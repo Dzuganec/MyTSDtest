@@ -62,12 +62,12 @@
     
     --btn-add: #FFC400;
     --btn-add-dark: #E6B000;
-    --btn-add-text: #14140F; /* Текст на желтом фоне */
+    --btn-add-text: #14140F;
     
     --btn-remove-bg: #fde8e8;
     --btn-remove-text: #dc2626;
     
-    /* Убраны зеленые цвета, заменены на темные акценты */
+    /* Темные кнопки (вместо зеленых) */
     --btn-blue: #2B2B26; 
     --btn-blue-dark: #14140F;
 
@@ -151,7 +151,7 @@ header {
     align-items: center; z-index: 100; border-bottom-left-radius: 26px; border-bottom-right-radius: 26px;
     margin-bottom: 18px; transition: background var(--t-med);
 }
-header h1 { font-size: clamp(22px, 6vw, 28px); font-weight: 900; display: flex; align-items: center; gap: 8px; letter-spacing: 0.2px; }
+header h1 { font-size: clamp(24px, 7vw, 30px); font-weight: 900; display: flex; align-items: center; gap: 8px; letter-spacing: 0.2px; }
 .header-controls { display: flex; gap: 8px; align-items: center; position: relative; }
 .btn-icon { background: var(--header-icon-bg); color: var(--header-text); border: none; width: 40px; height: 40px; border-radius: 13px; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform var(--t-fast) var(--ease-spring), background var(--t-fast); }
 .btn-icon:active { transform: scale(0.88); background: var(--header-icon-hover); }
@@ -170,17 +170,17 @@ header h1 { font-size: clamp(22px, 6vw, 28px); font-weight: 900; display: flex; 
 .menu-icon { font-size: 18px; width: 24px; text-align: center; }
 
 /* ---------- LAYOUT ---------- */
-.main-container { padding: 0 16px calc(100px + var(--safe-b)) 16px; max-width: 640px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+.main-container { padding: 0 16px calc(110px + var(--safe-b)) 16px; max-width: 640px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 18px; flex: 1; }
 .card { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); overflow: hidden; transition: box-shadow var(--t-med), border-color var(--t-med); animation: fadeUp var(--t-med) var(--ease-smooth); }
 
-/* ---------- ПАЛЛЕТЫ ---------- */
-.pallet-bar { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 12px 16px; margin-bottom: -6px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid var(--border-color); transition: transform var(--t-fast); }
+/* ---------- ПАЛЛЕТЫ (НАЗВАНИЕ СКАНА) ---------- */
+.pallet-bar { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 12px 16px; margin-bottom: -6px; display: flex; justify-content: flex-start; gap: 12px; align-items: center; cursor: pointer; border: 1px solid var(--border-color); transition: transform var(--t-fast); }
 .pallet-bar:active { transform: scale(0.98); }
-.pallet-bar-text { font-weight: 800; font-size: 15px; color: var(--text-muted); }
-.pallet-badge { background: var(--btn-add); color: var(--btn-add-text); padding: 4px 12px; border-radius: 12px; font-weight: 900; font-size: 14px; box-shadow: 0 2px 8px rgba(255, 196, 0, 0.3); transition: background var(--t-fast); max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
+.pallet-bar-text { font-weight: 800; font-size: 15px; color: var(--text-muted); flex-shrink: 0;}
+.pallet-badge { background: var(--btn-add); color: var(--btn-add-text); padding: 4px 12px; border-radius: 12px; font-weight: 900; font-size: 14px; box-shadow: 0 2px 8px rgba(255, 196, 0, 0.3); transition: background var(--t-fast); max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle; }
 
 .pallet-header-content { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 10px 0; }
-.pallet-name { font-weight: 900; font-size: 17px; color: var(--text-main); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.pallet-name { font-weight: 900; font-size: 17px; color: var(--text-main); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; text-align: left;}
 .btn-pallet-qr { flex-shrink: 0; background: var(--btn-blue); color: white; border: none; padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform var(--t-fast); }
 .btn-pallet-qr:active { transform: scale(0.9); }
 
@@ -257,16 +257,16 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     visibility: hidden;
     min-width: 250px; background-color: var(--text-main); color: var(--bg-card);
     text-align: center; border-radius: var(--radius-md); padding: 14px 16px;
-    position: fixed; z-index: 10000; left: 50%; bottom: 85px; transform: translateX(-50%);
+    position: fixed; z-index: 10000; left: 50%; bottom: 100px; transform: translateX(-50%);
     font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35); touch-action: pan-x;
     transition: visibility 0s, opacity 0.3s, bottom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0;
 }
-#snackbar.show { visibility: visible; bottom: 100px; opacity: 1; }
+#snackbar.show { visibility: visible; bottom: 120px; opacity: 1; }
 .snackbar-btn { background: var(--btn-add); color: var(--btn-add-text); border: none; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; transition: transform var(--t-fast); display: none; }
 .snackbar-btn:active { transform: scale(0.9); }
 
-.install-banner { position: fixed; bottom: 100px; left: 16px; right: 16px; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: 0 18px 46px rgba(0,0,0,0.18); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 90; border: 1px solid var(--border-color); animation: slideInUp var(--t-slow) var(--ease-smooth); }
+.install-banner { position: fixed; bottom: 120px; left: 16px; right: 16px; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: 0 18px 46px rgba(0,0,0,0.18); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 90; border: 1px solid var(--border-color); animation: slideInUp var(--t-slow) var(--ease-smooth); }
 .install-banner-header { display: flex; align-items: center; gap: 14px; }
 .install-banner-icon { font-size: 30px; background: var(--info-bg); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 13px; }
 .install-banner-text h4 { margin: 0 0 4px 0; color: var(--text-main); font-weight: 800; font-size: 16px; }
@@ -301,10 +301,10 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 #reader > div { flex: 1; }
 #reader video { object-fit: cover !important; width: 100%; height: 100%; }
 
-/* Убираем стандартную рамку html5-qrcode */
-#qr-shaded-region { border-width: 0 !important; }
+/* Убираем стандартную рамку html5-qrcode полностью */
+#qr-shaded-region { display: none !important; }
 
-/* Наша красивая рамка из прототипа */
+/* Наша красивая декоративная рамка из прототипа */
 .frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; max-width: 260px; height: 180px; pointer-events: none; z-index: 4; }
 .frame span { position: absolute; width: 34px; height: 34px; border-color: rgba(255,255,255,0.9); border-style: solid; border-width: 0; }
 .frame .tl { top: 0; left: 0; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 6px; }
@@ -413,7 +413,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; } }
 
 /* ---------- АДАПТИВНОСТЬ ---------- */
-header h1 { font-size: clamp(22px, 6vw, 28px); }
+header h1 { font-size: clamp(24px, 7vw, 30px); }
 .brightness-text { font-size: clamp(15px, 4vw, 19px); }
 
 @media (max-width: 360px) {
@@ -451,7 +451,7 @@ header h1 { font-size: clamp(22px, 6vw, 28px); }
 
 <div class="main-container">
     <div class="pallet-bar" onclick="openPalletModal()">
-        <div class="pallet-bar-text">Текущий паллет:</div>
+        <div class="pallet-bar-text">Текущий скан:</div>
         <div class="pallet-badge" id="currentPalletBadge">Основной</div>
     </div>
 
@@ -533,8 +533,8 @@ header h1 { font-size: clamp(22px, 6vw, 28px); }
         <div class="instruction-content">
             <ol>
                 <li>Нажми <b>желтую кнопку СКАНИРОВАТЬ</b> внизу или введи артикул вручную.</li>
-                <li>Товары автоматически добавляются в выбранный <b>Паллет</b>. Паллеты можно менять.</li>
-                <li><b>Долгое нажатие (0.5 сек)</b> на штрихкод в корзине увеличивает его и копирует в буфер.</li>
+                <li>Товары автоматически добавляются в выбранный <b>Скан/Раздел</b>. Вы можете создавать любые имена для сканов (полка, брак и тд).</li>
+                <li><b>Долгое нажатие (0.5 сек)</b> на штрихкод в корзине увеличивает его.</li>
                 <li><b>Режим «🔄 Непрерывный скан»</b>: сканируй потоком без закрытия камеры.</li>
                 <li>Нажми <b>В EXCEL</b> внизу, чтобы выгрузить всё.</li>
             </ol>
@@ -556,7 +556,7 @@ header h1 { font-size: clamp(22px, 6vw, 28px); }
             </p>
             <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
                 <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 800; color: var(--text-main);">👨‍💻 Джугань Сергей</p>
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 7.2 (Lemana Theme)</p>
+                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 7.3 (Lemana Theme)</p>
             </div>
         </div>
         <button class="btn-modal btn-close" onclick="document.getElementById('aboutModal').style.display='none'">Закрыть</button>
@@ -659,8 +659,8 @@ header h1 { font-size: clamp(22px, 6vw, 28px); }
 
 <div class="modal-overlay" id="palletModal">
     <div class="modal-content">
-        <h3 class="modal-title">📦 Выбор паллета</h3>
-        <p style="font-size: 14px; color: var(--text-muted); font-weight: 600; margin-top: 5px; margin-bottom: 0;">Все новые сканирования будут привязаны к нему</p>
+        <h3 class="modal-title">📦 Название скана</h3>
+        <p style="font-size: 14px; color: var(--text-muted); font-weight: 600; margin-top: 5px; margin-bottom: 0;">Все новые сканирования будут привязаны к нему (например: Брак, Полка 2)</p>
         
         <input type="text" id="palletInput" class="input-field" style="background:var(--input-bg); width:100%; border-radius:12px; margin: 15px 0; border:1px solid var(--border-color); text-align:center; font-size:18px;" placeholder="Введите название...">
         
@@ -749,6 +749,18 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
         }
     });
 });
+
+// Свайп для закрытия уведомлений (Snackbar)
+let snackbarTouchY = 0;
+const snackbarEl = document.getElementById('snackbar');
+snackbarEl.addEventListener('touchstart', e => { snackbarTouchY = e.touches[0].clientY; }, {passive:true});
+snackbarEl.addEventListener('touchmove', e => {
+    let dy = e.touches[0].clientY - snackbarTouchY;
+    if (dy > 30 || dy < -30) { // Если смахнули вверх или вниз
+        snackbarEl.classList.remove('show');
+        if (snackbarTimer) clearTimeout(snackbarTimer);
+    }
+}, {passive:true});
 
 // Закрытие всех модалок (Для кнопки Главная)
 function closeAllModals() {
@@ -963,7 +975,7 @@ function showToast(msg) {
     document.getElementById('snackbarUndoBtn').style.display = 'none';
     sb.classList.add('show');
     if (snackbarTimer) clearTimeout(snackbarTimer);
-    snackbarTimer = setTimeout(() => { sb.classList.remove('show'); }, 3000);
+    snackbarTimer = setTimeout(() => { sb.classList.remove('show'); }, 5000); // Показываем дольше
 }
 function showUndoToast() {
     const sb = document.getElementById('snackbar');
@@ -971,7 +983,7 @@ function showUndoToast() {
     document.getElementById('snackbarUndoBtn').style.display = 'block';
     sb.classList.add('show');
     if (snackbarTimer) clearTimeout(snackbarTimer);
-    snackbarTimer = setTimeout(() => { sb.classList.remove('show'); }, 4000);
+    snackbarTimer = setTimeout(() => { sb.classList.remove('show'); }, 6000); // Показываем дольше
 }
 
 /* ================= КОПИРОВАНИЕ И ДОЛГОЕ НАЖАТИЕ ================= */
@@ -1113,7 +1125,7 @@ function addOrUpdateItem(code, qty) {
                 <tr class="pallet-header-row">
                     <td colspan="3" style="background: transparent; border:none; padding-bottom:5px;">
                         <div class="pallet-header-content">
-                            <span class="pallet-name">📦 ${pallet}</span>
+                            <span class="pallet-name">📁 ${pallet}</span>
                             <button class="btn-pallet-qr" onclick="showPalletQR('${pallet}')">Показать QR</button>
                         </div>
                     </td>
@@ -1165,7 +1177,7 @@ function renderCart() {
             <tr class="pallet-header-row">
                 <td colspan="3" style="background: transparent; border:none; padding-bottom:5px;">
                     <div class="pallet-header-content">
-                        <span class="pallet-name">📦 ${palletName}</span>
+                        <span class="pallet-name">📁 ${palletName}</span>
                         <button class="btn-pallet-qr" onclick="showPalletQR('${palletName}')">Показать QR</button>
                     </div>
                 </td>
@@ -1335,6 +1347,10 @@ function startScanner() {
     if (scannerBusy) return;
     initAudio(); isScannerPaused = false; smartLensCycleIndex = 0; lastFrameTime = Date.now();
     
+    // Сбрасываем UI фонарика при новом старте
+    torchEnabled = false; 
+    document.getElementById('torchBtn').classList.remove('active');
+
     // Закрываем другие модалки перед открытием камеры
     closeAllModals();
 
@@ -1434,7 +1450,8 @@ function setLensMode(type) {
 }
 
 function handleDecodedText(rawTextIn) {
-    if (isScannerPaused) return;
+    if (isScannerPaused) return; // Логика: если ждём ввода кол-ва товара, новые штрихкоды не распознаются!
+    
     lastFrameTime = Date.now();
     let rawText = rawTextIn.trim();
 
@@ -1536,6 +1553,11 @@ function switchCameraDevice(deviceId) {
 
 function stopScanner() {
     stopRotateAssist(); stopSmartLensWatcher();
+    
+    // Выключаем фонарик аппаратно (за счет выключения камеры) и сбрасываем статус кнопки
+    torchEnabled = false;
+    document.getElementById('torchBtn').classList.remove('active');
+
     if (html5QrCode) { html5QrCode.stop().then(() => { html5QrCode.clear(); html5QrCode = null; }).catch(() => {}); }
     document.getElementById('scannerModal').style.display = 'none';
 }
