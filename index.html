@@ -67,7 +67,7 @@
     --btn-remove-bg: #fde8e8;
     --btn-remove-text: #dc2626;
     
-    /* Темные кнопки (вместо зеленых) */
+    /* Темные кнопки */
     --btn-blue: #2B2B26; 
     --btn-blue-dark: #14140F;
 
@@ -81,6 +81,12 @@
 
     --info-bg: #F8F7F3; --info-text: #14140F;
     --warn-bg: #fffbf0; --warn-text: #b48509;
+
+    /* Нижняя панель (светлая тема) */
+    --nav-bg: #ffffff;
+    --nav-icon: #8C897E;
+    --nav-icon-active: #14140F;
+    --nav-shadow: 0 -4px 20px rgba(0,0,0,0.06);
 
     --radius-sm: 14px; --radius-md: 18px; --radius-lg: 24px; --radius-xl: 32px;
     --glow-soft: rgba(255, 196, 0, 0.40);
@@ -126,6 +132,12 @@
 
     --info-bg: #2B2B26; --info-text: #f5f5f5;
     --warn-bg: #3a2e08; --warn-text: #fbbf24;
+
+    /* Нижняя панель (темная тема) */
+    --nav-bg: #242422;
+    --nav-icon: #8C897E;
+    --nav-icon-active: #ffffff;
+    --nav-shadow: 0 -4px 20px rgba(0,0,0,0.25);
 }
 
 * { box-sizing: border-box; font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
@@ -219,29 +231,30 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 
 .no-data { padding: 46px 20px; color: var(--text-muted); font-weight: 700; text-align: center; background: var(--bg-card); border-radius: var(--radius-md); font-size: 15px; border: 2px dashed var(--border-color); box-shadow: none;}
 
-/* ---------- НИЖНЯЯ ШТОРКА (Темный стиль из референса) ---------- */
+/* ---------- НИЖНЯЯ ШТОРКА ---------- */
 .navbar {
     position: fixed;
     bottom: 0; left: 0; right: 0;
     height: calc(78px + var(--safe-b));
-    background: #242422; /* Тёмный фон из референса */
+    background: var(--nav-bg);
     border-top: none;
     display: flex;
     align-items: flex-start;
     padding: 10px 8px calc(10px + var(--safe-b));
     z-index: 150;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    box-shadow: var(--nav-shadow);
     border-radius: 20px 20px 0 0;
+    transition: background var(--t-med), box-shadow var(--t-med);
 }
 .navitem {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-    font-size: 11px; color: #8C897E; background: none; border: none; font-family: inherit; cursor: pointer;
+    font-size: 11px; color: var(--nav-icon); background: none; border: none; font-family: inherit; cursor: pointer;
     padding-bottom: var(--safe-b);
     transition: color var(--t-fast);
 }
-.navitem.active { color: #ffffff; font-weight: 800; }
-.navitem svg { width: 24px; height: 24px; stroke: #8C897E; fill: none; stroke-width: 1.7; transition: stroke var(--t-fast); }
-.navitem.active svg { stroke: #ffffff; }
+.navitem.active { color: var(--nav-icon-active); font-weight: 800; }
+.navitem svg { width: 24px; height: 24px; stroke: var(--nav-icon); fill: none; stroke-width: 1.7; transition: stroke var(--t-fast); }
+.navitem.active svg { stroke: var(--nav-icon-active); }
 
 .scanbtn {
     width: 64px; height: 64px; background: var(--btn-add); border-radius: 50%;
@@ -556,7 +569,7 @@ header h1 { font-size: clamp(24px, 7vw, 30px); }
             </p>
             <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
                 <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 800; color: var(--text-main);">👨‍💻 Джугань Сергей</p>
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 7.3 (Lemana Theme)</p>
+                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 7.4 (Adaptive Nav Theme)</p>
             </div>
         </div>
         <button class="btn-modal btn-close" onclick="document.getElementById('aboutModal').style.display='none'">Закрыть</button>
