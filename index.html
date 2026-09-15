@@ -88,7 +88,7 @@
     --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --t-fast: 0.28s;
-    --t-theme: 0.85s cubic-bezier(0.22, 1, 0.36, 1); /* Плавная кривая для смены тем */
+    --t-theme: 0.85s cubic-bezier(0.22, 1, 0.36, 1);
     --t-slow: 0.7s;
 
     --safe-t: env(safe-area-inset-top);
@@ -376,9 +376,11 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .modal-content { background: var(--bg-card); color: var(--text-main); padding: 30px 20px 20px; border-radius: 34px 34px 0 0; width: 100%; max-width: 520px; text-align: center; box-shadow: 0 -22px 46px rgba(0,0,0,0.22); animation: slideInUp var(--t-med) var(--ease-smooth); position: relative; padding-bottom: calc(95px + var(--safe-b)); max-height: 94vh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; -ms-overflow-style: none; scrollbar-width: none; transition: background-color var(--t-theme), color var(--t-theme); }
 .modal-content::-webkit-scrollbar { display: none; }
 .modal-content::before { content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 42px; height: 5px; background: var(--border-color); border-radius: 10px; transition: background-color var(--t-theme); }
-.modal-title { margin-top:0; font-weight: 900; font-size: 19px; display:flex; align-items:center; gap:8px; justify-content:center; }
+.modal-title { margin-top:0; font-weight: 900; font-size: 19px; display:flex; align-items:center; gap:8px; justify-content:center; transition: color var(--t-theme); }
 
-/* ПОЛНОЭКРАННЫЙ СКАНЕР И КРАСИВЫЙ ПРИЦЕЛ */
+/* ============================================================
+   ПОЛНОЭКРАННЫЙ СКАНЕР И КРАСИВЫЙ ПРИЦЕЛ
+   ============================================================ */
 #scannerModal { align-items: center; }
 #scannerModal .modal-content { height: 100dvh; max-height: 100dvh; width: 100%; max-width: 100%; border-radius: 0; margin: 0; display: flex; flex-direction: column; padding: calc(40px + var(--safe-t)) 16px calc(95px + var(--safe-b)) 16px; }
 #scannerModal .modal-content::before { top: calc(16px + var(--safe-t)); }
@@ -394,15 +396,48 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     width: 65%; aspect-ratio: 1; max-width: 280px; max-height: 280px;
     border-radius: 20px; box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.45); pointer-events: none; z-index: 5;
+    animation: targetPulse 2.5s infinite ease-in-out;
 }
-.custom-scanner-target .corner { position: absolute; width: 38px; height: 38px; border-color: #10b981; border-style: solid; border-width: 0; box-shadow: 0 0 15px rgba(16, 185, 129, 0.35); transition: box-shadow var(--t-med); }
-.corner.tl { top: -2px; left: -2px; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 20px; }
-.corner.tr { top: -2px; right: -2px; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 20px; }
-.corner.bl { bottom: -2px; left: -2px; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 20px; }
-.corner.br { bottom: -2px; right: -2px; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 20px; }
+@keyframes targetPulse {
+    0%, 100% { box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.45), inset 0 0 0px rgba(16, 185, 129, 0); }
+    50% { box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.55), inset 0 0 25px rgba(16, 185, 129, 0.25); }
+}
 
-.laser { position: absolute; top: 0; left: 10px; right: 10px; height: 3px; background: #10b981; border-radius: 2px; box-shadow: 0 0 12px 3px rgba(16, 185, 129, 0.65); animation: scanLaser 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-@keyframes scanLaser { 0% { top: 5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 95%; opacity: 0; } }
+.custom-scanner-target .corner { 
+    position: absolute; width: 40px; height: 40px; 
+    border-color: #10b981; border-style: solid; border-width: 0; 
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); 
+    transition: box-shadow var(--t-med); 
+}
+.corner.tl { top: -2px; left: -2px; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 20px; animation: bracketTL 2s infinite ease-in-out; }
+.corner.tr { top: -2px; right: -2px; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 20px; animation: bracketTR 2s infinite ease-in-out; }
+.corner.bl { bottom: -2px; left: -2px; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 20px; animation: bracketBL 2s infinite ease-in-out; }
+.corner.br { bottom: -2px; right: -2px; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 20px; animation: bracketBR 2s infinite ease-in-out; }
+
+@keyframes bracketTL { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(4px, 4px); } }
+@keyframes bracketTR { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-4px, 4px); } }
+@keyframes bracketBL { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(4px, -4px); } }
+@keyframes bracketBR { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-4px, -4px); } }
+
+.laser { 
+    position: absolute; left: 10%; right: 10%; height: 40px; 
+    background: linear-gradient(to bottom, rgba(16, 185, 129, 0) 0%, rgba(16, 185, 129, 0.1) 40%, rgba(16, 185, 129, 0.6) 90%, #10b981 100%); 
+    border-bottom: 2px solid #34d399; border-radius: 0 0 10px 10px;
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); 
+    animation: scanLaserGradient 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate; 
+}
+@keyframes scanLaserGradient { 
+    0% { top: 0%; opacity: 0; transform: scaleY(0.5); } 
+    15% { opacity: 1; transform: scaleY(1); } 
+    85% { opacity: 1; transform: scaleY(1); } 
+    100% { top: calc(100% - 40px); opacity: 0; transform: scaleY(0.5); } 
+}
+
+.scan-line-center {
+    position: absolute; top: 50%; left: 5%; right: 5%; height: 1.5px; background: #10b981;
+    box-shadow: 0 0 8px 1px rgba(16, 185, 129, 0.8); animation: centerPulse 1.5s infinite ease-in-out; opacity: 0.6;
+}
+@keyframes centerPulse { 0%, 100% { opacity: 0.3; transform: scaleX(0.95); } 50% { opacity: 0.8; transform: scaleX(1); } }
 
 .scan-orientation-hint { position: absolute; left: -30px; right: -30px; bottom: -45px; text-align: center; font-size: 14px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.85); pointer-events: none; }
 
@@ -482,7 +517,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color);
     border-radius: 12px; font-size: 20px; width: 44px; height: 44px;
     display: flex; justify-content: center; align-items: center;
-    cursor: pointer; flex-shrink: 0; transition: transform var(--t-fast) var(--ease-spring), background-color var(--t-theme), border-color var(--t-theme);
+    cursor: pointer; flex-shrink: 0; transition: transform var(--t-fast) var(--ease-spring), background-color var(--t-theme), border-color var(--t-theme), color var(--t-theme);
 }
 .numpad-paste-btn:active { transform: scale(0.85) rotate(-5deg); }
 
@@ -496,7 +531,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .btn-numpad-ok { flex: 2; background: var(--btn-add); color: white; border: none; border-radius: 20px; font-size: 18px; font-weight: 800; padding: 18px 0; cursor: pointer; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.32); transition: transform var(--t-fast);}
 .btn-numpad-cancel:active, .btn-numpad-ok:active { transform: scale(0.94); }
 
-/* ---------- НАСТРОЙКИ ---------- */
+/* ---------- НАСТРОЙКИ И ПРОЧЕЕ ---------- */
 .settings-section { text-align: left; margin-bottom: 4px; }
 .settings-section-title { font-size: 12.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; padding: 14px 2px 8px; transition: color var(--t-theme); }
 .settings-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 15px 2px; border-bottom: 1px solid var(--border-color); transition: border-color var(--t-theme); }
@@ -511,13 +546,11 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .toggle.active .toggle-thumb { transform: translateX(22px); }
 .toggle:active .toggle-thumb { width: 30px; }
 
-/* ---------- QR ЭКРАН ---------- */
 #qrModal { background: rgba(0,0,0,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); justify-content: center; align-items: center;}
 #qrModal .modal-content { background: transparent; box-shadow: none; display: flex; flex-direction: column; align-items: center; justify-content: center; max-height: none;}
 #qrModal .modal-content::before { display: none; }
 #finalQrCanvas { display: none; margin: 0 auto; max-width: 100%; border-radius: var(--radius-lg); background: #fff; padding: 12px; box-shadow: 0 12px 46px rgba(255,255,255,0.22);}
 
-/* ---------- АРХИВ ---------- */
 .archive-list { display: flex; flex-direction: column; gap: 12px; padding: 5px; margin: 0 -5px;}
 .archive-item { background: var(--input-bg); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; text-align: left; border: 1px solid var(--border-color); transition: background-color var(--t-theme), border-color var(--t-theme), transform var(--t-fast); }
 .archive-info-row { display: flex; justify-content: space-between; align-items: center; }
@@ -531,6 +564,57 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 #zoomModal { background: rgba(0,0,0,0.88); backdrop-filter: blur(16px); justify-content: center; align-items: center;}
 .zoom-container { background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); box-shadow: 0 18px 46px rgba(0,0,0,0.35); text-align: center; width: 90%; max-width: 450px; transition: background-color var(--t-theme); }
 .zoom-container svg { max-width: 100%; max-height: 200px; display: block; margin: 0 auto; background: #fff; padding: 15px; border-radius: 8px;}
+
+/* ============================================================
+   СТИЛИ КАРТОЧКИ РАЗРАБОТЧИКА (ABOUT) С КАСТОМНЫМ АВАТАРОМ
+   ============================================================ */
+.dev-card {
+    background: var(--input-bg);
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color var(--t-theme), border-color var(--t-theme);
+}
+
+.dev-avatar-svg { width: 100px; height: 100px; margin-bottom: 12px; overflow: visible; }
+.character .head { transform-origin: 115px 70px; animation: headBob 3s ease-in-out infinite; }
+.arms .arm-l-group { animation: typeLeft 0.18s ease-in-out infinite alternate; }
+.arms .arm-r-group { animation: typeRight 0.22s ease-in-out infinite alternate; }
+.code-lines rect { animation: codeScroll 1.5s infinite linear; }
+.code-1 { animation-delay: 0s; } .code-2 { animation-delay: 0.2s; } .code-3 { animation-delay: 0.4s; }
+.code-4 { animation-delay: 0.6s; } .code-5 { animation-delay: 0.8s; } .code-6 { animation-delay: 1.0s; }
+
+@keyframes headBob { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(1.5deg) translateY(1.5px); } }
+@keyframes typeLeft { 0% { transform: translateY(0); } 100% { transform: translateY(-3.5px); } }
+@keyframes typeRight { 0% { transform: translateY(0); } 100% { transform: translateY(-4px); } }
+@keyframes codeScroll { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-20px); opacity: 0; } }
+
+.tg-dev-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: linear-gradient(135deg, #28a8ea 0%, #178cc4 100%);
+    color: #fff; text-decoration: none;
+    padding: 14px 20px; border-radius: var(--radius-md);
+    font-weight: 800; font-size: 15px; margin-top: 10px;
+    box-shadow: 0 8px 20px rgba(40, 168, 234, 0.3);
+    transition: transform var(--t-fast) var(--ease-spring), box-shadow var(--t-fast);
+    overflow: hidden; position: relative; width: 100%;
+}
+.tg-dev-btn:active { transform: scale(0.94); box-shadow: 0 4px 10px rgba(40, 168, 234, 0.2); }
+.tg-icon-fly { width: 22px; height: 22px; animation: gentleFloat 3s ease-in-out infinite; }
+.tg-dev-btn:active .tg-icon-fly { animation: flyAway 0.6s ease forwards; }
+
+@keyframes gentleFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-3px); } }
+@keyframes flyAway {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    30% { transform: translate(25px, -25px) scale(0.8); opacity: 0; }
+    31% { transform: translate(-25px, 25px) scale(0.8); opacity: 0; }
+    100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
 
 .install-steps { list-style: none; padding: 0; margin: 15px 0 0; text-align: left; }
 .install-steps li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 15px; font-weight: 700; color: var(--text-main); transition: color var(--t-theme); }
@@ -581,8 +665,16 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: none !important; 
     animation: none !important; 
 }
+[data-fx="low"] .custom-scanner-target {
+    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.6) !important;
+}
 [data-fx="low"] .custom-scanner-target .corner { 
     box-shadow: none !important; 
+    animation: none !important; 
+    transform: none !important;
+}
+[data-fx="low"] .scan-line-center { 
+    animation: none !important; opacity: 1 !important; transform: none !important;
 }
 [data-fx="low"] .navbar-goo-layer {
     filter: none !important;
@@ -598,10 +690,28 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     -webkit-backdrop-filter: none !important;
     background-color: rgba(0,0,0,0.95) !important;
 }
-[data-fx="low"] .zoom-pill,
+[data-fx="low"] .zoom-pill {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft) !important;
+}
+[data-fx="low"] .zoom-btn {
+    color: var(--text-main) !important;
+    background: transparent !important;
+}
+[data-fx="low"] .zoom-btn.active {
+    background-color: var(--input-bg) !important;
+    color: var(--btn-add) !important;
+    font-weight: 900 !important;
+}
 [data-fx="low"] .btn-icon-torch {
     background-color: var(--bg-card) !important;
     color: var(--text-main) !important;
+    border: 1px solid var(--border-color);
+}
+[data-fx="low"] .btn-icon-torch.active {
+    background-color: #f59e0b !important;
+    color: #fff !important;
 }
 [data-fx="low"] #snackbar {
     transform: translate(-50%, 0) !important;
@@ -609,6 +719,9 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 [data-fx="low"] .numpad-cursor {
     animation: none !important; opacity: 1 !important;
 }
+[data-fx="low"] .tg-icon-fly { animation: none !important; }
+[data-fx="low"] .dev-avatar-svg * { animation: none !important; }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; } .bg-blob { display: none !important; } }
 
 /* ---------- АДАПТИВНОСТЬ ПОД РАЗМЕР ЭКРАНА ---------- */
@@ -717,7 +830,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .navitem.active .icon-home .house-roof { animation: roofJoy 0.5s var(--ease-bounce); }
 @keyframes roofJoy { 0% { transform: scaleY(1); } 40% { transform: scaleY(1.15) translateY(-1px); } 100% { transform: scaleY(1); } }
 
-/* Новая иконка Клавиатуры (Ввод -> Артикул) */
+/* Иконка Клавиатуры (Ввод -> Артикул) */
 .icon-keyboard .key { transform-box: fill-box; transform-origin: center; transition: transform 0.2s var(--ease-bounce), fill 0.2s; }
 @keyframes keyType { 
     0% { transform: scale(1) translateY(0); fill: currentColor; } 
@@ -982,12 +1095,108 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <div class="modal-content">
         <h3 class="modal-title">ℹ️ О приложении</h3>
         <div style="text-align: left; margin-top: 15px;">
-            <p style="margin: 0 0 15px 0; font-size: 15px; color: var(--text-muted); line-height: 1.5;">
-                «Мой ТСД» — это автономный веб-терминал сбора данных. Создан для быстрого сканирования товаров камерой смартфона, ускорения инвентаризации и мгновенного переноса данных в Excel.
+            <p style="margin: 0 0 15px 0; font-size: 15px; color: var(--text-muted); line-height: 1.5; text-align: center;">
+                «Мой ТСД» — это автономный веб-терминал сбора данных для быстрой инвентаризации и переноса данных в Excel.
             </p>
-            <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
-                <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 800; color: var(--text-main);">👨‍💻 Джугань Сергей</p>
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 9.6 (Smooth Transitions & Modern Beep)</p>
+            
+            <div class="dev-card">
+                
+                <!-- КАСТОМНАЯ АВАТАРКА РАЗРАБОТЧИКА С АНИМАЦИЕЙ -->
+                <svg viewBox="0 0 160 160" class="dev-avatar-svg" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="screen-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+                       <stop offset="0%" stop-color="#10b981" stop-opacity="0.25" />
+                       <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.05" />
+                    </linearGradient>
+                    <linearGradient id="glass-refl" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
+                        <stop offset="30%" stop-color="rgba(255,255,255,0.1)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </linearGradient>
+                    <clipPath id="screen-clip">
+                        <rect x="23" y="68" width="39" height="44" />
+                    </clipPath>
+                  </defs>
+
+                  <circle cx="80" cy="80" r="75" fill="var(--header-icon-bg)" />
+
+                  <!-- Ноутбук -->
+                  <path d="M 15 115 L 60 115 L 75 125 L 5 125 Z" fill="#94a3b8" />
+                  <path d="M 15 115 L 60 115 L 60 65 L 15 65 Z" fill="#334155" />
+                  <rect x="18" y="68" width="39" height="44" fill="#0f172a" />
+                  <rect x="18" y="68" width="39" height="44" fill="url(#screen-glow)" />
+                  
+                  <g clip-path="url(#screen-clip)" class="code-lines">
+                    <rect class="code-1" x="22" y="75" width="15" height="3.5" rx="1.5" fill="#10b981" />
+                    <rect class="code-2" x="22" y="83" width="28" height="3.5" rx="1.5" fill="#3b82f6" />
+                    <rect class="code-3" x="22" y="91" width="20" height="3.5" rx="1.5" fill="#f59e0b" />
+                    <rect class="code-4" x="22" y="99" width="12" height="3.5" rx="1.5" fill="#10b981" />
+                    <rect class="code-5" x="38" y="99" width="14" height="3.5" rx="1.5" fill="#e2e8f0" />
+                    <rect class="code-6" x="22" y="107" width="22" height="3.5" rx="1.5" fill="#3b82f6" />
+                  </g>
+
+                  <g class="character">
+                     <!-- Тело, переходящее в плечи -->
+                     <path d="M 60 160 C 60 110, 80 105, 115 105 C 150 105, 160 110, 160 160 Z" fill="#64748b" />
+                     
+                     <!-- Надпись на футболке (ПОД рукой) -->
+                     <text x="113" y="142" font-family="Nunito, sans-serif" font-weight="900" font-size="11" fill="#cbd5e1" text-anchor="middle" opacity="0.65" letter-spacing="0.5">HELLO WORLD</text>
+                     
+                     <!-- Шея -->
+                     <rect x="107" y="85" width="16" height="25" fill="#fde0c6" />
+                     
+                     <g class="head">
+                         <!-- Круглое лицо -->
+                         <rect x="91" y="40" width="48" height="56" rx="24" ry="24" fill="#fde0c6" />
+                         
+                         <!-- Волосы (светло-русые) -->
+                         <path d="M 89 54 Q 93 30 115 30 Q 137 30 141 54 Q 138 36 115 34 Q 92 36 89 54 Z" fill="#a68a68" />
+                         <path d="M 100 32 Q 105 26 110 32 Q 115 25 120 32 Q 125 28 130 33" fill="none" stroke="#a68a68" stroke-width="4" stroke-linecap="round"/>
+
+                         <!-- Аккуратная борода по подбородку -->
+                         <path d="M 91 74 C 91 102, 139 102, 139 74 C 139 88, 128 102, 115 102 C 102 102, 91 88, 91 74 Z" fill="#a68a68" opacity="0.9" />
+
+                         <!-- Улыбающийся рот -->
+                         <path d="M 108 81 Q 115 84 122 81" fill="none" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" />
+
+                         <!-- Глаза -->
+                         <circle cx="104" cy="61" r="2.5" fill="#1e293b" />
+                         <circle cx="126" cy="61" r="2.5" fill="#1e293b" />
+
+                         <!-- Крупные прозрачные очки -->
+                         <circle cx="104" cy="61" r="11" fill="url(#glass-refl)" stroke="#cbd5e1" stroke-width="2.5" />
+                         <circle cx="126" cy="61" r="11" fill="url(#glass-refl)" stroke="#cbd5e1" stroke-width="2.5" />
+                         <line x1="114" y1="59" x2="116" y2="59" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+                         <line x1="93" y1="60" x2="89" y2="58" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+                         <line x1="137" y1="60" x2="141" y2="58" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+                     </g>
+
+                     <g class="arms">
+                        <!-- Левая рука -->
+                        <g class="arm-l-group">
+                            <path class="arm-left" d="M 75 115 Q 65 130 45 120" fill="none" stroke="#475569" stroke-width="12" stroke-linecap="round" />
+                            <circle class="hand-left" cx="45" cy="120" r="6.5" fill="#fde0c6" />
+                        </g>
+                        <!-- Правая рука тянется к клавиатуре (Изменен цвет, чтобы выделялась поверх тела) -->
+                        <g class="arm-r-group">
+                            <path class="arm-right" d="M 140 115 Q 110 140 60 124" fill="none" stroke="#475569" stroke-width="12" stroke-linecap="round" />
+                            <circle class="hand-right" cx="60" cy="124" r="6.5" fill="#fde0c6" />
+                        </g>
+                     </g>
+                  </g>
+                  <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
+                </svg>
+
+                <p style="margin: 0 0 4px 0; font-size: 19px; font-weight: 900; color: var(--text-main); transition: color var(--t-theme);">Джугань Сергей</p>
+                <p style="margin: 0 0 10px 0; font-size: 13.5px; color: var(--text-muted); font-weight: 700; transition: color var(--t-theme);">Версия: 10.2 (Premium Avatar)</p>
+                
+                <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
+                    <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    Написать в Telegram
+                </a>
             </div>
         </div>
         <button class="btn-modal btn-close" onclick="closeAllModals()">Закрыть</button>
@@ -1047,6 +1256,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <div class="corner tr"></div>
                 <div class="corner bl"></div>
                 <div class="corner br"></div>
+                <div class="scan-line-center"></div>
                 <div class="laser"></div>
                 <div class="scan-orientation-hint" id="orientationHint">📦 Наведите на штрихкод</div>
             </div>
@@ -2378,3 +2588,4 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
