@@ -88,7 +88,7 @@
     --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --t-fast: 0.28s;
-    --t-med: 0.5s; /* Увеличено для более плавных переходов цвета */
+    --t-theme: 0.85s cubic-bezier(0.22, 1, 0.36, 1); /* Плавная кривая для смены тем */
     --t-slow: 0.7s;
 
     --safe-t: env(safe-area-inset-top);
@@ -148,13 +148,13 @@ body {
     background-color: var(--bg-body);
     color: var(--text-main);
     min-height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden;
-    transition: color var(--t-med) ease;
+    transition: color var(--t-theme);
     position: relative;
     z-index: 0;
 }
 body::before, body::after {
     content: ''; position: fixed; inset: 0; z-index: -2;
-    background-attachment: fixed; transition: opacity var(--t-med) var(--ease-smooth);
+    background-attachment: fixed; transition: opacity var(--t-theme);
     pointer-events: none;
 }
 body::before { background-color: #f2f5f4; background-image: radial-gradient(circle at 50% 0%, #dcf0e7 0%, #f2f5f4 70%); opacity: 1; }
@@ -268,40 +268,33 @@ header h1 { font-size: clamp(17px, 4.6vw, 21px); font-weight: 900; display: flex
 .header-controls { display: flex; gap: 8px; align-items: center; position: relative; }
 
 /* Меню список */
-.dropdown-item { padding: 15px 20px; font-weight: 700; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 13px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth); }
+.dropdown-item { padding: 15px 20px; font-weight: 700; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 13px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color var(--t-theme), color var(--t-theme); }
 .dropdown-item:last-child { border-bottom: none; }
 .dropdown-item:active { background: var(--input-bg); }
 .menu-icon { font-size: 18px; width: 24px; text-align: center; }
 
 /* ---------- LAYOUT ---------- */
 .main-container { padding: 0 16px calc(110px + var(--safe-b)) 16px; max-width: 640px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 18px; flex: 1; }
-.card { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); overflow: hidden; transition: background-color var(--t-med) var(--ease-smooth), box-shadow var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth); animation: fadeUp var(--t-med) var(--ease-smooth); }
+.card { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); overflow: hidden; transition: background-color var(--t-theme), box-shadow var(--t-theme), border-color var(--t-theme); animation: fadeUp var(--t-med) var(--ease-smooth); }
 
 /* ---------- ПАЛЛЕТЫ ---------- */
-.pallet-bar { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 12px 16px; margin-bottom: -6px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid var(--border-color); transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), transform var(--t-fast); }
+.pallet-bar { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 12px 16px; margin-bottom: -6px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid var(--border-color); transition: background-color var(--t-theme), border-color var(--t-theme), transform var(--t-fast); }
 .pallet-bar:active { transform: scale(0.98); }
-.pallet-bar-text { font-weight: 800; font-size: 15px; color: var(--text-muted); transition: color var(--t-med) var(--ease-smooth); }
-.pallet-badge { background: var(--btn-add); color: white; padding: 4px 12px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: 0 2px 8px rgba(5,150,105,0.3); transition: background-color var(--t-med) var(--ease-smooth); }
+.pallet-bar-text { font-weight: 800; font-size: 15px; color: var(--text-muted); transition: color var(--t-theme); }
+.pallet-badge { background: var(--btn-add); color: white; padding: 4px 12px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: 0 2px 8px rgba(5,150,105,0.3); transition: background-color var(--t-theme); }
 
 .pallet-header-content { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 0; }
-.pallet-name { font-weight: 900; font-size: 17px; color: var(--text-main); display: flex; align-items: center; gap: 6px; transition: color var(--t-med) var(--ease-smooth); }
+.pallet-name { font-weight: 900; font-size: 17px; color: var(--text-main); display: flex; align-items: center; gap: 6px; transition: color var(--t-theme); }
 .btn-pallet-qr { background: var(--btn-blue); color: white; border: none; padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(37,99,235,0.3); transition: transform var(--t-fast); }
 .btn-pallet-qr:active { transform: scale(0.9); }
 
 /* ---------- ВВОД И КОРЗИНА ---------- */
-.input-card { padding: 7px; display: flex; gap: 7px; align-items: center; border-radius: var(--radius-lg); transition: background-color var(--t-med) var(--ease-smooth), box-shadow var(--t-fast) ease, border-color var(--t-fast) ease; }
-.input-card:focus-within { border-color: var(--btn-add); box-shadow: 0 0 0 5px var(--glow-soft); }
-.input-field { flex: 1; padding: 15px 16px; background: transparent; color: var(--text-main); border: none; font-size: 16px; font-weight: 700; transition: color var(--t-med) var(--ease-smooth); }
-.input-field::placeholder { color: var(--text-muted); font-weight: 600; }
-.btn-manual-add { background: var(--btn-add); color: white; border: none; border-radius: var(--radius-md); width: 52px; height: 52px; font-weight: 800; font-size: 25px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35); transition: transform var(--t-fast) var(--ease-spring); }
-.btn-manual-add:active { transform: scale(0.9) rotate(90deg); }
-
 .cart-card { background: transparent; box-shadow: none; border: none; border-radius: 0; display: flex; flex-direction: column; animation: none; }
-.cart-header { padding: 0 4px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px; color: var(--text-main); transition: color var(--t-med) var(--ease-smooth);}
+.cart-header { padding: 0 4px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px; color: var(--text-main); transition: color var(--t-theme);}
 
 table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;}
 th { display: none; }
-tr { background: var(--bg-card); box-shadow: var(--shadow-soft); border-radius: var(--radius-md); border: 1px solid var(--border-color); transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), transform var(--t-fast); }
+tr { background: var(--bg-card); box-shadow: var(--shadow-soft); border-radius: var(--radius-md); border: 1px solid var(--border-color); transition: background-color var(--t-theme), border-color var(--t-theme), transform var(--t-fast); }
 .pallet-header-row { background: transparent !important; box-shadow: none !important; border: none !important; }
 td { padding: 12px 10px; vertical-align: middle; text-align: center; border: none; }
 td:first-child { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); width: 58%; }
@@ -311,7 +304,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .inline-barcode-container { padding: 5px; cursor: pointer; transition: opacity var(--t-fast); }
 .inline-barcode-container:active { opacity: 0.5; }
 
-/* Обновленные стили контейнера штрихкода - Жесткая фиксация для идентичных граней */
 .barcode-wrapper {
     background-color: #ffffff;
     padding: 6px;
@@ -320,58 +312,73 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     align-items: center;
     justify-content: center;
     width: 140px;
-    height: 62px; /* Фиксированная высота */
+    height: 62px;
     pointer-events: none;
     margin: 0 auto;
 }
 .barcode-wrapper svg {
-    /* Никаких 100% width/height. Позволяем JsBarcode использовать свои инлайн-атрибуты для идеального масштаба 1:1 */
     max-width: 100%;
     max-height: 100%;
     display: block;
 }
 
-.qty-box { background: var(--input-bg); border: 2px solid var(--border-color); color: var(--text-main); font-weight: 800; font-size: 17px; border-radius: 13px; padding: 12px 0; width: 100%; cursor: pointer; display: block; transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth), transform var(--t-fast) var(--ease-spring); }
+.qty-box { background: var(--input-bg); border: 2px solid var(--border-color); color: var(--text-main); font-weight: 800; font-size: 17px; border-radius: 13px; padding: 12px 0; width: 100%; cursor: pointer; display: block; transition: background-color var(--t-theme), border-color var(--t-theme), color var(--t-theme), transform var(--t-fast) var(--ease-spring); }
 .qty-box:active { background: var(--border-color); transform: scale(0.9); }
 
 .btn-remove { background: var(--btn-remove-bg); color: var(--btn-remove-text); border: none; font-size: 18px; width: 40px; height: 40px; border-radius: 13px; font-weight: bold; cursor: pointer; transition: transform var(--t-fast) var(--ease-spring); display: flex; align-items: center; justify-content: center; margin: 0 auto; padding: 0; }
 .btn-remove:active { transform: scale(0.78) rotate(14deg); }
 
-.no-data { padding: 46px 20px; color: var(--text-muted); font-weight: 700; text-align: center; background: var(--bg-card); border-radius: var(--radius-md); font-size: 15px; border: 2px dashed var(--border-color); box-shadow: none; transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth);}
+.no-data { padding: 46px 20px; color: var(--text-muted); font-weight: 700; text-align: center; background: var(--bg-card); border-radius: var(--radius-md); font-size: 15px; border: 2px dashed var(--border-color); box-shadow: none; transition: background-color var(--t-theme), border-color var(--t-theme), color var(--t-theme);}
 
-/* ---------- SNACKBAR ---------- */
+/* ---------- SNACKBAR (Уведомления) ---------- */
 #snackbar {
     visibility: hidden;
-    min-width: 250px; background-color: var(--text-main); color: var(--bg-card);
-    text-align: center; border-radius: var(--radius-md); padding: 14px 16px;
-    position: fixed; z-index: 10000; left: 50%; bottom: 85px; transform: translateX(-50%);
-    font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    transition: visibility 0s, opacity 0.3s, bottom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth); opacity: 0;
+    min-width: 260px; 
+    background-color: var(--bg-card); 
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    text-align: left; 
+    border-radius: 20px; 
+    padding: 12px 14px 12px 20px;
+    position: fixed; z-index: 10000; left: 50%; bottom: 95px; 
+    transform: translate(-50%, 40px) scale(0.85);
+    font-weight: 800; font-size: 15px; 
+    display: flex; justify-content: space-between; align-items: center; gap: 15px;
+    box-shadow: var(--shadow-hover);
+    opacity: 0; pointer-events: none;
+    transition: visibility 0s 0.4s, transform 0.4s var(--ease-spring), opacity 0.3s ease, background-color var(--t-theme), color var(--t-theme), border-color var(--t-theme);
 }
-#snackbar.show { visibility: visible; bottom: 100px; opacity: 1; }
-.snackbar-btn { background: var(--btn-add); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; transition: transform var(--t-fast); display: none; }
-.snackbar-btn:active { transform: scale(0.9); }
+#snackbar.show { 
+    visibility: visible; 
+    opacity: 1; 
+    transform: translate(-50%, 0) scale(1);
+    pointer-events: auto;
+    transition: visibility 0s 0s, transform 0.4s var(--ease-spring), opacity 0.3s ease, background-color var(--t-theme), color var(--t-theme), border-color var(--t-theme);
+}
+.snackbar-btn { 
+    background: var(--btn-add); color: white; border: none; padding: 10px 18px; border-radius: 14px; font-weight: 800; font-size: 14px; cursor: pointer; transition: transform var(--t-fast) var(--ease-spring), background-color var(--t-fast); display: none; 
+}
+.snackbar-btn:active { transform: scale(0.9); background: var(--btn-add-dark); }
 
-.install-banner { position: fixed; bottom: 106px; left: 16px; right: 16px; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: 0 18px 46px rgba(0,0,0,0.18); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 90; border: 1px solid var(--border-color); animation: slideInUp var(--t-slow) var(--ease-smooth); transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth); }
+.install-banner { position: fixed; bottom: 106px; left: 16px; right: 16px; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: 0 18px 46px rgba(0,0,0,0.18); padding: 16px; display: none; flex-direction: column; gap: 12px; z-index: 90; border: 1px solid var(--border-color); animation: slideInUp var(--t-slow) var(--ease-smooth); transition: background-color var(--t-theme), border-color var(--t-theme); }
 .install-banner-header { display: flex; align-items: center; gap: 14px; }
-.install-banner-icon { font-size: 30px; background: var(--info-bg); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 13px; transition: background-color var(--t-med) var(--ease-smooth); }
-.install-banner-text h4 { margin: 0 0 4px 0; color: var(--text-main); font-weight: 800; font-size: 16px; transition: color var(--t-med) var(--ease-smooth); }
-.install-banner-text p { margin: 0; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 1.35; transition: color var(--t-med) var(--ease-smooth); }
+.install-banner-icon { font-size: 30px; background: var(--info-bg); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 13px; transition: background-color var(--t-theme); }
+.install-banner-text h4 { margin: 0 0 4px 0; color: var(--text-main); font-weight: 800; font-size: 16px; transition: color var(--t-theme); }
+.install-banner-text p { margin: 0; color: var(--text-muted); font-size: 13px; font-weight: 600; line-height: 1.35; transition: color var(--t-theme); }
 .install-banner-actions { display: flex; gap: 10px; }
 .install-banner-actions button { flex: 1; padding: 12px; border: none; border-radius: var(--radius-sm); font-weight: 800; font-size: 14px; cursor: pointer; transition: transform var(--t-fast); }
 .btn-install-yes { background: var(--btn-add); color: white; box-shadow: 0 6px 16px rgba(5, 150, 105, 0.25); }
 .btn-install-yes:active, .btn-install-no:active { transform: scale(0.95); }
-.btn-install-no { background: var(--input-bg); color: var(--text-muted); border: 1px solid var(--border-color); transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth); }
+.btn-install-no { background: var(--input-bg); color: var(--text-muted); border: 1px solid var(--border-color); transition: background-color var(--t-theme), border-color var(--t-theme), color var(--t-theme); }
 
 /* ---------- МОДАЛЬНЫЕ ОКНА (Базовые) ---------- */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); backdrop-filter: var(--modal-backdrop); -webkit-backdrop-filter: var(--modal-backdrop); z-index: 9999; justify-content: center; align-items: flex-end; padding: 0; margin: 0; }
-.modal-content { background: var(--bg-card); color: var(--text-main); padding: 30px 20px 20px; border-radius: 34px 34px 0 0; width: 100%; max-width: 520px; text-align: center; box-shadow: 0 -22px 46px rgba(0,0,0,0.22); animation: slideInUp var(--t-med) var(--ease-smooth); position: relative; padding-bottom: calc(95px + var(--safe-b)); max-height: 94vh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; -ms-overflow-style: none; scrollbar-width: none; transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth); }
+.modal-content { background: var(--bg-card); color: var(--text-main); padding: 30px 20px 20px; border-radius: 34px 34px 0 0; width: 100%; max-width: 520px; text-align: center; box-shadow: 0 -22px 46px rgba(0,0,0,0.22); animation: slideInUp var(--t-med) var(--ease-smooth); position: relative; padding-bottom: calc(95px + var(--safe-b)); max-height: 94vh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; -ms-overflow-style: none; scrollbar-width: none; transition: background-color var(--t-theme), color var(--t-theme); }
 .modal-content::-webkit-scrollbar { display: none; }
-.modal-content::before { content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 42px; height: 5px; background: var(--border-color); border-radius: 10px; transition: background-color var(--t-med) var(--ease-smooth); }
+.modal-content::before { content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 42px; height: 5px; background: var(--border-color); border-radius: 10px; transition: background-color var(--t-theme); }
 .modal-title { margin-top:0; font-weight: 900; font-size: 19px; display:flex; align-items:center; gap:8px; justify-content:center; }
 
-/* ПОЛНОЭКРАННЫЙ СКАНЕР */
+/* ПОЛНОЭКРАННЫЙ СКАНЕР И КРАСИВЫЙ ПРИЦЕЛ */
 #scannerModal { align-items: center; }
 #scannerModal .modal-content { height: 100dvh; max-height: 100dvh; width: 100%; max-width: 100%; border-radius: 0; margin: 0; display: flex; flex-direction: column; padding: calc(40px + var(--safe-t)) 16px calc(95px + var(--safe-b)) 16px; }
 #scannerModal .modal-content::before { top: calc(16px + var(--safe-t)); }
@@ -379,11 +386,25 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 @media (min-width: 640px) { #scannerModal .modal-content { height: 90dvh; max-width: 600px; border-radius: 34px; margin-bottom: 20px; } }
 
 .scanner-wrapper { flex: 1; position: relative; width: 100%; margin-bottom: 15px; border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; }
-#reader { flex: 1; width: 100%; background: #000; box-shadow: inset 0 0 24px rgba(0,0,0,0.55); display: flex; flex-direction: column; }
-#reader > div { flex: 1; }
-#reader video { object-fit: cover !important; width: 100%; height: 100%; }
+#qr-shaded-region { display: none !important; }
+#reader { flex: 1; width: 100%; display: flex; flex-direction: column; background: #000; position: relative; }
+#reader video { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: var(--radius-lg); z-index: 1; }
 
-.scan-orientation-hint { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; pointer-events: none; z-index: 5; font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); padding: 0 10px; }
+.custom-scanner-target {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 65%; aspect-ratio: 1; max-width: 280px; max-height: 280px;
+    border-radius: 20px; box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.45); pointer-events: none; z-index: 5;
+}
+.custom-scanner-target .corner { position: absolute; width: 38px; height: 38px; border-color: #10b981; border-style: solid; border-width: 0; box-shadow: 0 0 15px rgba(16, 185, 129, 0.35); transition: box-shadow var(--t-med); }
+.corner.tl { top: -2px; left: -2px; border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 20px; }
+.corner.tr { top: -2px; right: -2px; border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 20px; }
+.corner.bl { bottom: -2px; left: -2px; border-bottom-width: 4px; border-left-width: 4px; border-bottom-left-radius: 20px; }
+.corner.br { bottom: -2px; right: -2px; border-bottom-width: 4px; border-right-width: 4px; border-bottom-right-radius: 20px; }
+
+.laser { position: absolute; top: 0; left: 10px; right: 10px; height: 3px; background: #10b981; border-radius: 2px; box-shadow: 0 0 12px 3px rgba(16, 185, 129, 0.65); animation: scanLaser 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+@keyframes scanLaser { 0% { top: 5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 95%; opacity: 0; } }
+
+.scan-orientation-hint { position: absolute; left: -30px; right: -30px; bottom: -45px; text-align: center; font-size: 14px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.85); pointer-events: none; }
 
 .btn-icon-torch {
     position: absolute; right: 12px; top: 14px; z-index: 6;
@@ -404,43 +425,87 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 
 .btn-modal { width: 100%; padding: 16px; border: none; border-radius: var(--radius-md); font-weight: 800; font-size: 16px; margin-top: 10px; cursor: pointer; transition: transform var(--t-fast) var(--ease-spring);}
 .btn-modal:active { transform: scale(0.96); }
-.btn-close { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth), transform var(--t-fast) var(--ease-spring); }
+.btn-close { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); transition: background-color var(--t-theme), border-color var(--t-theme), color var(--t-theme), transform var(--t-fast) var(--ease-spring); }
 
-.instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; transition: color var(--t-med) var(--ease-smooth); }
+.instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; transition: color var(--t-theme); }
 .instruction-content ol { margin: 10px 0 0 0; padding-left: 20px; }
-.instruction-content li { margin-bottom: 12px; line-height: 1.5; color: var(--text-main); transition: color var(--t-med) var(--ease-smooth);}
-.browser-note { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; display: flex; gap: 10px; align-items: flex-start; text-align: left; background: var(--warn-bg); color: var(--warn-text); margin-top: 15px; transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth);}
+.instruction-content li { margin-bottom: 12px; line-height: 1.5; color: var(--text-main); transition: color var(--t-theme);}
+.browser-note { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; display: flex; gap: 10px; align-items: flex-start; text-align: left; background: var(--warn-bg); color: var(--warn-text); margin-top: 15px; transition: background-color var(--t-theme), color var(--t-theme);}
 
-/* ---------- ЦИФРОВАЯ КЛАВИАТУРА ---------- */
-.numpad-content { background: var(--numpad-bg); padding-top: 20px; transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth); }
-.numpad-title { font-size: 15px; font-weight: 800; color: var(--text-muted); margin: 0 0 10px 0; transition: color var(--t-med) var(--ease-smooth);}
-.numpad-display { 
-    background: transparent; font-size: clamp(38px, 11vw, 52px); font-weight: 800; 
-    padding: 10px; margin-bottom: 15px; text-align: center; color: var(--text-main); 
-    letter-spacing: 2px; font-variant-numeric: tabular-nums; min-height: 80px; 
-    display: flex; align-items: center; justify-content: center;
-    transition: color var(--t-med) var(--ease-smooth);
+/* ---------- ЦИФРОВАЯ КЛАВИАТУРА И РУЧНОЙ ВВОД ---------- */
+.numpad-content { background: var(--numpad-bg); padding-top: 20px; transition: background-color var(--t-theme), color var(--t-theme); }
+.numpad-title { font-size: 15px; font-weight: 800; color: var(--text-muted); margin: 0 0 10px 0; transition: color var(--t-theme);}
+
+.numpad-input-group {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+    background: transparent; border: 2px solid transparent; border-radius: 16px; 
+    padding: 0px 4px; min-height: 60px;
+    transition: background-color var(--t-theme), border-color var(--t-theme), box-shadow var(--t-fast);
 }
+.numpad-input-group.manual-mode {
+    background: var(--bg-card); 
+    border-color: var(--btn-add);
+    box-shadow: 0 0 0 4px var(--glow-soft);
+}
+
+.numpad-display { 
+    flex: 1;
+    background: transparent; font-size: clamp(28px, 8vw, 34px); font-weight: 800; 
+    padding: 10px; text-align: left; color: var(--text-main); 
+    letter-spacing: 1px; font-variant-numeric: tabular-nums; 
+    display: flex; align-items: center; justify-content: flex-start;
+    transition: color var(--t-theme);
+    overflow-x: auto; white-space: nowrap; -ms-overflow-style: none; scrollbar-width: none;
+}
+.numpad-display::-webkit-scrollbar { display: none; }
+
+/* Каретка (Бликующий курсор) */
+.numpad-cursor {
+    display: inline-block;
+    width: 2.5px; height: 0.9em;
+    background-color: var(--btn-add);
+    vertical-align: text-bottom;
+    margin-left: 4px; margin-bottom: 2px;
+    border-radius: 2px;
+    animation: blinkCursor 1.1s step-end infinite;
+}
+@keyframes blinkCursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+.numpad-placeholder {
+    color: var(--text-muted); opacity: 0.6;
+    font-size: 18px; font-weight: 700;
+}
+
+.numpad-paste-btn {
+    background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color);
+    border-radius: 12px; font-size: 20px; width: 44px; height: 44px;
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; flex-shrink: 0; transition: transform var(--t-fast) var(--ease-spring), background-color var(--t-theme), border-color var(--t-theme);
+}
+.numpad-paste-btn:active { transform: scale(0.85) rotate(-5deg); }
+
 .numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.num-btn { background: var(--numpad-btn); color: var(--text-main); border: none; border-radius: 20px; font-size: 26px; font-weight: 800; padding: 18px 0; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth), transform 0.18s var(--ease-spring), box-shadow 0.18s; }
+.num-btn { background: var(--numpad-btn); color: var(--text-main); border: none; border-radius: 20px; font-size: 26px; font-weight: 800; padding: 18px 0; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: background-color var(--t-theme), color var(--t-theme), transform 0.18s var(--ease-spring), box-shadow 0.18s; }
 .num-btn:active { background: var(--border-color); transform: scale(0.88) translateY(4px); box-shadow: none;}
 .num-btn.action-c { color: #dc2626; }
 .num-btn.action-back { color: #d97706; font-size: 24px; }
 .numpad-actions { display: flex; gap: 12px; margin-top: 20px; }
-.btn-numpad-cancel { flex: 1; background: var(--border-color); color: var(--text-main); border: none; border-radius: 20px; font-size: 16px; font-weight: 800; cursor: pointer; padding: 18px 0; transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth), transform var(--t-fast);}
+.btn-numpad-cancel { flex: 1; background: var(--border-color); color: var(--text-main); border: none; border-radius: 20px; font-size: 16px; font-weight: 800; cursor: pointer; padding: 18px 0; transition: background-color var(--t-theme), color var(--t-theme), transform var(--t-fast);}
 .btn-numpad-ok { flex: 2; background: var(--btn-add); color: white; border: none; border-radius: 20px; font-size: 18px; font-weight: 800; padding: 18px 0; cursor: pointer; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.32); transition: transform var(--t-fast);}
 .btn-numpad-cancel:active, .btn-numpad-ok:active { transform: scale(0.94); }
 
 /* ---------- НАСТРОЙКИ ---------- */
 .settings-section { text-align: left; margin-bottom: 4px; }
-.settings-section-title { font-size: 12.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; padding: 14px 2px 8px; transition: color var(--t-med) var(--ease-smooth); }
-.settings-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 15px 2px; border-bottom: 1px solid var(--border-color); transition: border-color var(--t-med) var(--ease-smooth); }
+.settings-section-title { font-size: 12.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; padding: 14px 2px 8px; transition: color var(--t-theme); }
+.settings-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 15px 2px; border-bottom: 1px solid var(--border-color); transition: border-color var(--t-theme); }
 .settings-row:last-child { border-bottom: none; }
 .settings-row-label { display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 700; text-align: left; line-height: 1.3; }
-.settings-row-icon { width: 34px; height: 34px; border-radius: 10px; background: var(--input-bg); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; transition: background-color var(--t-med) var(--ease-smooth); }
-.settings-row-text small { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; transition: color var(--t-med) var(--ease-smooth); }
+.settings-row-icon { width: 34px; height: 34px; border-radius: 10px; background: var(--input-bg); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; transition: background-color var(--t-theme); }
+.settings-row-text small { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; transition: color var(--t-theme); }
 
-.toggle { width: 54px; height: 32px; border-radius: 20px; background: var(--border-color); position: relative; cursor: pointer; transition: background-color var(--t-med) var(--ease-smooth); flex-shrink: 0; }
+.toggle { width: 54px; height: 32px; border-radius: 20px; background: var(--border-color); position: relative; cursor: pointer; transition: background-color var(--t-theme); flex-shrink: 0; }
 .toggle .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.28); transition: transform var(--t-med) var(--ease-spring); }
 .toggle.active { background: var(--btn-add); }
 .toggle.active .toggle-thumb { transform: translateX(22px); }
@@ -454,23 +519,21 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 
 /* ---------- АРХИВ ---------- */
 .archive-list { display: flex; flex-direction: column; gap: 12px; padding: 5px; margin: 0 -5px;}
-.archive-item { background: var(--input-bg); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; text-align: left; border: 1px solid var(--border-color); transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), transform var(--t-fast); }
+.archive-item { background: var(--input-bg); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; text-align: left; border: 1px solid var(--border-color); transition: background-color var(--t-theme), border-color var(--t-theme), transform var(--t-fast); }
 .archive-info-row { display: flex; justify-content: space-between; align-items: center; }
-.archive-date { color: var(--text-main); font-weight: 800; font-size: 15px; transition: color var(--t-med) var(--ease-smooth); }
-.archive-stats { color: var(--text-muted); font-size: 13px; font-weight: 700; transition: color var(--t-med) var(--ease-smooth);}
+.archive-date { color: var(--text-main); font-weight: 800; font-size: 15px; transition: color var(--t-theme); }
+.archive-stats { color: var(--text-muted); font-size: 13px; font-weight: 700; transition: color var(--t-theme);}
 .archive-actions { display: flex; gap: 10px; width: 100%; }
 .archive-btn { flex: 1; background: var(--btn-add); color: white; border: none; padding: 11px 5px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 800; font-size: 13px; transition: transform var(--t-fast); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22); white-space: nowrap;}
-.archive-btn-secondary { flex: 1; background: var(--border-color); color: var(--text-main); border: none; padding: 11px 5px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 800; font-size: 13px; transition: background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth), transform var(--t-fast); white-space: nowrap;}
+.archive-btn-secondary { flex: 1; background: var(--border-color); color: var(--text-main); border: none; padding: 11px 5px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 800; font-size: 13px; transition: background-color var(--t-theme), color var(--t-theme), transform var(--t-fast); white-space: nowrap;}
 .archive-btn:active, .archive-btn-secondary:active { transform: scale(0.94); }
 
 #zoomModal { background: rgba(0,0,0,0.88); backdrop-filter: blur(16px); justify-content: center; align-items: center;}
-.zoom-container { background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); box-shadow: 0 18px 46px rgba(0,0,0,0.35); text-align: center; width: 90%; max-width: 450px; transition: background-color var(--t-med) var(--ease-smooth); }
-
-/* Обновленные стили для увеличенного штрихкода - тоже не растягиваем */
+.zoom-container { background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); box-shadow: 0 18px 46px rgba(0,0,0,0.35); text-align: center; width: 90%; max-width: 450px; transition: background-color var(--t-theme); }
 .zoom-container svg { max-width: 100%; max-height: 200px; display: block; margin: 0 auto; background: #fff; padding: 15px; border-radius: 8px;}
 
 .install-steps { list-style: none; padding: 0; margin: 15px 0 0; text-align: left; }
-.install-steps li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 15px; font-weight: 700; color: var(--text-main); transition: color var(--t-med) var(--ease-smooth); }
+.install-steps li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: 15px; font-weight: 700; color: var(--text-main); transition: color var(--t-theme); }
 .install-steps .step-num { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; background: var(--btn-add); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
 .install-steps .step-icon { font-size: 20px; }
 
@@ -514,6 +577,13 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 [data-fx="low"] .moon {
     display: none !important;
 }
+[data-fx="low"] .laser { 
+    display: none !important; 
+    animation: none !important; 
+}
+[data-fx="low"] .custom-scanner-target .corner { 
+    box-shadow: none !important; 
+}
 [data-fx="low"] .navbar-goo-layer {
     filter: none !important;
 }
@@ -533,6 +603,12 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     background-color: var(--bg-card) !important;
     color: var(--text-main) !important;
 }
+[data-fx="low"] #snackbar {
+    transform: translate(-50%, 0) !important;
+}
+[data-fx="low"] .numpad-cursor {
+    animation: none !important; opacity: 1 !important;
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; } .bg-blob { display: none !important; } }
 
 /* ---------- АДАПТИВНОСТЬ ПОД РАЗМЕР ЭКРАНА ---------- */
@@ -540,6 +616,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     .main-container { padding-left: 10px; padding-right: 10px; gap: 14px; }
     td { padding: 9px 6px; }
     .zoom-pill { transform: translateX(-50%) scale(0.92); }
+    .numpad-display { font-size: clamp(24px, 7vw, 28px); }
 }
 @media (min-width: 640px) {
     .main-container { max-width: 640px; }
@@ -574,7 +651,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .navbar-pill{
   position:absolute; inset:0; background:var(--nav-bg); border-radius:30px;
   box-shadow:var(--nav-shadow); border:1px solid var(--nav-border);
-  transition: background-color var(--t-med) var(--ease-smooth), border-color var(--t-med) var(--ease-smooth), box-shadow var(--t-med) var(--ease-smooth);
+  transition: background-color var(--t-theme), border-color var(--t-theme), box-shadow var(--t-theme);
 }
 .navbar-bead{
   position:absolute; top:-13px; left:0; width:48px; height:48px;
@@ -584,7 +661,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .bead-inner{
   width:100%; height:100%; border-radius:50%;
-  background:var(--nav-bead); transition:background-color .3s ease;
+  background:var(--nav-bead); transition:background-color var(--t-theme);
 }
 @keyframes beadSquash{
   0%{ transform:scale(1,1); }
@@ -610,7 +687,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .navitem-icon{
   width:22px; height:22px; display:flex; align-items:center; justify-content:center;
-  transition:transform 0.45s var(--ease-calm), color 0.3s ease;
+  transition:transform 0.45s var(--ease-calm), color var(--t-theme);
 }
 .icon-inner{ display:block; width:100%; height:100%; }
 .icon-inner svg{ width:100%; height:100%; overflow:visible; }
@@ -625,7 +702,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .navitem-label{
   font-size:10.5px; font-weight:700; color:var(--nav-icon-inactive);
   opacity:1; position:absolute; bottom:7px; white-space:nowrap;
-  transition:color 0.3s ease;
+  transition:color var(--t-theme);
 }
 .navitem.active .navitem-icon{ transform:translateY(-22px); color:var(--nav-icon-active); }
 .navitem.active .navitem-label{ color:var(--nav-bead); font-weight:800; }
@@ -640,9 +717,16 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .navitem.active .icon-home .house-roof { animation: roofJoy 0.5s var(--ease-bounce); }
 @keyframes roofJoy { 0% { transform: scaleY(1); } 40% { transform: scaleY(1.15) translateY(-1px); } 100% { transform: scaleY(1); } }
 
-@keyframes lidPop{ 0%{ transform:rotate(0deg); } 45%{ transform:rotate(-18deg); } 70%{ transform:rotate(-3deg); } 100%{ transform:rotate(-9deg); } }
-.icon-archive .lid{ transform-origin:12px 6px; }
-.navitem.active .icon-archive .lid{ animation:lidPop 0.5s var(--ease-bounce) forwards; }
+/* Новая иконка Клавиатуры (Ввод -> Артикул) */
+.icon-keyboard .key { transform-box: fill-box; transform-origin: center; transition: transform 0.2s var(--ease-bounce), fill 0.2s; }
+@keyframes keyType { 
+    0% { transform: scale(1) translateY(0); fill: currentColor; } 
+    30% { transform: scale(0.6) translateY(2px); fill: var(--bg-card); } 
+    100% { transform: scale(1) translateY(0); fill: currentColor; } 
+}
+.navitem.active .icon-keyboard .key-1 { animation: keyType 0.35s var(--ease-bounce) 0.1s; }
+.navitem.active .icon-keyboard .key-2 { animation: keyType 0.35s var(--ease-bounce) 0.25s; }
+.navitem.active .icon-keyboard .key-3 { animation: keyType 0.35s var(--ease-bounce) 0.4s; }
 
 .icon-scan .corner{ transition:transform 0.35s var(--ease-bounce); transform-box:fill-box; }
 .icon-scan .tl{ transform-origin:top left; }
@@ -704,10 +788,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
         <div class="pallet-badge" id="currentPalletBadge">Основной</div>
     </div>
 
-    <div class="card input-card">
-        <input type="text" inputmode="numeric" pattern="[0-9]*" id="codeInput" class="input-field" placeholder="Введите артикул...">
-        <button class="btn-manual-add" onclick="manualAdd()">✚</button>
-    </div>
+    <!-- Поле ручного ввода убрано, теперь это вкладка "Артикул" -->
 
     <div class="cart-card">
         <div class="cart-header">
@@ -775,15 +856,21 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
         <span class="navitem-label">Главная</span>
       </button>
 
-      <button class="navitem" data-action="onNavArchive" onclick="switchNav(this)">
-        <span class="navitem-icon icon-archive"><span class="icon-inner">
+      <!-- Вкладка Ручного ввода (Клавиатура) -->
+      <button class="navitem" data-action="onNavManual" onclick="switchNav(this)">
+        <span class="navitem-icon icon-keyboard"><span class="icon-inner">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 9V18C5 19.1 5.9 20 7 20H17C18.1 20 19 19.1 19 18V9" stroke="currentColor" stroke-width="2"/>
-            <path d="M10 13H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <g class="lid"><rect x="3" y="4" width="18" height="5" rx="1.5" stroke="currentColor" stroke-width="2"/></g>
+            <rect x="2" y="6" width="20" height="13" rx="2.5" stroke="currentColor" stroke-width="2"/>
+            <circle class="key key-1" cx="6" cy="10" r="1.2" fill="currentColor"/>
+            <circle class="key key-2" cx="10" cy="10" r="1.2" fill="currentColor"/>
+            <circle class="key key-3" cx="14" cy="10" r="1.2" fill="currentColor"/>
+            <circle class="key key-1" cx="18" cy="10" r="1.2" fill="currentColor"/>
+            <circle class="key key-2" cx="6" cy="14" r="1.2" fill="currentColor"/>
+            <rect class="key key-3" x="9.5" y="13.2" width="5" height="1.6" rx="0.8" fill="currentColor"/>
+            <circle class="key key-1" cx="18" cy="14" r="1.2" fill="currentColor"/>
           </svg>
         </span></span>
-        <span class="navitem-label">Архив</span>
+        <span class="navitem-label">Артикул</span>
       </button>
 
       <button class="navitem" data-action="onNavScan" onclick="switchNav(this)">
@@ -861,6 +948,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <div class="modal-content">
         <h3 class="modal-title">📌 Меню</h3>
         <div style="margin-top: 15px; text-align: left;">
+            <div class="dropdown-item" onclick="openArchive()"><span class="menu-icon">🗄️</span> Архив выгрузок</div>
             <div class="dropdown-item" onclick="openSettings()"><span class="menu-icon">⚙️</span> Настройки</div>
             <div class="dropdown-item" onclick="openInstruction()"><span class="menu-icon">📖</span> Инструкция</div>
             <div class="dropdown-item" onclick="openAbout()"><span class="menu-icon">ℹ️</span> О приложении</div>
@@ -875,7 +963,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
         <h3 class="modal-title">📖 Как это работает?</h3>
         <div class="instruction-content">
             <ol>
-                <li>Нажми <b>Скан</b> на нижней панели или введи артикул вручную.</li>
+                <li>Нажми <b>Скан</b> на нижней панели или введи артикул вручную на вкладке <b>Артикул</b>.</li>
                 <li>Товары автоматически добавляются в выбранный <b>Паллет</b>. Паллеты можно менять.</li>
                 <li><b>Долгое нажатие (0.5 сек)</b> на штрихкод в корзине увеличивает его и копирует в буфер.</li>
                 <li><b>Режим «🔄 Непрерывный скан»</b>: сканируй потоком без закрытия камеры.</li>
@@ -899,7 +987,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
             </p>
             <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
                 <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 800; color: var(--text-main);">👨‍💻 Джугань Сергей</p>
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 8.0 (Gooey Navbar Edition)</p>
+                <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Версия: 9.6 (Smooth Transitions & Modern Beep)</p>
             </div>
         </div>
         <button class="btn-modal btn-close" onclick="closeAllModals()">Закрыть</button>
@@ -954,9 +1042,17 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
         <div class="scanner-wrapper">
             <div id="reader"></div>
             
+            <div class="custom-scanner-target" id="customScannerTarget">
+                <div class="corner tl"></div>
+                <div class="corner tr"></div>
+                <div class="corner bl"></div>
+                <div class="corner br"></div>
+                <div class="laser"></div>
+                <div class="scan-orientation-hint" id="orientationHint">📦 Наведите на штрихкод</div>
+            </div>
+            
             <button class="btn-icon-torch" id="torchBtn" onclick="toggleTorch()">🔦</button>
 
-            <div class="scan-orientation-hint" id="orientationHint">📦 Наведите на любой штрихкод</div>
             <div class="zoom-pill" id="zoomPill">
                 <button class="zoom-btn active" data-zoom="1" onclick="setZoomLevel(1)">1x</button>
                 <button class="zoom-btn" data-zoom="2" onclick="setZoomLevel(2)">2x</button>
@@ -972,10 +1068,16 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
+<!-- УМНАЯ КЛАВИАТУРА И РУЧНОЙ ВВОД -->
 <div class="modal-overlay" id="numpadModal">
     <div class="modal-content numpad-content">
         <div class="numpad-title" id="numpadTitle">Количество товара</div>
-        <div class="numpad-display" id="numpadDisplay">1</div>
+        
+        <div class="numpad-input-group" id="numpadInputGroup">
+            <div class="numpad-display" id="numpadDisplay"></div>
+            <button class="numpad-paste-btn" id="numpadPasteBtn" onclick="pasteToNumpad()">📋</button>
+        </div>
+
         <div class="numpad-grid">
             <button class="num-btn" onclick="numPress(1)">1</button>
             <button class="num-btn" onclick="numPress(2)">2</button>
@@ -1111,7 +1213,7 @@ function playDeleteAnimation(callback) {
     if (!deleteBtn || !binIcon) { if(callback) callback(); return; }
 
     isDeleteAnimating = true;
-    if (settings && settings.vibro && navigator.vibrate) navigator.vibrate([40, 60, 40]);
+    if (settings && settings.vibro && navigator.vibrate) navigator.vibrate([30, 50, 30]);
 
     const binRect = binIcon.getBoundingClientRect();
     const targetX = binRect.left + binRect.width * 0.5;
@@ -1219,8 +1321,12 @@ function onNavHome() {
     closeAllModals(false); 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function onNavArchive() { 
-    closeAllModals(false);
+function onNavManual() {
+    closeAllModals(false); 
+    showNumpadForManual();
+}
+function openArchive() {
+    document.getElementById('mainMenuModal').style.display = 'none';
     document.getElementById('archiveModal').style.display = 'flex';
     renderArchive(); 
 }
@@ -1371,7 +1477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isSwiping = false;
             let deltaY = touchCurrentY - touchStartY;
             // Убеждаемся, что мы не стираем плавный переход темы при отпускании свайпа
-            content.style.transition = 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color var(--t-med) var(--ease-smooth), color var(--t-med) var(--ease-smooth)';
+            content.style.transition = 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color var(--t-theme), color var(--t-theme)';
             if (deltaY > 80) {
                 let modal = content.closest('.modal-overlay');
                 if (modal.id === 'numpadModal') numCancel();
@@ -1424,7 +1530,7 @@ function toggleSetting(key) {
     settings[key] = !settings[key];
     paintToggle('toggle-' + key, settings[key]);
     saveSettings();
-    if (settings.vibro && navigator.vibrate) navigator.vibrate(15);
+    if (settings.vibro && navigator.vibrate) navigator.vibrate(10);
 }
 function saveSettings() { localStorage.setItem('tsd_settings', JSON.stringify(settings)); }
 
@@ -1446,11 +1552,8 @@ function toggleSimpleMode() {
     paintToggle('toggle-simplemode', forced);
     document.documentElement.setAttribute('data-fx', computeFxTier());
     
-    // Синхронизация панели навигации
     const activeBtn = document.querySelector('.navitem.active');
-    if (activeBtn) {
-        moveBeadTo(activeBtn, false);
-    }
+    if (activeBtn) moveBeadTo(activeBtn, false);
 }
 
 let audioCtx = null;
@@ -1459,11 +1562,32 @@ function playBeep() {
     if (!settings.sound || !audioCtx) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
     try {
-        let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        const t = audioCtx.currentTime;
+        
+        // Современный, приятный двойной аккорд (C6 + E6)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1046.50, t); // C6
+        gain1.gain.setValueAtTime(0, t);
+        gain1.gain.linearRampToValueAtTime(0.15, t + 0.02);
+        gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(t);
+        osc1.stop(t + 0.15);
+
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1318.51, t); // E6
+        gain2.gain.setValueAtTime(0, t);
+        gain2.gain.linearRampToValueAtTime(0.15, t + 0.02);
+        gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(t);
+        osc2.stop(t + 0.15);
     } catch(e) {}
 }
 
@@ -1493,7 +1617,7 @@ window.startPress = function(e, text) {
     pressTimer = window.setTimeout(() => {
         isLongPress = true; 
         copyToClipboard(text);
-        if (settings.vibro && navigator.vibrate) navigator.vibrate([50, 50, 50]);
+        if (settings.vibro && navigator.vibrate) navigator.vibrate([20, 30, 20]);
         document.getElementById('zoomModal').style.display = 'flex';
         renderBarcodeSafe('zoomedBarcodeSvg', text, { width: 2.5, height: 100, displayValue: true, fontSize: 20, margin: 10 });
     }, 600); 
@@ -1575,18 +1699,6 @@ function confirmPallet() {
     activePallet = val;
     document.getElementById('currentPalletBadge').innerText = activePallet;
     document.getElementById('palletModal').style.display = 'none';
-}
-
-document.getElementById('codeInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') { e.preventDefault(); manualAdd(); } });
-
-function manualAdd() {
-    const input = document.getElementById('codeInput');
-    const code = input.value;
-    if (!code) return;
-    addOrUpdateItem(normalizeBarcode(code), 1);
-    playBeep();
-    if (settings.vibro && navigator.vibrate) navigator.vibrate(50);
-    input.value = ''; input.focus();
 }
 
 function updateCartStats() {
@@ -1749,8 +1861,41 @@ window.clearCart = function() {
     }
 }
 
+/* ================= УМНАЯ ЦИФРОВАЯ КЛАВИАТУРА И РУЧНОЙ ВВОД (NUMPAD) ================= */
 let numpadValue = "1"; let isNewNumpadEntry = true; let numpadMode = ""; let numpadTargetCode = ""; let numpadTargetPallet = ""; let numpadTargetBoxQty = 1;
-function updateNumpadDisplay() { document.getElementById('numpadDisplay').innerText = numpadValue === "" ? "0" : numpadValue; }
+
+function updateNumpadDisplay() { 
+    const displayEl = document.getElementById('numpadDisplay');
+    let textToShow = numpadValue;
+    
+    // Отрисовка текста и каретки в зависимости от состояния и режима
+    if (numpadValue === "") {
+        if (numpadMode === 'manual') {
+            displayEl.innerHTML = '<span class="numpad-placeholder">Ввод штрихкода...</span><span class="numpad-cursor"></span>';
+        } else {
+            displayEl.innerHTML = '0<span class="numpad-cursor"></span>';
+        }
+    } else {
+        displayEl.innerHTML = textToShow + '<span class="numpad-cursor"></span>';
+    }
+    
+    // Включаем/отключаем стили и кнопку Paste в зависимости от режима
+    const group = document.getElementById('numpadInputGroup');
+    const pasteBtn = document.getElementById('numpadPasteBtn');
+    
+    if (numpadMode === 'manual') {
+        group.classList.add('manual-mode');
+        pasteBtn.style.display = 'flex';
+    } else {
+        group.classList.remove('manual-mode');
+        pasteBtn.style.display = 'none';
+    }
+    
+    // Автоскролл вправо, если код длинный
+    displayEl.scrollLeft = displayEl.scrollWidth;
+}
+
+// Открытие для ввода количества после сканирования
 function showNumpadForScan(code) {
     numpadMode = 'scan'; numpadTargetCode = code; isNewNumpadEntry = true; numpadTargetBoxQty = 1;
     for(let key in MASTER_CODES) { if(MASTER_CODES[key].code === code && MASTER_CODES[key].qtyInBox) { numpadTargetBoxQty = MASTER_CODES[key].qtyInBox; break; } }
@@ -1758,6 +1903,8 @@ function showNumpadForScan(code) {
     document.getElementById('numpadTitle').innerText = "ШК: " + code;
     updateNumpadDisplay(); document.getElementById('numpadModal').style.display = 'flex';
 }
+
+// Открытие для изменения существующего количества
 function showNumpadForEdit(code, pallet) {
     const item = currentCart.find(i => i.code === code && i.pallet === pallet);
     if (!item) return;
@@ -1765,19 +1912,75 @@ function showNumpadForEdit(code, pallet) {
     document.getElementById('numpadTitle').innerText = "Изменить: " + code;
     updateNumpadDisplay(); document.getElementById('numpadModal').style.display = 'flex';
 }
-function numPress(n) { if(isNewNumpadEntry || numpadValue === "0") { numpadValue = n.toString(); isNewNumpadEntry = false; } else { if(numpadValue.length < 4) numpadValue += n.toString(); } updateNumpadDisplay(); }
-function numClear() { numpadValue = "0"; isNewNumpadEntry = true; updateNumpadDisplay(); }
-function numBackspace() { if (isNewNumpadEntry) return; numpadValue = numpadValue.slice(0, -1); if (numpadValue === "") { numpadValue = "0"; isNewNumpadEntry = true; } updateNumpadDisplay(); }
+
+// Открытие для ручного ввода штрихкода (Вкладка "Артикул")
+function showNumpadForManual() {
+    numpadMode = 'manual'; numpadValue = ""; isNewNumpadEntry = true;
+    document.getElementById('numpadTitle').innerText = "Введите артикул";
+    updateNumpadDisplay(); document.getElementById('numpadModal').style.display = 'flex';
+}
+
+// Логика нажатия кнопок
+function numPress(n) { 
+    if(isNewNumpadEntry || (numpadValue === "0" && numpadMode !== 'manual')) { 
+        numpadValue = n.toString(); 
+        isNewNumpadEntry = false; 
+    } else { 
+        if (numpadMode === 'edit' || numpadMode === 'scan') {
+            if(numpadValue.length < 4) numpadValue += n.toString(); 
+        } else {
+            if(numpadValue.length < 30) numpadValue += n.toString();
+        }
+    } 
+    updateNumpadDisplay(); 
+}
+
+function numClear() { 
+    numpadValue = numpadMode === 'manual' ? "" : "0"; 
+    isNewNumpadEntry = true; 
+    updateNumpadDisplay(); 
+}
+
+function numBackspace() { 
+    if (isNewNumpadEntry && numpadMode !== 'manual') return; 
+    numpadValue = numpadValue.slice(0, -1); 
+    if (numpadValue === "") { 
+        numpadValue = numpadMode === 'manual' ? "" : "0"; 
+        isNewNumpadEntry = true; 
+    } 
+    updateNumpadDisplay(); 
+}
+
 function numCancel() {
     document.getElementById('numpadModal').style.display = 'none';
-    if (numpadMode === 'scan') { if (settings.continuous) { setTimeout(() => { isScannerPaused = false; if (isIOS) startRotateAssist(); }, 500); } else { stopScanner(true); } }
+    if (numpadMode === 'scan') { 
+        if (settings.continuous) { setTimeout(() => { isScannerPaused = false; if (isIOS) startRotateAssist(); }, 500); } 
+        else { stopScanner(true); } 
+    } else if (numpadMode === 'manual') {
+        updateNavState('onNavHome');
+    }
 }
+
 function numConfirm() {
+    if (numpadMode === 'manual') {
+        const code = numpadValue.trim();
+        if (!code) return; // Пустой ввод игнорируем
+        
+        document.getElementById('numpadModal').style.display = 'none';
+        addOrUpdateItem(normalizeBarcode(code), 1);
+        playBeep();
+        if (settings.vibro && navigator.vibrate) navigator.vibrate([15]); // Легкий тап при ручном добавлении
+        updateNavState('onNavHome');
+        return;
+    }
+
     let finalQty = parseInt(numpadValue) || 1; if(finalQty < 1) finalQty = 1;
     document.getElementById('numpadModal').style.display = 'none';
+    
     if(numpadMode === 'scan') {
         addOrUpdateItem(numpadTargetCode, finalQty);
-        if (settings.continuous) { setTimeout(() => { isScannerPaused = false; if (isIOS) startRotateAssist(); }, 500); } else { stopScanner(true); }
+        if (settings.continuous) { setTimeout(() => { isScannerPaused = false; if (isIOS) startRotateAssist(); }, 500); } 
+        else { stopScanner(true); }
     } else if(numpadMode === 'edit') {
         const item = currentCart.find(i => i.code === numpadTargetCode && i.pallet === numpadTargetPallet);
         if (item) {
@@ -1786,6 +1989,22 @@ function numConfirm() {
             if (qtyBox) qtyBox.innerText = finalQty;
             updateCartStats();
         }
+    }
+}
+
+// Вставка из буфера обмена (только для режима Ручного ввода)
+async function pasteToNumpad() {
+    try {
+        const text = await navigator.clipboard.readText();
+        const cleanText = text.trim();
+        if(cleanText) {
+            numpadValue = cleanText;
+            isNewNumpadEntry = false;
+            updateNumpadDisplay();
+            if (settings.vibro && navigator.vibrate) navigator.vibrate([15]);
+        }
+    } catch (err) {
+        showToast("Не удалось вставить из буфера");
     }
 }
 
@@ -1869,7 +2088,7 @@ const SCAN_CONFIG = {
     fps: 20,
     qrbox: function (viewfinderWidth, viewfinderHeight) {
         const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-        return { width: Math.floor(minEdge * 0.9), height: Math.floor(minEdge * 0.9) };
+        return { width: Math.floor(minEdge * 0.65), height: Math.floor(minEdge * 0.65) };
     },
     disableFlip: false,
     formatsToSupport: [ Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.DATA_MATRIX, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.CODE_39, Html5QrcodeSupportedFormats.QR_CODE ],
@@ -1958,7 +2177,7 @@ function handleDecodedText(rawTextIn) {
 
     if (rawText.includes("-") && /\d-\d/.test(rawText)) {
         isScannerPaused = true; playBeep();
-        if (settings.vibro && navigator.vibrate) navigator.vibrate(100);
+        if (settings.vibro && navigator.vibrate) navigator.vibrate([20, 40, 20]);
         let items = rawText.split(" "); let addedCount = 0;
         items.forEach(function (itemStr) {
             let parts = itemStr.split("-");
@@ -1974,7 +2193,7 @@ function handleDecodedText(rawTextIn) {
 
     let cleanCode = normalizeBarcode(rawText);
     playBeep();
-    if (settings.vibro && navigator.vibrate) navigator.vibrate(100);
+    if (settings.vibro && navigator.vibrate) navigator.vibrate([20, 40, 20]);
     isScannerPaused = true; stopRotateAssist(); showNumpadForScan(cleanCode);
 }
 function onScanFrameDecoded(text) { handleDecodedText(text); }
