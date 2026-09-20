@@ -40,7 +40,7 @@
 
 <style>
 /* ============================================================
-   ДИЗАЙН-СИСТЕМА, ПЕРЕМЕННЫЕ И МНОГОСЛОЙНЫЕ ГРАДИЕНТЫ
+   ДИЗАЙН-СИСТЕМА И ПЕРЕМЕННЫЕ
    ============================================================ */
 :root {
     --bg-body: #f6f9f7;
@@ -185,7 +185,7 @@ body::after { background: radial-gradient(circle at 50% -10%, #153326 0%, var(--
 .app-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; transition: transform var(--t-fast) var(--ease-spring); }
 .app-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ---------- HEADER & ЦЕНТРИРОВАНИЕ ШАПКИ ---------- */
+/* ---------- HEADER ---------- */
 header {
     position: sticky; top: 0; background: var(--header-bg); background-size: 240% 240%; color: var(--header-text);
     padding: calc(13px + var(--safe-t)) 16px 14px;
@@ -197,10 +197,7 @@ header {
 @keyframes headerGradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
 .brand-wrapper { display: flex; align-items: center; gap: 11px; cursor: default; }
-.brand-logo-svg {
-    width: 40px; height: 40px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.22));
-    transition: transform var(--t-fast) var(--ease-spring);
-}
+.brand-logo-svg { width: 40px; height: 40px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.22)); transition: transform var(--t-fast) var(--ease-spring); }
 .brand-wrapper:active .brand-logo-svg { transform: scale(0.92) rotate(-5deg); }
 .logo-laser { animation: logoLaserPulse 2.4s ease-in-out infinite alternate; }
 @keyframes logoLaserPulse { 0% { opacity: 0.3; transform: scaleX(0.85); } 100% { opacity: 1; transform: scaleX(1.05); } }
@@ -277,7 +274,7 @@ header {
     display: flex; align-items: center; gap: 6px; max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-/* Кнопка Корзины с анимацией */
+/* Кнопка Корзины */
 .delete-btn {
     --del-color: #ef4444; --del-dark: #dc2626;
     position: relative; display: inline-flex; align-items: center; gap: 8px;
@@ -306,7 +303,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ С QR И ЦЕНОЙ ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -369,7 +366,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     box-shadow: 0 3px 8px rgba(5,150,105,0.25); white-space: nowrap;
 }
 .price-regular-old {
-    font-size: 11px; font-weight: 800; color: var(--text-muted); text-decoration: line-through;
+    font-size: 11.5px; font-weight: 800; color: var(--text-muted); text-decoration: line-through;
 }
 
 /* Ячейка информации из QR */
@@ -422,7 +419,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     width: 44px !important; height: 44px !important; padding: 10px; border-radius: 14px; background: var(--info-bg);
 }
 
-/* ---------- SNACKBAR (УВЕДОМЛЕНИЯ) ---------- */
+/* ---------- SNACKBAR ---------- */
 #snackbar {
     visibility: hidden; min-width: 270px; background-color: var(--bg-card); color: var(--text-main);
     border: 1px solid var(--border-color); border-radius: 22px; padding: 12px 14px 12px 18px;
@@ -472,7 +469,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .btn-modal:active { transform: scale(0.96); }
 .btn-close { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); }
 
-/* Меню список */
 .dropdown-item {
     padding: 14px 12px; font-weight: 800; font-size: 15px; color: var(--text-main);
     display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-color);
@@ -485,7 +481,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: flex; align-items: center; justify-content: center; color: var(--btn-add);
 }
 
-/* Инструкция */
 .instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; }
 .instruction-content ol { margin: 10px 0 0 0; padding-left: 20px; }
 .instruction-content li { margin-bottom: 12px; line-height: 1.5; color: var(--text-main); }
@@ -495,7 +490,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     background: var(--warn-bg); color: var(--warn-text); margin-top: 15px;
 }
 
-/* Настройки */
 .settings-section { text-align: left; margin-bottom: 6px; }
 .settings-section-title { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; padding: 14px 4px 6px; }
 .settings-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 13px 4px; border-bottom: 1px solid var(--border-color); }
@@ -515,7 +509,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .toggle.active { background: var(--btn-add); }
 .toggle.active .toggle-thumb { transform: translateX(22px); }
 
-/* ---------- СКАНЕР И ПРИЦЕЛ ---------- */
+/* ---------- СКАНЕР ---------- */
 #scannerModal { align-items: center; }
 #scannerModal .modal-content {
     height: 100dvh; max-height: 100dvh; width: 100%; max-width: 100%; border-radius: 0;
@@ -591,7 +585,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .zoom-btn.active { background: #fff; color: #111827; }
 
-/* ---------- ЦИФРОВАЯ КЛАВИАТУРА И РУЧНОЙ ВВОД (NUMPAD) ---------- */
+/* ---------- NUMPAD ---------- */
 .numpad-content { background: var(--numpad-bg); padding-top: 20px; }
 .numpad-title { font-size: 15px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; }
 .numpad-input-group {
@@ -635,7 +629,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .btn-numpad-cancel { flex: 1; background: var(--border-color); color: var(--text-main); border: none; border-radius: 20px; font-size: 16px; font-weight: 800; cursor: pointer; padding: 18px 0; }
 .btn-numpad-ok { flex: 2; background: var(--btn-add); color: white; border: none; border-radius: 20px; font-size: 18px; font-weight: 800; padding: 18px 0; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.32); }
 
-/* ---------- GOOEY BOTTOM NAVBAR ---------- */
+/* ---------- NAVBAR ---------- */
 .navbar-wrap {
     position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: center;
     padding: 0 12px calc(10px + var(--safe-b)); pointer-events: none; z-index: 10005;
@@ -682,21 +676,12 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .navitem.active .navitem-icon { transform: translateY(-21px); color: var(--nav-icon-active); }
 .navitem.active .navitem-label { color: var(--nav-bead); font-weight: 900; }
 
-/* Карточка разработчика и Архив */
+/* Dev & Archive */
 .dev-card {
     background: var(--input-bg); padding: 20px; border-radius: 20px; margin-top: 15px; margin-bottom: 12px;
     border: 1px solid var(--border-color); text-align: center; display: flex; flex-direction: column; align-items: center;
 }
 .dev-avatar-svg { width: 100px; height: 100px; margin-bottom: 12px; overflow: visible; }
-.character .head { transform-origin: 115px 70px; animation: headBob 3s ease-in-out infinite; }
-.arms .arm-l-group { animation: typeLeft 0.18s ease-in-out infinite alternate; }
-.arms .arm-r-group { animation: typeRight 0.22s ease-in-out infinite alternate; }
-.code-lines rect { animation: codeScroll 1.5s infinite linear; }
-@keyframes headBob { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.5deg) translateY(1.5px); } }
-@keyframes typeLeft { 0% { transform: translateY(0); } 100% { transform: translateY(-3.5px); } }
-@keyframes typeRight { 0% { transform: translateY(0); } 100% { transform: translateY(-4px); } }
-@keyframes codeScroll { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-20px); opacity: 0; } }
-
 .tg-dev-btn {
     display: flex; align-items: center; justify-content: center; gap: 10px;
     background: linear-gradient(135deg, #28a8ea 0%, #178cc4 100%); color: #fff;
@@ -723,9 +708,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     border-radius: var(--radius-sm); cursor: pointer; font-weight: 800; font-size: 13px; white-space: nowrap;
 }
 
-/* ============================================================
-   УПРОЩЕННЫЙ РЕЖИМ (LOW FX)
-   ============================================================ */
 [data-fx="low"] *, [data-fx="low"] *::before, [data-fx="low"] *::after {
     animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important;
 }
@@ -803,13 +785,11 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <span class="delete-label" id="deleteLabel">Очистить</span>
             </button>
         </div>
-        <div id="cartContentArea">
-            <!-- Таблица генерируется скриптом -->
-        </div>
+        <div id="cartContentArea"></div>
     </div>
 </div>
 
-<!-- GOOEY BOTTOM NAVBAR -->
+<!-- NAVBAR -->
 <div class="navbar-wrap">
   <svg width="0" height="0" style="position:absolute">
     <defs>
@@ -863,7 +843,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
             <path d="M16 3H19C20.1 3 21 3.9 21 5V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             <path d="M21 16V19C21 20.1 20.1 21 19 21H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             <path d="M8 21H5C3.9 21 3 20.1 3 19V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <line class="scan-line" x1="5.5" y1="12" x2="18.5" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="5.5" y1="12" x2="18.5" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
         </span></span>
         <span class="navitem-label">Скан</span>
@@ -904,7 +884,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- ГЛАВНОЕ МЕНЮ -->
+<!-- МОДАЛКИ: МЕНЮ, НАСТРОЙКИ, СКАНЕР, NUMPAD, ЗУМ -->
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -933,32 +913,19 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- НАСТРОЙКИ -->
 <div class="modal-overlay" id="settingsModal">
     <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-            Настройки
-        </h3>
-
+        <h3 class="modal-title">Настройки</h3>
         <div class="settings-section">
             <div class="settings-section-title">Сканирование</div>
             <div class="settings-row">
                 <div class="settings-row-label">
                     <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>
-                    <div class="settings-row-text">Непрерывный скан<small>Не закрывать камеру после считывания</small></div>
+                    <div class="settings-row-text">Непрерывный скан<small>Не закрывать камеру</small></div>
                 </div>
                 <div class="toggle" id="toggle-continuous" onclick="toggleSetting('continuous')"><div class="toggle-thumb"></div></div>
             </div>
-            <div class="settings-row">
-                <div class="settings-row-label">
-                    <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
-                    <div class="settings-row-text">Авто-объектив<small>Сама подбирает макро/телевик</small></div>
-                </div>
-                <div class="toggle" id="toggle-autolens" onclick="toggleSetting('autolens')"><div class="toggle-thumb"></div></div>
-            </div>
         </div>
-
         <div class="settings-section">
             <div class="settings-section-title">Сигналы и отклик</div>
             <div class="settings-row">
@@ -970,91 +937,44 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
             </div>
             <div class="settings-row">
                 <div class="settings-row-label">
-                    <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-                    <div class="settings-row-text">Звуки интерфейса<small>Мягкие клики при тапах</small></div>
-                </div>
-                <div class="toggle" id="toggle-uiSound" onclick="toggleSetting('uiSound')"><div class="toggle-thumb"></div></div>
-            </div>
-            <div class="settings-row">
-                <div class="settings-row-label">
                     <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><path d="M1 9l2 3-2 3M23 9l-2 3 2 3"/></svg></span>
                     <div class="settings-row-text">Вибрация кнопок<small>Тактильный Haptic отклик</small></div>
                 </div>
                 <div class="toggle" id="toggle-vibro" onclick="toggleSetting('vibro')"><div class="toggle-thumb"></div></div>
             </div>
         </div>
-
-        <div class="settings-section">
-            <div class="settings-section-title">Производительность</div>
-            <div class="settings-row">
-                <div class="settings-row-label">
-                    <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-                    <div class="settings-row-text">Упрощённый режим<small>Меньше анимаций для слабых устройств</small></div>
-                </div>
-                <div class="toggle" id="toggle-simplemode" onclick="toggleSimpleMode()"><div class="toggle-thumb"></div></div>
-            </div>
-        </div>
-
         <button class="btn-modal btn-close" onclick="closeAllModals()">Готово</button>
     </div>
 </div>
 
-<!-- ПОЛНОЭКРАННЫЙ СКАНЕР -->
 <div class="modal-overlay" id="scannerModal">
     <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
-            Наведите камеру на QR ценника
-        </h3>
-
+        <h3 class="modal-title">Наведите камеру на ценник</h3>
         <div class="scanner-wrapper">
             <div id="reader"></div>
-            
             <div class="custom-scanner-target">
                 <div class="corner tl"></div><div class="corner tr"></div>
                 <div class="corner bl"></div><div class="corner br"></div>
                 <div class="laser"></div>
-                <div class="scan-hint">
-                    <span class="app-icon" style="width:18px;height:18px;">
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M3 8V5C3 3.9 3.9 3 5 3H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M16 3H19C20.1 3 21 3.9 21 5V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M21 16V19C21 20.1 20.1 21 19 21H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M8 21H5C3.9 21 3 20.1 3 19V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <line x1="5.5" y1="12" x2="18.5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </span>
-                    <span>Наведите QR или штрихкод в рамку</span>
-                </div>
+                <div class="scan-hint"><span>QR или штрихкод в рамку</span></div>
             </div>
-            
             <button class="btn-icon-torch" id="torchBtn" onclick="toggleTorch()">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
             </button>
-
-            <div class="zoom-pill" id="zoomPill">
-                <button class="zoom-btn active" data-zoom="1" onclick="setZoomLevel(1)">1x</button>
-                <button class="zoom-btn" data-zoom="2" onclick="setZoomLevel(2)">2x</button>
-                <button class="zoom-btn" data-zoom="3" id="zoomBtn3" style="display:none;" onclick="setZoomLevel(3)">3x</button>
-            </div>
         </div>
-
-        <button class="btn-modal btn-close" onclick="stopScanner()" style="margin-top:0;">Завершить</button>
+        <button class="btn-modal btn-close" onclick="stopScanner()">Завершить</button>
     </div>
 </div>
 
-<!-- ЦИФРОВАЯ КЛАВИАТУРА И РУЧНОЙ ВВОД -->
 <div class="modal-overlay" id="numpadModal">
     <div class="modal-content numpad-content">
         <div class="numpad-title" id="numpadTitle">Количество товара</div>
-        
         <div class="numpad-input-group" id="numpadInputGroup">
             <div class="numpad-display" id="numpadDisplay"></div>
             <button class="numpad-paste-btn" id="numpadPasteBtn" onclick="pasteToNumpad()">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span>
             </button>
         </div>
-
         <div class="numpad-grid">
             <button class="num-btn" onclick="numPress(1)">1</button>
             <button class="num-btn" onclick="numPress(2)">2</button>
@@ -1078,19 +998,11 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- ВЫБОР ПАЛЛЕТА -->
 <div class="modal-overlay" id="palletModal">
     <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
-            Выбор паллета
-        </h3>
-        <p style="font-size: 14px; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">Все новые сканирования будут привязаны к нему</p>
-        
+        <h3 class="modal-title">Выбор паллета</h3>
         <input type="text" id="palletInput" style="background:var(--input-bg); width:100%; border-radius:14px; padding:14px; margin-bottom: 14px; border:1px solid var(--border-color); text-align:center; font-size:18px; font-weight:800; color:var(--text-main);" placeholder="Введите название...">
-        
         <div id="existingPallets" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:15px;"></div>
-
         <div style="display:flex; gap:10px;">
             <button class="btn-modal btn-close" onclick="document.getElementById('palletModal').style.display='none'">Отмена</button>
             <button class="btn-modal" style="background:var(--btn-add); color:#fff;" onclick="confirmPallet()">Выбрать</button>
@@ -1098,105 +1010,16 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- QR ЭКСПОРТ -->
 <div class="modal-overlay" id="qrModal" style="align-items: center;">
     <div class="modal-content" style="background: transparent; box-shadow: none;">
         <div class="brightness-text">Выкрути яркость на максимум!</div>
-        <canvas id="finalQrCanvas" width="340" height="340" style="display:none; margin: 0 auto; border-radius: 22px; background: #fff; padding: 12px; box-shadow: 0 16px 45px rgba(255,255,255,0.25);"></canvas>
-        <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:25px;" onclick="downloadQR()">
-            <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-            Сохранить в галерею
-        </button>
-        <button class="btn-modal" style="background:#2563eb; color:white;" onclick="shareToExcel()">
-            <span class="app-icon"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
-            Поделиться текстом
-        </button>
-        <button class="btn-modal btn-close" style="background:rgba(255,255,255,0.2); color:white; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);" onclick="closeQRModal()">Закрыть</button>
+        <canvas id="finalQrCanvas" width="340" height="340" style="display:none; margin: 0 auto; border-radius: 22px; background: #fff; padding: 12px;"></canvas>
+        <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:25px;" onclick="downloadQR()">Сохранить в галерею</button>
+        <button class="btn-modal" style="background:#2563eb; color:white;" onclick="shareToExcel()">Поделиться текстом</button>
+        <button class="btn-modal btn-close" style="background:rgba(255,255,255,0.2); color:white;" onclick="closeQRModal()">Закрыть</button>
     </div>
 </div>
 
-<!-- АРХИВ ВЫГРУЗОК -->
-<div class="modal-overlay" id="archiveModal">
-    <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg></span>
-            История выгрузок
-        </h3>
-        <p style="font-size: 14px; color: var(--text-muted); margin-top: -8px; margin-bottom: 16px; font-weight: 700;">Последние 15 сохранений</p>
-        <div id="archiveList" class="archive-list"></div>
-        <button class="btn-modal btn-close" onclick="closeAllModals()" style="margin-top: 18px;">Закрыть</button>
-    </div>
-</div>
-
-<!-- ИНСТРУКЦИЯ -->
-<div class="modal-overlay" id="instructionModal">
-    <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
-            Как это работает?
-        </h3>
-        <div class="instruction-content">
-            <ol>
-                <li>Нажмите <b>Скан</b> и наведите на ценник.</li>
-                <li>Система автоматически считает QR, сдублирует его в первой колонке, сгенерирует линейный штрихкод товара, выведет цену со скидкой (по карте) и распарсит все остальные данные.</li>
-                <li><b>Нажатие на QR или штрихкод</b> увеличивает его на весь экран для удобного считывания другим ТСД.</li>
-                <li>Выгружайте паллеты в Excel или передавайте готовый QR в товароучетную систему.</li>
-            </ol>
-            <div class="note-box browser-note">
-                <span class="app-icon" style="color:var(--warn-text); width:22px; height:22px;"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/></svg></span>
-                <div style="flex: 1; line-height: 1.4;"><b>Совет:</b> Приложение распознает как полные ценниковые структуры, так и чистые линейные коды EAN-13.</div>
-            </div>
-        </div>
-        <button class="btn-modal btn-close" onclick="closeAllModals()">Понятно</button>
-    </div>
-</div>
-
-<!-- О ПРИЛОЖЕНИИ -->
-<div class="modal-overlay" id="aboutModal">
-    <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
-            О приложении
-        </h3>
-        <p style="margin: 0 0 10px 0; font-size: 14.5px; color: var(--text-muted); line-height: 1.5; font-weight: 700;">
-            «Мой ТСД» — автономный инструмент для переоценки, инвентаризации и распознавания ценников с QR-кодами.
-        </p>
-
-        <div class="dev-card">
-            <svg viewBox="0 0 160 160" class="dev-avatar-svg" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="80" cy="80" r="75" fill="var(--header-icon-bg)" />
-              <path d="M 15 115 L 60 115 L 75 125 L 5 125 Z" fill="#94a3b8" />
-              <path d="M 15 115 L 60 115 L 60 65 L 15 65 Z" fill="#334155" />
-              <rect x="18" y="68" width="39" height="44" fill="#0f172a" />
-              <g class="character">
-                 <path d="M 60 160 C 60 110, 80 105, 115 105 C 150 105, 160 110, 160 160 Z" fill="#64748b" />
-                 <text x="113" y="142" font-family="Nunito, sans-serif" font-weight="900" font-size="11" fill="#cbd5e1" text-anchor="middle" opacity="0.65">TSD SCAN</text>
-                 <rect x="107" y="85" width="16" height="25" fill="#fde0c6" />
-                 <g class="head">
-                     <rect x="91" y="40" width="48" height="56" rx="24" ry="24" fill="#fde0c6" />
-                     <path d="M 89 54 Q 93 30 115 30 Q 137 30 141 54 Q 138 36 115 34 Q 92 36 89 54 Z" fill="#a68a68" />
-                     <circle cx="104" cy="61" r="2.5" fill="#1e293b" />
-                     <circle cx="126" cy="61" r="2.5" fill="#1e293b" />
-                 </g>
-              </g>
-              <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
-            </svg>
-
-            <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 11.0 (QR Price Tag Engine)</p>
-            
-            <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-                Написать в Telegram
-            </a>
-        </div>
-        <button class="btn-modal btn-close" onclick="closeAllModals()">Закрыть</button>
-    </div>
-</div>
-
-<!-- ЗУМ КОДА (ШТРИХКОД ИЛИ QR) -->
 <div class="modal-overlay" id="zoomModal" style="align-items: center;" onclick="this.style.display='none'">
     <div class="modal-content" style="background:var(--bg-card); max-width:460px; padding:26px; border-radius:var(--radius-lg); text-align:center;">
         <div style="background:#fff; padding:16px; border-radius:16px; margin-bottom:14px; display:flex; justify-content:center; align-items:center; min-height: 180px; box-shadow: inset 0 0 0 1px #e5ebe7;">
@@ -1208,10 +1031,43 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
+<div class="modal-overlay" id="archiveModal">
+    <div class="modal-content">
+        <h3 class="modal-title">История выгрузок</h3>
+        <div id="archiveList" class="archive-list"></div>
+        <button class="btn-modal btn-close" onclick="closeAllModals()" style="margin-top: 18px;">Закрыть</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="instructionModal">
+    <div class="modal-content">
+        <h3 class="modal-title">Инструкция</h3>
+        <div class="instruction-content">
+            <ol>
+                <li>Наведите камеру на ценник — код считается автоматически.</li>
+                <li>В столбце <b>QR ценника</b> появится точная копия оригинального QR.</li>
+                <li>В столбце <b>Штрихкод</b> отобразится линейный EAN-13 код.</li>
+                <li>В столбце <b>По карте</b> зеленым бейджем выделяется цена со скидкой, а снизу — перечеркнутая базовая цена.</li>
+            </ol>
+        </div>
+        <button class="btn-modal btn-close" onclick="closeAllModals()">Понятно</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="aboutModal">
+    <div class="modal-content">
+        <h3 class="modal-title">О приложении</h3>
+        <div class="dev-card">
+            <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 11.2 (Smart Price Parser)</p>
+            <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">Написать в Telegram</a>
+        </div>
+        <button class="btn-modal btn-close" onclick="closeAllModals()">Закрыть</button>
+    </div>
+</div>
+
 <script>
-/* ============================================================
-   WEB AUDIO API СИНТЕЗАТОР И ТАКТИЛЬНЫЙ ОТКЛИК (HAPTICS)
-   ============================================================ */
+/* ================= АУДИО И ОТКЛИК ================= */
 const SoundFX = {
     ctx: null,
     init() {
@@ -1302,8 +1158,7 @@ let settings = Object.assign({
     continuous: true,
     sound: true,
     uiSound: true,
-    vibro: true,
-    autolens: true
+    vibro: true
 }, JSON.parse(localStorage.getItem('tsd_settings')) || {});
 
 function saveSettings() { localStorage.setItem('tsd_settings', JSON.stringify(settings)); }
@@ -1332,10 +1187,7 @@ function openSettings() {
     document.getElementById('mainMenuModal').style.display = 'none';
     paintToggle('toggle-continuous', settings.continuous);
     paintToggle('toggle-sound', settings.sound);
-    paintToggle('toggle-uiSound', settings.uiSound);
     paintToggle('toggle-vibro', settings.vibro);
-    paintToggle('toggle-autolens', settings.autolens);
-    paintToggle('toggle-simplemode', localStorage.getItem('tsd_force_simple') === 'true');
     document.getElementById('settingsModal').style.display = 'flex';
 }
 
@@ -1345,16 +1197,7 @@ function toggleSetting(key) {
     saveSettings();
 }
 
-function toggleSimpleMode() {
-    const forced = !(localStorage.getItem('tsd_force_simple') === 'true');
-    localStorage.setItem('tsd_force_simple', forced ? 'true' : 'false');
-    paintToggle('toggle-simplemode', forced);
-    document.documentElement.setAttribute('data-fx', forced ? 'low' : 'high');
-}
-
-function isLowFx() { return document.documentElement.getAttribute('data-fx') === 'low'; }
-
-/* ================= КОПИРОВАНИЕ И ЗУМ ================= */
+/* ================= ЗУМ И КОПИРОВАНИЕ ================= */
 let pressTimer = null;
 
 window.copyToClipboard = function(text) {
@@ -1378,9 +1221,7 @@ function fallbackCopy(text) {
 
 window.startPress = function(e, code) {
     if (pressTimer) clearTimeout(pressTimer);
-    pressTimer = setTimeout(() => {
-        zoomBarcode(code);
-    }, 450);
+    pressTimer = setTimeout(() => { zoomBarcode(code); }, 450);
 };
 
 window.cancelPress = function() {
@@ -1411,7 +1252,7 @@ function zoomQr(rawText) {
     QRCode.toCanvas(qCan, rawText, { width: 230, margin: 2 });
 }
 
-/* ================= ДЕТАЛЬНЫЙ ПАРСИНГ QR ЦЕННИКА ================= */
+/* ================= ИНТЕЛЛЕКТУАЛЬНЫЙ ПАРСИНГ QR ЦЕННИКА ================= */
 const MASTER_CODES = { "14630557641291": { code: "4607075900196", qtyInBox: 50 } };
 let currentCart = [];
 let activePallet = "Основной";
@@ -1430,11 +1271,9 @@ function normalizeBarcode(text) {
 }
 
 /**
- * Интеллектуальный анализатор данных QR кода ценника:
- * 1. Выделяет EAN-13 / EAN-8 штрихкод.
- * 2. Выделяет цену по карте (со скидкой) и базовую цену.
- * 3. Находит артикул (PLU), код магазина, планограмму.
- * 4. Сохраняет исходный QR-пейлоад для точного дублирования в таблице.
+ * Парсер ценника:
+ * Автоматически находит ШК, артикул, место и все цены в строке.
+ * Минимальная цена назначается ценой «По карте», максимальная — зачёркнутой «Без карты».
  */
 function parsePriceTagQR(rawText) {
     const raw = String(rawText).trim();
@@ -1452,8 +1291,18 @@ function parsePriceTagQR(rawText) {
         try {
             const data = JSON.parse(raw);
             res.barcode = normalizeBarcode(data.barcode || data.ean || data.code || data.shk || '');
-            res.priceCard = String(data.priceCard || data.card_price || data.price || '').replace(',', '.');
-            res.priceRegular = String(data.priceRegular || data.old_price || data.price_no_card || '').replace(',', '.');
+            let pCard = parseFloat(String(data.priceCard || data.card_price || data.price || '').replace(',', '.'));
+            let pReg = parseFloat(String(data.priceRegular || data.old_price || data.price_no_card || '').replace(',', '.'));
+            
+            if (!isNaN(pCard) && !isNaN(pReg)) {
+                res.priceCard = Math.min(pCard, pReg).toFixed(2);
+                res.priceRegular = Math.max(pCard, pReg).toFixed(2);
+            } else if (!isNaN(pCard)) {
+                res.priceCard = pCard.toFixed(2);
+            } else if (!isNaN(pReg)) {
+                res.priceCard = pReg.toFixed(2);
+            }
+
             res.article = String(data.article || data.art || data.plu || '');
             let extras = [];
             for (let k in data) {
@@ -1466,13 +1315,20 @@ function parsePriceTagQR(rawText) {
         } catch(e) {}
     }
 
-    // 2. Проверка URL адреса
+    // 2. Проверка URL
     if (raw.startsWith('http://') || raw.startsWith('https://')) {
         try {
             const url = new URL(raw);
             const p = url.searchParams;
             res.barcode = normalizeBarcode(p.get('ean') || p.get('barcode') || p.get('shk') || '');
-            res.priceCard = (p.get('price') || p.get('card') || '').replace(',', '.');
+            let pCard = parseFloat((p.get('price') || p.get('card') || '').replace(',', '.'));
+            let pReg = parseFloat((p.get('old_price') || p.get('regular') || '').replace(',', '.'));
+            if (!isNaN(pCard) && !isNaN(pReg)) {
+                res.priceCard = Math.min(pCard, pReg).toFixed(2);
+                res.priceRegular = Math.max(pCard, pReg).toFixed(2);
+            } else if (!isNaN(pCard)) {
+                res.priceCard = pCard.toFixed(2);
+            }
             res.article = p.get('art') || p.get('plu') || '';
             if (!res.barcode) {
                 const match13 = url.pathname.match(/\b\d{13}\b/);
@@ -1483,23 +1339,37 @@ function parsePriceTagQR(rawText) {
         } catch(e) {}
     }
 
-    // 3. Текстовые строки ценников (с разделителями ';', '|', пробелами)
-    // Поиск штрихкода EAN-13 (13 цифр) или EAN-8 (8 цифр)
+    // 3. Текстовый ценник
+    // Ищем штрихкод EAN-13 или EAN-8
     const eanMatch = raw.match(/\b\d{13}\b/) || raw.match(/\b\d{8}\b/);
     if (eanMatch) {
         res.barcode = eanMatch[0];
     }
 
-    // Поиск цен (вида 234.99 или 234,99)
-    const priceMatches = raw.match(/\b\d+[\.,]\d{2}\b/g);
+    // Ищем цены (например 284.20, 234.99), исключая дату (20.09.2026)
+    const priceRegex = /(?<!\d[\.,])\b\d{1,6}[\.,]\d{2}\b(?!\.\d)/g;
+    const priceMatches = raw.match(priceRegex);
     if (priceMatches && priceMatches.length > 0) {
-        res.priceCard = priceMatches[0].replace(',', '.');
-        if (priceMatches.length > 1) {
-            res.priceRegular = priceMatches[1].replace(',', '.');
+        const rawPrices = priceMatches
+            .map(p => parseFloat(p.replace(',', '.')))
+            .filter(p => !isNaN(p) && p > 0);
+
+        const uniquePrices = [...new Set(rawPrices)];
+
+        if (uniquePrices.length === 1) {
+            res.priceCard = uniquePrices[0].toFixed(2);
+        } else if (uniquePrices.length >= 2) {
+            // В рознице цена по карте всегда минимальная из представленных на ценнике
+            const minPrice = Math.min(...uniquePrices);
+            // Базовая цена без карты — максимальная
+            const maxPrice = Math.max(...uniquePrices);
+
+            res.priceCard = minPrice.toFixed(2);
+            res.priceRegular = maxPrice.toFixed(2);
         }
     }
 
-    // Поиск артикула (5-7 цифр, не являющихся штрихкодом и датой)
+    // Поиск артикула (5-7 цифр)
     const numCandidates = raw.match(/\b\d{5,7}\b/g);
     if (numCandidates) {
         for (let candidate of numCandidates) {
@@ -1510,20 +1380,17 @@ function parsePriceTagQR(rawText) {
         }
     }
 
-    // Поиск топологии / планограммы (например 23_Б16012)
+    // Топология / место
     const topoMatch = raw.match(/\b\d{1,2}_[А-ЯA-Z0-9]+\b/i);
     let topoStr = topoMatch ? topoMatch[0] : '';
 
-    // Если штрихкод не выделился через регулярку — используем очищенную строку
     if (!res.barcode) {
         res.barcode = normalizeBarcode(raw);
     }
 
-    // Формируем сводку дополнительной информации
     let extraParts = [];
     if (topoStr) extraParts.push(`Место: ${topoStr}`);
     
-    // Если в raw были другие данные помимо штрихкода и цен
     let cleanRest = raw
         .replace(res.barcode, '')
         .replace(res.priceCard, '')
@@ -1569,7 +1436,6 @@ function addOrUpdateItem(parsedData, qty = 1) {
     const pallet = activePallet;
     const barcode = parsedData.barcode || normalizeBarcode(parsedData.raw);
     
-    // Ищем товар с таким же штрихкодом в данном паллете
     const existing = currentCart.find(i => i.code === barcode && i.pallet === pallet);
     if (existing) {
         existing.qty += qty;
@@ -1607,7 +1473,7 @@ function renderCart() {
         area.innerHTML = `
             <div class="no-data-card">
                 <span class="app-icon" style="color:var(--btn-add);"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg></span>
-                <span>Наведите камеру на QR-код ценника</span>
+                <span>Наведите камеру на QR ценника</span>
             </div>`;
         updateCartStats();
         return;
@@ -1624,7 +1490,7 @@ function renderCart() {
             <tr>
                 <th style="width:64px;">QR ценника</th>
                 <th style="width:140px;">Штрихкод</th>
-                <th style="width:95px;">По карте</th>
+                <th style="width:105px;">По карте</th>
                 <th>Инфо из QR</th>
                 <th style="width:55px;">Кол-во</th>
                 <th style="width:42px;"></th>
@@ -1659,14 +1525,14 @@ function renderCart() {
 
             html += `
                 <tr>
-                    <!-- 1. ДУБЛИКАТ QR КОДА С ЦЕННИКА -->
+                    <!-- 1. ДУБЛИКАТ QR КОДА -->
                     <td>
                         <div class="qr-cell-box" onclick="zoomQr(decodeURIComponent('${safeRaw}'))" title="Нажмите для увеличения">
                             <canvas id="qr-c-${item.id}" width="48" height="48"></canvas>
                         </div>
                     </td>
 
-                    <!-- 2. СГЕНЕРИРОВАННЫЙ ЛИНЕЙНЫЙ ШТРИХКОД -->
+                    <!-- 2. СГЕНЕРИРОВАННЫЙ ШТРИХКОД -->
                     <td class="inline-barcode-container" 
                         onmousedown="startPress(event, '${item.code}')" 
                         onmouseup="cancelPress()" 
@@ -1678,7 +1544,7 @@ function renderCart() {
                         <div class="barcode-wrapper"><svg id="bc-${item.id}"></svg></div>
                     </td>
 
-                    <!-- 3. ЦЕНА ТОВАРА ПО КАРТЕ -->
+                    <!-- 3. ЦЕНА СО СКИДКОЙ И БЕЗ -->
                     <td>
                         <div class="price-cell">
                             ${cardPriceHtml}
@@ -1686,7 +1552,7 @@ function renderCart() {
                         </div>
                     </td>
 
-                    <!-- 4. ОСТАЛЬНАЯ ИНФОРМАЦИЯ ИЗ QR -->
+                    <!-- 4. ОСТАЛЬНАЯ ИНФОРМАЦИЯ -->
                     <td>
                         <div class="extra-info-cell">
                             ${artHtml}
@@ -1699,7 +1565,7 @@ function renderCart() {
                         <button class="qty-box" onclick="showNumpadForEdit('${item.id}')">${item.qty}</button>
                     </td>
 
-                    <!-- 6. КНОПКА УДАЛЕНИЯ -->
+                    <!-- 6. УДАЛИТЬ -->
                     <td>
                         <button class="btn-remove" onclick="removeItem('${item.id}')">
                             <span class="app-icon" style="width:18px;height:18px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
@@ -1712,36 +1578,23 @@ function renderCart() {
     html += `</table></div>`;
     area.innerHTML = html;
 
-    // Отрисовываем канвасы QR и SVG линейных штрихкодов после вставки в DOM
     currentCart.forEach(item => {
-        // Линейный код
         renderBarcodeSafe(`bc-${item.id}`, item.code, { width: 1.8, height: 42, displayValue: true, fontSize: 13, margin: 2 });
-        
-        // Дубликат QR ценника
         const qrCanvas = document.getElementById(`qr-c-${item.id}`);
         if (qrCanvas) {
-            QRCode.toCanvas(qrCanvas, item.raw || item.code, {
-                width: 48,
-                margin: 0,
-                color: { dark: '#0c1e16', light: '#ffffff' }
-            }, function(err){});
+            QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 48, margin: 0 }, function(){});
         }
     });
 
     updateCartStats();
 }
 
-/* ================= УДАЛЕНИЕ И ВОССТАНОВЛЕНИЕ ================= */
-let lastDeletedItem = null;
-let snackbarTimer = null;
-
 function showToast(msg) {
     const sb = document.getElementById('snackbar');
     document.getElementById('snackbarText').innerText = msg;
     document.getElementById('snackbarUndoBtn').style.display = 'none';
     sb.classList.add('show');
-    if (snackbarTimer) clearTimeout(snackbarTimer);
-    snackbarTimer = setTimeout(() => sb.classList.remove('show'), 3000);
+    setTimeout(() => sb.classList.remove('show'), 3000);
 }
 
 function removeItem(itemId) {
@@ -1752,17 +1605,12 @@ function removeItem(itemId) {
         renderCart();
         SoundFX.trash();
         triggerVibrate([20, 30]);
-        showUndoToast();
+        const sb = document.getElementById('snackbar');
+        document.getElementById('snackbarText').innerText = 'Товар удалён';
+        document.getElementById('snackbarUndoBtn').style.display = 'block';
+        sb.classList.add('show');
+        setTimeout(() => sb.classList.remove('show'), 3800);
     }
-}
-
-function showUndoToast() {
-    const sb = document.getElementById('snackbar');
-    document.getElementById('snackbarText').innerText = 'Товар удалён';
-    document.getElementById('snackbarUndoBtn').style.display = 'block';
-    sb.classList.add('show');
-    if (snackbarTimer) clearTimeout(snackbarTimer);
-    snackbarTimer = setTimeout(() => sb.classList.remove('show'), 3800);
 }
 
 function undoDelete() {
@@ -1961,11 +1809,6 @@ function toggleTorch() {
     html5QrCode.applyVideoConstraints({ advanced: [{ torch: torchEnabled }] })
     .then(() => document.getElementById('torchBtn').classList.toggle('active', torchEnabled))
     .catch(() => { torchEnabled = false; });
-}
-
-function setZoomLevel(lvl) {
-    document.querySelectorAll('.zoom-btn').forEach(b => b.classList.toggle('active', Number(b.dataset.zoom) === lvl));
-    if (html5QrCode) html5QrCode.applyVideoConstraints({ advanced: [{ zoom: lvl }] }).catch(() => {});
 }
 
 /* ================= ЭКСПОРТ & АРХИВ ================= */
