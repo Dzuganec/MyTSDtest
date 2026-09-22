@@ -249,7 +249,7 @@ header {
 .daynight-input:checked ~ .daynight-toggle .cloud { background: #c9d3ea; opacity: 0.85; }
 .daynight-input:checked ~ .daynight-toggle .cloud1 { box-shadow: 6px 2px 0 -1px #c9d3ea, 11px 0 0 -2px #c9d3ea; }
 .daynight-input:checked ~ .daynight-toggle .cloud2 { box-shadow: 5px 1px 0 -1px #c9d3ea; }
-.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 2px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
+.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 1px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
 .toggle-thumb {
     position: absolute; top: var(--pad); left: var(--pad); width: var(--thumb); height: var(--thumb);
     border-radius: 50%; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
@@ -308,7 +308,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, КВАДРАТНЫЙ QR) ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -1035,19 +1035,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ -->
-<div class="modal-overlay" id="cameraSelectModal">
-    <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v2"/><circle cx="12" cy="13" r="4"/></svg></span>
-            Выберите камеру
-        </h3>
-        <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Для ценников лучше использовать Основную (1x)</p>
-        <div id="cameraListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
-        <button class="btn-modal btn-close" onclick="document.getElementById('cameraSelectModal').style.display='none'">Отмена</button>
-    </div>
-</div>
-
+<!-- МОДАЛЬНЫЕ ОКНА: ГЛАВНОЕ МЕНЮ -->
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1230,11 +1218,32 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
+<!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
+<div class="modal-overlay" id="exportChoiceModal">
+    <div class="modal-content">
+        <h3 class="modal-title">Экспорт Excel</h3>
+        <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Выберите действие с файлом</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn-modal" style="background:#2563eb; color:white; margin-top:0;" onclick="executeExport('share')">
+                <span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+                Поделиться файлом (Telegram, WhatsApp)
+            </button>
+            <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:0;" onclick="executeExport('save')">
+                <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+                Сохранить в загрузки
+            </button>
+            <button class="btn-modal btn-close" onclick="document.getElementById('exportChoiceModal').style.display='none'">Отмена</button>
+        </div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="qrModal" style="align-items: center;">
     <div class="modal-content" style="background: transparent; box-shadow: none;">
         <div class="brightness-text">Выкрути яркость на максимум!</div>
         <canvas id="finalQrCanvas" width="340" height="340" style="display:none; margin: 0 auto; border-radius: 22px; background: #fff; padding: 12px;"></canvas>
         <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:25px;" onclick="downloadQR()">Сохранить в галерею</button>
+        <button class="btn-modal" style="background:#2563eb; color:white;" onclick="shareToExcel()">Поделиться текстом</button>
         <button class="btn-modal btn-close" style="background:rgba(255,255,255,0.2); color:white; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);" onclick="closeQRModal()">Закрыть</button>
     </div>
 </div>
@@ -1280,7 +1289,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <li>В столбце <b>QR</b> появится аккуратная мини-копия оригинального QR.</li>
                 <li>Вверху экрана доступны кнопки: <b>Выбор камеры</b> (слева), <b>Зум 1x, 2x, 3x</b> (по центру), <b>Фонарик</b> (справа).</li>
                 <li>Нажмите на код в таблице для увеличения. <b>Зажмите увеличенный код пальцем на 0.5 сек</b>, чтобы скопировать.</li>
-                <li>Нажмите кнопку <b>«В Excel»</b> для сохранения файла и отправки его в Telegram или WhatsApp.</li>
+                <li>Нажмите кнопку <b>«В Excel»</b> для формирования файла и отправки его в мессенджеры.</li>
             </ol>
         </div>
         <button class="btn-modal btn-close" onclick="closeAllModals()">Понятно</button>
@@ -1353,7 +1362,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.0 (Excel Share Engine HD)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.1 (Interactive Share Dialog)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1875,6 +1884,10 @@ function renderCart() {
                                 <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
                                 ${palletName}
                             </span>
+                            <button class="btn-pallet-qr" onclick="exportPalletToExcel('${palletName}')">
+                                <span class="app-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                                Экспорт
+                            </button>
                         </div>
                     </td>
                 </tr>`;
@@ -2457,9 +2470,53 @@ function stopScanner(resetNav = true) {
     if (resetNav) updateNavState('onNavHome');
 }
 
-/* ================= EXCELJS ГЕНЕРАЦИЯ И ОТПРАВКА С ФОТОГРАФИЯМИ ШТРИХКОДОВ ================= */
+/* ================= EXCELJS ГЕНЕРАЦИЯ, ВЫБОР ДЕЙСТВИЯ И ОТПРАВКА ================= */
+let pendingExportItems = [];
+let pendingExportPrefix = "Inventory";
 
-async function generateExcel(itemsToExport) {
+function exportToExcel() {
+    if (currentCart.length === 0) {
+        alert("Корзина пуста!");
+        updateNavState('onNavHome');
+        return;
+    }
+    pendingExportItems = currentCart;
+    pendingExportPrefix = "Inventory";
+    document.getElementById('exportChoiceModal').style.display = 'flex';
+}
+
+function exportPalletToExcel(palletName) {
+    const items = currentCart.filter(i => i.pallet === palletName);
+    if (!items.length) return;
+    pendingExportItems = items;
+    pendingExportPrefix = `Pallet_${palletName}`;
+    document.getElementById('exportChoiceModal').style.display = 'flex';
+}
+
+async function openArchiveExcel(idx) {
+    const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
+    if (archive[idx] && archive[idx].cartData) {
+        document.getElementById('archiveModal').style.display = 'none';
+        pendingExportItems = archive[idx].cartData;
+        pendingExportPrefix = "Archive";
+        document.getElementById('exportChoiceModal').style.display = 'flex';
+    } else {
+        showToast("Ошибка: формат не поддерживается");
+    }
+}
+
+async function executeExport(action) {
+    document.getElementById('exportChoiceModal').style.display = 'none';
+    await generateExcel(pendingExportItems, action, pendingExportPrefix);
+    
+    // Сохраняем в архив, только если мы выгружаем текущую полную корзину, а не отдельный паллет или старый архив
+    if (pendingExportItems === currentCart && pendingExportPrefix === "Inventory") {
+        const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
+        saveToArchivePayload(currentCart, totalQty);
+    }
+}
+
+async function generateExcel(itemsToExport, action, prefix) {
     if (!itemsToExport || itemsToExport.length === 0) {
         showToast("Нет данных для выгрузки");
         return;
@@ -2543,29 +2600,39 @@ async function generateExcel(itemsToExport) {
 
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-        const fileName = `TSD_Inventory_${Date.now()}.xlsx`;
+        const fileName = `TSD_${prefix}_${Date.now()}.xlsx`;
         const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
 
-        // Вызов шторки "Поделиться"
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({
-                    files: [file],
-                    title: 'Выгрузка ТСД',
-                    text: 'Таблица инвентаризации с QR и Штрихкодами'
-                });
-                showToast("Отправлено!");
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    downloadExcelBlob(blob, fileName);
+        // Если пользователь выбрал "Поделиться"
+        if (action === 'share') {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Выгрузка ТСД',
+                        text: 'Таблица инвентаризации с QR и Штрихкодами'
+                    });
+                    showToast("Отправлено!");
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        downloadExcelBlob(blob, fileName);
+                    }
                 }
+            } else {
+                showToast("Отправка не поддерживается, файл скачан");
+                downloadExcelBlob(blob, fileName);
             }
         } else {
+            // Если пользователь выбрал "Сохранить на устройство"
             downloadExcelBlob(blob, fileName);
         }
+        
+        updateNavState('onNavHome');
+
     } catch(e) {
         console.error(e);
         showToast("Ошибка формирования Excel");
+        updateNavState('onNavHome');
     }
 }
 
@@ -2579,12 +2646,6 @@ function downloadExcelBlob(blob, fileName) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast("Файл сохранен!");
-}
-
-async function exportToExcel() {
-    await generateExcel(currentCart);
-    const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
-    saveToArchivePayload(currentCart, totalQty);
 }
 
 function saveToArchivePayload(cartItems, totalQty) {
@@ -2601,6 +2662,37 @@ function saveToArchivePayload(cartItems, totalQty) {
     });
     if (archive.length > 15) archive.pop();
     localStorage.setItem('tsd_archive', JSON.stringify(archive));
+}
+
+function showPalletQR(palletName) {
+    const items = currentCart.filter(i => i.pallet === palletName);
+    if (!items.length) return;
+    const payload = items.map(i => `${i.code}-${i.qty}`).join(" ");
+    document.getElementById('qrModal').style.display = 'flex';
+    const canvas = document.getElementById('finalQrCanvas');
+    canvas.style.display = 'block';
+    window.currentPayload = payload;
+    QRCode.toCanvas(canvas, payload, { width: 320, margin: 2 });
+}
+
+function closeQRModal() {
+    document.getElementById('qrModal').style.display = 'none';
+    updateNavState('onNavHome');
+}
+
+function downloadQR() {
+    const canvas = document.getElementById('finalQrCanvas');
+    const a = document.createElement('a');
+    a.download = `TSD_QR_${Date.now()}.png`;
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+}
+
+function shareToExcel() {
+    if (navigator.clipboard && window.currentPayload) {
+        navigator.clipboard.writeText(window.currentPayload);
+        alert("Данные скопированы в буфер!");
+    }
 }
 
 function renderArchive() {
@@ -2639,16 +2731,6 @@ function restoreArchiveToTable(idx) {
         saveState();
         renderCart();
         closeAllModals(true);
-    }
-}
-
-async function openArchiveExcel(idx) {
-    const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
-    if (archive[idx] && archive[idx].cartData) {
-        document.getElementById('archiveModal').style.display = 'none';
-        await generateExcel(archive[idx].cartData);
-    } else {
-        showToast("Ошибка: формат не поддерживается");
     }
 }
 
