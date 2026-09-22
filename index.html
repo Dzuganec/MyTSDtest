@@ -303,7 +303,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, КВАДРАТНЫЙ QR) ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -476,47 +476,89 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: flex; align-items: center; justify-content: center; color: var(--btn-add);
 }
 
-/* ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПРЯМО ПОВЕРХ ОКНА КАМЕРЫ */
+/* ============================================================
+   ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПОВЕРХ ВИДОИСКАТЕЛЯ (С ПОДДЕРЖКОЙ ТЕМ)
+   ============================================================ */
 .cam-overlay-menu {
     position: absolute; inset: 0; z-index: 50;
-    background: rgba(10, 24, 18, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(var(--bg-card-rgb), 0.95);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border-radius: var(--radius-lg); padding: 16px 14px 18px;
     display: flex; flex-direction: column; text-align: left;
     animation: slideInUp 0.25s var(--ease-smooth);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
 }
 .cam-overlay-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);
 }
 .cam-overlay-title {
-    font-size: 16px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px;
+    font-size: 16px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 8px;
 }
 .cam-overlay-close {
-    background: rgba(255, 255, 255, 0.15); border: none; color: #fff;
+    background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main);
     width: 32px; height: 32px; border-radius: 50%; display: flex;
     align-items: center; justify-content: center; cursor: pointer;
+    transition: transform var(--t-fast);
 }
+.cam-overlay-close:active { transform: scale(0.9); }
 .cam-overlay-list {
     flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px;
 }
 .cam-choice-card {
-    background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.12);
+    background: var(--input-bg); border: 1.5px solid var(--border-color);
     border-radius: 14px; padding: 12px 14px; cursor: pointer;
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
     transition: transform 0.18s, background-color 0.18s, border-color 0.18s;
 }
 .cam-choice-card:active { transform: scale(0.97); }
 .cam-choice-card.active {
-    background: rgba(16, 185, 129, 0.22); border-color: #10b981;
+    background: var(--info-bg); border-color: var(--btn-add);
 }
 .cam-card-info { display: flex; flex-direction: column; gap: 2px; }
-.cam-card-name { font-size: 14.5px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 6px; }
+.cam-card-name { font-size: 14.5px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
 .cam-badge-tag {
     font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
-    background: rgba(16, 185, 129, 0.2); color: #34d399; margin-left: 6px;
+    background: rgba(5, 150, 105, 0.12); color: var(--btn-add); margin-left: 6px;
     display: inline-block; vertical-align: middle;
 }
-.cam-card-desc { font-size: 11.5px; font-weight: 600; color: rgba(255, 255, 255, 0.65); line-height: 1.25; }
+.cam-card-desc { font-size: 11.5px; font-weight: 600; color: var(--text-muted); line-height: 1.25; }
+
+/* Темная тема для меню камер */
+[data-theme="dark"] .cam-overlay-menu {
+    background: rgba(10, 24, 18, 0.96);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+[data-theme="dark"] .cam-overlay-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+[data-theme="dark"] .cam-overlay-title {
+    color: #ffffff;
+}
+[data-theme="dark"] .cam-overlay-close {
+    background: rgba(255, 255, 255, 0.14);
+    border: none;
+    color: #ffffff;
+}
+[data-theme="dark"] .cam-choice-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+}
+[data-theme="dark"] .cam-choice-card.active {
+    background: rgba(16, 185, 129, 0.22);
+    border-color: #10b981;
+}
+[data-theme="dark"] .cam-card-name {
+    color: #ffffff;
+}
+[data-theme="dark"] .cam-badge-tag {
+    background: rgba(16, 185, 129, 0.22);
+    color: #34d399;
+}
+[data-theme="dark"] .cam-card-desc {
+    color: rgba(255, 255, 255, 0.65);
+}
 
 .instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; }
 .instruction-content ol { margin: 10px 0 0 0; padding-left: 20px; }
@@ -837,6 +879,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 [data-fx="low"] .navbar-goo-layer { filter: none !important; }
 [data-fx="low"] .navbar-glow { box-shadow: none !important; }
 [data-fx="low"] .modal-overlay { backdrop-filter: none !important; background: rgba(7, 19, 13, 0.92) !important; }
+[data-fx="low"] .cam-overlay-menu { backdrop-filter: none !important; }
 [data-fx="low"] .character .head,
 [data-fx="low"] .arms .arm-l-group,
 [data-fx="low"] .arms .arm-r-group,
@@ -1013,7 +1056,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ (РЕЗЕРВНЫЙ ДИАЛОГ) -->
+<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ -->
 <div class="modal-overlay" id="cameraSelectModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1026,6 +1069,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
+<!-- ГЛАВНОЕ МЕНЮ -->
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1331,7 +1375,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.8 (Full Lens Overlay & Safe Switch)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.9 (Adaptive Theme Camera Menu)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1957,6 +2001,130 @@ function undoDelete() {
     }
 }
 
+/* ================= NUMPAD МОДАЛ ================= */
+let numpadVal = "1";
+let numpadMode = "";
+let pendingParsedItem = null;
+let editingItemId = null;
+
+function updateNumpadUI() {
+    const display = document.getElementById('numpadDisplay');
+    const group = document.getElementById('numpadInputGroup');
+    const pasteBtn = document.getElementById('numpadPasteBtn');
+
+    if (numpadMode === 'manual') {
+        group.classList.add('manual-mode');
+        pasteBtn.style.display = 'flex';
+        display.innerHTML = numpadVal ? `${numpadVal}<span class="numpad-cursor"></span>` : `<span class="numpad-placeholder">Ввод ШК или QR...</span><span class="numpad-cursor"></span>`;
+    } else {
+        group.classList.remove('manual-mode');
+        pasteBtn.style.display = 'none';
+        display.innerHTML = `${numpadVal || 0}<span class="numpad-cursor"></span>`;
+    }
+    display.scrollLeft = display.scrollWidth;
+}
+
+function showNumpadForManual() {
+    numpadMode = 'manual';
+    numpadVal = "";
+    document.getElementById('numpadTitle').style.display = "none";
+    updateNumpadUI();
+    document.getElementById('numpadModal').style.display = 'flex';
+}
+
+function showNumpadForScan(parsedObj) {
+    numpadMode = 'scan';
+    pendingParsedItem = parsedObj;
+    let defQty = 1;
+    if (MASTER_CODES[parsedObj.barcode] && MASTER_CODES[parsedObj.barcode].qtyInBox) {
+        defQty = MASTER_CODES[parsedObj.barcode].qtyInBox;
+    }
+    numpadVal = String(defQty);
+    const titleEl = document.getElementById('numpadTitle');
+    titleEl.style.display = "block";
+    titleEl.innerText = `ШК: ${parsedObj.barcode}${parsedObj.priceCard ? ' | ' + parsedObj.priceCard + ' ₽' : ''}`;
+    updateNumpadUI();
+    document.getElementById('numpadModal').style.display = 'flex';
+}
+
+function showNumpadForEdit(itemId) {
+    const item = currentCart.find(i => i.id === itemId);
+    if (!item) return;
+    numpadMode = 'edit';
+    editingItemId = itemId;
+    numpadVal = String(item.qty);
+    const titleEl = document.getElementById('numpadTitle');
+    titleEl.style.display = "block";
+    titleEl.innerText = `Изменить кол-во: ${item.code}`;
+    updateNumpadUI();
+    document.getElementById('numpadModal').style.display = 'flex';
+}
+
+function numPress(n) {
+    if (numpadVal === "0" && numpadMode !== 'manual') numpadVal = "";
+    if (numpadVal.length < 28) numpadVal += String(n);
+    updateNumpadUI();
+}
+function numClear() { numpadVal = ""; updateNumpadUI(); }
+function numBackspace() { numpadVal = numpadVal.slice(0, -1); updateNumpadUI(); }
+
+function numCancel() {
+    document.getElementById('numpadModal').style.display = 'none';
+    if (numpadMode === 'scan' && settings.continuous) isScannerPaused = false;
+    else updateNavState('onNavHome');
+}
+
+function numConfirm() {
+    document.getElementById('numpadModal').style.display = 'none';
+    if (numpadMode === 'manual') {
+        const c = numpadVal.trim();
+        if (c) {
+            const parsed = parsePriceTagQR(c);
+            addOrUpdateItem(parsed, 1);
+        }
+        updateNavState('onNavHome');
+    } else if (numpadMode === 'scan') {
+        const q = parseInt(numpadVal) || 1;
+        if (pendingParsedItem) addOrUpdateItem(pendingParsedItem, Math.max(1, q));
+        if (settings.continuous) isScannerPaused = false;
+        else stopScanner(true);
+    } else if (numpadMode === 'edit') {
+        const item = currentCart.find(i => i.id === editingItemId);
+        if (item) {
+            item.qty = Math.max(1, parseInt(numpadVal) || 1);
+            saveState();
+            renderCart();
+        }
+    }
+}
+
+async function pasteToNumpad() {
+    try {
+        const text = await navigator.clipboard.readText();
+        if (text) { numpadVal = text.trim(); updateNumpadUI(); }
+    } catch(e) {}
+}
+
+/* ================= ПАЛЛЕТЫ ================= */
+function openPalletModal() {
+    document.getElementById('palletInput').value = activePallet;
+    const pallets = [...new Set(currentCart.map(i => i.pallet))];
+    const container = document.getElementById('existingPallets');
+    container.innerHTML = pallets.map(p => `
+        <button style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:11px; padding:8px 14px; font-weight:800; font-size:14px; color:var(--text-main); cursor:pointer;" onclick="document.getElementById('palletInput').value='${p}'">${p}</button>
+    `).join('');
+    document.getElementById('palletModal').style.display = 'flex';
+}
+
+function confirmPallet() {
+    activePallet = document.getElementById('palletInput').value.trim() || "Основной";
+    document.getElementById('currentPalletBadge').innerHTML = `
+        <span class="app-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        ${activePallet}
+    `;
+    document.getElementById('palletModal').style.display = 'none';
+}
+
 /* ================= ПОЛНЫЙ СПИСОК ВСЕХ КАМЕР И ПЕРЕКЛЮЧЕНИЕ ================= */
 let html5QrCode = null;
 let isScannerPaused = false;
@@ -2146,7 +2314,7 @@ async function toggleCameraOverlayMenu() {
                     </div>
                     <div class="cam-card-desc">${info.desc}</div>
                 </div>
-                ${isActive ? '<span class="app-icon" style="color:#10b981; width:20px; height:20px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
+                ${isActive ? '<span class="app-icon" style="color:var(--btn-add); width:20px; height:20px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
             </div>
         `;
     }).join('');
@@ -2202,7 +2370,7 @@ async function selectCameraById(camId) {
             html5QrCode = null;
         }
 
-        // Пауза 250 мс для корректного освобождения сенсора в Android (Samsung One UI)
+        // Пауза 250 мс для освобождения сенсора в Android HAL
         await new Promise(r => setTimeout(r, 250));
 
         html5QrCode = new Html5Qrcode("reader");
@@ -2226,7 +2394,7 @@ async function toggleTorch() {
     const nextTorchState = !torchEnabled;
     let applied = false;
 
-    // Способ 1: Прямой доступ к дорожке WebRTC
+    // 1. Прямой доступ к дорожке WebRTC
     try {
         const videoEl = document.querySelector("#reader video");
         if (videoEl && videoEl.srcObject) {
@@ -2243,7 +2411,7 @@ async function toggleTorch() {
         console.warn("Direct track torch error:", e);
     }
 
-    // Способ 2: Библиотечный метод
+    // 2. Библиотечный метод
     if (!applied) {
         try {
             await html5QrCode.applyVideoConstraints({ advanced: [{ torch: nextTorchState }] });
