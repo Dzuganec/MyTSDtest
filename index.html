@@ -26,9 +26,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#10b981" id="meta-theme-color">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23059669'/><path d='M25 35h50M25 50h50M25 65h30' stroke='%23fff' stroke-width='8' stroke-linecap='round'/></svg>">
-<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+
+<!-- ВСТРОЕННАЯ ИКОНКА ПРИЛОЖЕНИЯ (КАК В ШАПКЕ) ДЛЯ APPLE И ANDROID -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23059669'/><rect x='22' y='22' width='56' height='56' rx='12' stroke='%23ffffff' stroke-width='6'/><rect x='31' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='40' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/><rect x='51' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='60' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23059669'/><rect x='22' y='22' width='56' height='56' rx='12' stroke='%23ffffff' stroke-width='6'/><rect x='31' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='40' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/><rect x='51' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='60' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/></svg>">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -244,7 +246,7 @@ header {
 .daynight-input:checked ~ .daynight-toggle .cloud { background: #c9d3ea; opacity: 0.85; }
 .daynight-input:checked ~ .daynight-toggle .cloud1 { box-shadow: 6px 2px 0 -1px #c9d3ea, 11px 0 0 -2px #c9d3ea; }
 .daynight-input:checked ~ .daynight-toggle .cloud2 { box-shadow: 5px 1px 0 -1px #c9d3ea; }
-.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 2px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
+.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 1px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
 .toggle-thumb {
     position: absolute; top: var(--pad); left: var(--pad); width: var(--thumb); height: var(--thumb);
     border-radius: 50%; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
@@ -474,90 +476,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .menu-icon-box {
     width: 34px; height: 34px; border-radius: 11px; background: var(--input-bg);
     display: flex; align-items: center; justify-content: center; color: var(--btn-add);
-}
-
-/* ============================================================
-   ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПОВЕРХ ВИДОИСКАТЕЛЯ (СВЕТЛАЯ/ТЁМНАЯ ТЕМА)
-   ============================================================ */
-.cam-overlay-menu {
-    position: absolute; inset: 0; z-index: 50;
-    background: rgba(var(--bg-card-rgb), 0.95);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-radius: var(--radius-lg); padding: 16px 14px 18px;
-    display: flex; flex-direction: column; text-align: left;
-    animation: slideInUp 0.25s var(--ease-smooth);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
-}
-.cam-overlay-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);
-}
-.cam-overlay-title {
-    font-size: 16px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 8px;
-}
-.cam-overlay-close {
-    background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main);
-    width: 32px; height: 32px; border-radius: 50%; display: flex;
-    align-items: center; justify-content: center; cursor: pointer;
-    transition: transform var(--t-fast);
-}
-.cam-overlay-close:active { transform: scale(0.9); }
-.cam-overlay-list {
-    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px;
-}
-.cam-choice-card {
-    background: var(--input-bg); border: 1.5px solid var(--border-color);
-    border-radius: 14px; padding: 12px 14px; cursor: pointer;
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    transition: transform 0.18s, background-color 0.18s, border-color 0.18s;
-}
-.cam-choice-card:active { transform: scale(0.97); }
-.cam-choice-card.active {
-    background: var(--info-bg); border-color: var(--btn-add);
-}
-.cam-card-info { display: flex; flex-direction: column; gap: 2px; }
-.cam-card-name { font-size: 14.5px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
-.cam-badge-tag {
-    font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
-    background: rgba(5, 150, 105, 0.12); color: var(--btn-add); margin-left: 6px;
-    display: inline-block; vertical-align: middle;
-}
-.cam-card-desc { font-size: 11.5px; font-weight: 600; color: var(--text-muted); line-height: 1.25; }
-
-/* Тёмная тема для меню камер */
-[data-theme="dark"] .cam-overlay-menu {
-    background: rgba(10, 24, 18, 0.96);
-    border-color: rgba(255, 255, 255, 0.14);
-}
-[data-theme="dark"] .cam-overlay-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-}
-[data-theme="dark"] .cam-overlay-title {
-    color: #ffffff;
-}
-[data-theme="dark"] .cam-overlay-close {
-    background: rgba(255, 255, 255, 0.14);
-    border: none;
-    color: #ffffff;
-}
-[data-theme="dark"] .cam-choice-card {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
-}
-[data-theme="dark"] .cam-choice-card.active {
-    background: rgba(16, 185, 129, 0.22);
-    border-color: #10b981;
-}
-[data-theme="dark"] .cam-card-name {
-    color: #ffffff;
-}
-[data-theme="dark"] .cam-badge-tag {
-    background: rgba(16, 185, 129, 0.22);
-    color: #34d399;
-}
-[data-theme="dark"] .cam-card-desc {
-    color: rgba(255, 255, 255, 0.65);
 }
 
 .instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; }
@@ -1069,7 +987,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 Архив выгрузок
             </div>
             <div class="dropdown-item" onclick="openSettings()">
-                <div class="menu-icon-box"><span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span></div>
+                <div class="menu-icon-box"><span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span></div>
                 Настройки
             </div>
             <div class="dropdown-item" onclick="openInstruction()">
@@ -1249,7 +1167,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- ЗУМ: С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
+<!-- ЗУМ С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
 <div class="modal-overlay" id="zoomModal" style="align-items: center;" onclick="handleZoomClick(event)">
     <div class="modal-content" style="background:var(--bg-card); max-width:460px; padding:26px; border-radius:var(--radius-lg); text-align:center; position: relative;">
         <p style="font-weight:800; font-size:13.5px; color:var(--btn-add); margin-top:-8px; margin-bottom:12px;">Зажмите код пальцем, чтобы скопировать</p>
@@ -1362,7 +1280,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 13.0 (Native Barcode Engine)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 13.1 (Fixed Camera Cache & Native Scanner)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -2112,7 +2030,7 @@ function confirmPallet() {
     document.getElementById('palletModal').style.display = 'none';
 }
 
-/* ================= БИБЛИОТЕКА СКАНИРОВАНИЯ И ВЫБОР ВСЕХ КАМЕР ================= */
+/* ================= ПОЛНЫЙ СПИСОК ВСЕХ КАМЕР И ПЕРЕКЛЮЧЕНИЕ ================= */
 let html5QrCode = null;
 let isScannerPaused = false;
 let torchEnabled = false;
@@ -2120,7 +2038,6 @@ let allCamerasList = [];
 let selectedCameraId = null;
 let isSwitchingCamera = false;
 
-// Подробная расшифровка типа камеры на русском языке
 function parseRussianCameraLabel(cam, index) {
     const l = (cam.label || '').toLowerCase();
     const isFront = l.includes('front') || l.includes('user') || l.includes('передн') || l.includes('selfie') || l.includes('facing front');
@@ -2164,7 +2081,6 @@ function parseRussianCameraLabel(cam, index) {
     return { title, desc, badge };
 }
 
-// Поиск абсолютно всех камер устройства (с защитой от стирания кэша)
 async function detectAllCameras() {
     if (allCamerasList && allCamerasList.length > 0) {
         return allCamerasList;
@@ -2188,7 +2104,6 @@ async function detectAllCameras() {
     return allCamerasList;
 }
 
-// Первоначальный выбор: по умолчанию всегда основная задняя 64MP
 function getBestDefaultCameraId() {
     if (!allCamerasList || !allCamerasList.length) return null;
 
@@ -2227,7 +2142,6 @@ async function startScanner() {
         html5QrCode = null;
     }
 
-    // ВАЖНО: Активация нативного аппаратного BarcodeDetector в конструкторе!
     html5QrCode = new Html5Qrcode("reader", {
         formatsToSupport: [
             Html5QrcodeSupportedFormats.QR_CODE,
@@ -2243,10 +2157,7 @@ async function startScanner() {
         verbose: false
     });
 
-    const config = {
-        fps: 22
-        // Без qrbox сканер следит за всем полем и декодирует код мгновенно
-    };
+    const config = { fps: 22 };
 
     await detectAllCameras();
     if (!selectedCameraId) {
@@ -2276,7 +2187,6 @@ async function startScanner() {
     }
 }
 
-/* ОТКРЫТИЕ И ЗАКРЫТИЕ ВЫПАДАЮЩЕГО МЕНЮ ПОВЕРХ КАМЕРЫ */
 async function toggleCameraOverlayMenu() {
     const overlay = document.getElementById('camOverlayMenu');
     if (overlay && overlay.style.display === 'flex') {
@@ -2320,7 +2230,6 @@ function closeCameraMenu(e) {
     if (overlay) overlay.style.display = 'none';
 }
 
-/* ПЕРЕКЛЮЧЕНИЕ КАМЕРЫ БЕЗ ОШИБОК */
 async function selectCameraById(camId) {
     closeCameraMenu();
     if (isSwitchingCamera) return;
@@ -2350,7 +2259,6 @@ async function selectCameraById(camId) {
             html5QrCode = null;
         }
 
-        // Пауза 250 мс для освобождения сенсора в Android HAL (критично для Samsung)
         await new Promise(r => setTimeout(r, 250));
 
         html5QrCode = new Html5Qrcode("reader", {
@@ -2386,13 +2294,11 @@ async function selectCameraById(camId) {
     }
 }
 
-/* НАДЕЖНЫЙ ФОНАРИК ДЛЯ GALAXY A52 */
 async function toggleTorch() {
     if (!html5QrCode) return;
     const nextTorchState = !torchEnabled;
     let applied = false;
 
-    // 1. Прямой доступ к дорожке WebRTC
     try {
         const videoEl = document.querySelector("#reader video");
         if (videoEl && videoEl.srcObject) {
@@ -2409,7 +2315,6 @@ async function toggleTorch() {
         console.warn("Direct torch error:", e);
     }
 
-    // 2. Библиотечный метод
     if (!applied) {
         try {
             await html5QrCode.applyVideoConstraints({ advanced: [{ torch: nextTorchState }] });
