@@ -308,7 +308,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, КВАДРАТНЫЙ QR) ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -875,7 +875,6 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 
 <header>
     <div class="brand-wrapper">
-        <!-- СИНХРОНИЗИРОВАНО С НОВОЙ ИКОНКОЙ (РАВНОМЕРНЫЕ РАДИУСЫ И ЛИНИИ) -->
         <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="100" height="100" rx="28" fill="rgba(255, 255, 255, 0.2)"/>
             <rect x="22" y="22" width="56" height="56" rx="12" stroke="#ffffff" stroke-width="6"/>
@@ -1036,7 +1035,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ (РЕЗЕРВНЫЙ ДИАЛОГ) -->
+<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ -->
 <div class="modal-overlay" id="cameraSelectModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1231,7 +1230,16 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- ЗУМ: С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
+<div class="modal-overlay" id="qrModal" style="align-items: center;">
+    <div class="modal-content" style="background: transparent; box-shadow: none;">
+        <div class="brightness-text">Выкрути яркость на максимум!</div>
+        <canvas id="finalQrCanvas" width="340" height="340" style="display:none; margin: 0 auto; border-radius: 22px; background: #fff; padding: 12px;"></canvas>
+        <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:25px;" onclick="downloadQR()">Сохранить в галерею</button>
+        <button class="btn-modal btn-close" style="background:rgba(255,255,255,0.2); color:white; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);" onclick="closeQRModal()">Закрыть</button>
+    </div>
+</div>
+
+<!-- ЗУМ С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
 <div class="modal-overlay" id="zoomModal" style="align-items: center;" onclick="handleZoomClick(event)">
     <div class="modal-content" style="background:var(--bg-card); max-width:460px; padding:26px; border-radius:var(--radius-lg); text-align:center; position: relative;">
         <p style="font-weight:800; font-size:13.5px; color:var(--btn-add); margin-top:-8px; margin-bottom:12px;">Зажмите код пальцем, чтобы скопировать</p>
@@ -1272,6 +1280,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <li>В столбце <b>QR</b> появится аккуратная мини-копия оригинального QR.</li>
                 <li>Вверху экрана доступны кнопки: <b>Выбор камеры</b> (слева), <b>Зум 1x, 2x, 3x</b> (по центру), <b>Фонарик</b> (справа).</li>
                 <li>Нажмите на код в таблице для увеличения. <b>Зажмите увеличенный код пальцем на 0.5 сек</b>, чтобы скопировать.</li>
+                <li>Нажмите кнопку <b>«В Excel»</b> для сохранения файла и отправки его в Telegram или WhatsApp.</li>
             </ol>
         </div>
         <button class="btn-modal btn-close" onclick="closeAllModals()">Понятно</button>
@@ -1344,7 +1353,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 15.0 (Excel Share Engine HD)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.0 (Excel Share Engine HD)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -2479,11 +2488,9 @@ async function generateExcel(itemsToExport) {
 
         for (let i = 0; i < itemsToExport.length; i++) {
             const item = itemsToExport[i];
-            const rowIndex = i + 2;
 
-            worksheet.getRow(rowIndex).height = 75; 
-
-            worksheet.addRow({
+            // 1. СНАЧАЛА добавляем строку с данными
+            const newRow = worksheet.addRow({
                 pallet: item.pallet || "Основной",
                 qr: "",
                 barcode: "",
@@ -2494,7 +2501,11 @@ async function generateExcel(itemsToExport) {
                 raw: item.raw || item.code || ""
             });
 
-            worksheet.getRow(rowIndex).alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+            const rowIndex = newRow.number; // Получаем реальный номер созданной строки
+
+            // 2. ТЕПЕРЬ задаем высоту и выравнивание этой строке
+            newRow.height = 75;
+            newRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
 
             // === ВСТАВКА ВЫСОКОЧЁТКОГО QR-КОДА ===
             const qrCanvas = document.createElement('canvas');
@@ -2504,7 +2515,7 @@ async function generateExcel(itemsToExport) {
                 extension: 'png',
             });
             worksheet.addImage(qrId, {
-                tl: { col: 1.15, row: rowIndex - 0.9 },
+                tl: { col: 1.15, row: rowIndex - 0.9 }, // Привязываем к правильной строке (индекс ExcelJS)
                 ext: { width: 68, height: 68 }
             });
 
