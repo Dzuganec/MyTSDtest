@@ -303,7 +303,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, КВАДРАТНЫЙ QR) ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -477,7 +477,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 
 /* ============================================================
-   ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПОВЕРХ ВИДОИСКАТЕЛЯ (С ПОДДЕРЖКОЙ ТЕМ)
+   ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПОВЕРХ ВИДОИСКАТЕЛЯ (СВЕТЛАЯ/ТЁМНАЯ ТЕМА)
    ============================================================ */
 .cam-overlay-menu {
     position: absolute; inset: 0; z-index: 50;
@@ -525,7 +525,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .cam-card-desc { font-size: 11.5px; font-weight: 600; color: var(--text-muted); line-height: 1.25; }
 
-/* Темная тема для меню камер */
+/* Тёмная тема для меню камер */
 [data-theme="dark"] .cam-overlay-menu {
     background: rgba(10, 24, 18, 0.96);
     border-color: rgba(255, 255, 255, 0.14);
@@ -1056,20 +1056,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ -->
-<div class="modal-overlay" id="cameraSelectModal">
-    <div class="modal-content">
-        <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v2"/><circle cx="12" cy="13" r="4"/></svg></span>
-            Выберите камеру
-        </h3>
-        <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Для ценников лучше использовать Основную (1x)</p>
-        <div id="cameraListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
-        <button class="btn-modal btn-close" onclick="document.getElementById('cameraSelectModal').style.display='none'">Отмена</button>
-    </div>
-</div>
-
-<!-- ГЛАВНОЕ МЕНЮ -->
+<!-- МОДАЛЬНЫЕ ОКНА: ГЛАВНОЕ МЕНЮ -->
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1168,7 +1155,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <div class="scan-hint"><span>QR или штрихкод в рамку</span></div>
             </div>
             
-            <!-- КНОПКА ВЫБОРА КАМЕРЫ (СЛЕВА, ОТКРЫВАЕТ СПИСОК ПОВЕРХ КАМЕРЫ) -->
+            <!-- КНОПКА ВЫБОРА КАМЕРЫ (СЛЕВА) -->
             <button class="btn-icon-camera" id="cameraBtn" onclick="toggleCameraOverlayMenu()" title="Выбрать камеру">
                 <span class="app-icon">
                     <svg viewBox="0 0 24 24" fill="none">
@@ -1375,7 +1362,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.9 (Adaptive Theme Camera Menu)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 13.0 (Native Barcode Engine)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -2125,7 +2112,7 @@ function confirmPallet() {
     document.getElementById('palletModal').style.display = 'none';
 }
 
-/* ================= ПОЛНЫЙ СПИСОК ВСЕХ КАМЕР И ПЕРЕКЛЮЧЕНИЕ ================= */
+/* ================= БИБЛИОТЕКА СКАНИРОВАНИЯ И ВЫБОР ВСЕХ КАМЕР ================= */
 let html5QrCode = null;
 let isScannerPaused = false;
 let torchEnabled = false;
@@ -2149,7 +2136,7 @@ function parseRussianCameraLabel(cam, index) {
     } else {
         if (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || (index === 0 && !l.includes('2') && !l.includes('3'))) {
             title = "Основная камера (1x)";
-            desc = "Высокая чёткость и автофокус (рекомендуется для ценников)";
+            desc = "Автофокус и высокая чёткость (рекомендуется для ценников)";
             badge = "Основная";
         } else if (l.includes('camera2 2') || l.includes('ultra') || l.includes('wide') || l.includes('0.5') || l.includes('широк')) {
             title = "Сверхширокоугольная (0.5x)";
@@ -2177,7 +2164,7 @@ function parseRussianCameraLabel(cam, index) {
     return { title, desc, badge };
 }
 
-// Поиск абсолютно всех камер устройства
+// Поиск абсолютно всех камер устройства (с защитой от стирания кэша)
 async function detectAllCameras() {
     if (allCamerasList && allCamerasList.length > 0) {
         return allCamerasList;
@@ -2240,20 +2227,25 @@ async function startScanner() {
         html5QrCode = null;
     }
 
-    html5QrCode = new Html5Qrcode("reader");
-
-    const config = {
-        fps: 20,
-        qrbox: (w, h) => {
-            const min = Math.min(w, h);
-            return { width: Math.floor(min * 0.78), height: Math.floor(min * 0.78) };
-        },
+    // ВАЖНО: Активация нативного аппаратного BarcodeDetector в конструкторе!
+    html5QrCode = new Html5Qrcode("reader", {
         formatsToSupport: [
             Html5QrcodeSupportedFormats.QR_CODE,
             Html5QrcodeSupportedFormats.EAN_13,
             Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.CODE_128
-        ]
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.DATA_MATRIX
+        ],
+        experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true
+        },
+        verbose: false
+    });
+
+    const config = {
+        fps: 22
+        // Без qrbox сканер следит за всем полем и декодирует код мгновенно
     };
 
     await detectAllCameras();
@@ -2338,19 +2330,7 @@ async function selectCameraById(camId) {
     selectedCameraId = camId;
     triggerVibrate(20);
 
-    const config = {
-        fps: 20,
-        qrbox: (w, h) => {
-            const min = Math.min(w, h);
-            return { width: Math.floor(min * 0.78), height: Math.floor(min * 0.78) };
-        },
-        formatsToSupport: [
-            Html5QrcodeSupportedFormats.QR_CODE,
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.CODE_128
-        ]
-    };
+    const config = { fps: 22 };
 
     try {
         torchEnabled = false;
@@ -2370,17 +2350,35 @@ async function selectCameraById(camId) {
             html5QrCode = null;
         }
 
-        // Пауза 250 мс для освобождения сенсора в Android HAL
+        // Пауза 250 мс для освобождения сенсора в Android HAL (критично для Samsung)
         await new Promise(r => setTimeout(r, 250));
 
-        html5QrCode = new Html5Qrcode("reader");
+        html5QrCode = new Html5Qrcode("reader", {
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.QR_CODE,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.DATA_MATRIX
+            ],
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            },
+            verbose: false
+        });
+
         await html5QrCode.start(camId, config, onCodeDetected);
         showToast("Камера переключена");
     } catch(err) {
         console.error("Camera switch error:", err);
         showToast("Ошибка запуска сенсора");
         try {
-            if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader", {
+                    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+                });
+            }
             await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
         } catch(e2) {}
     } finally {
@@ -2408,7 +2406,7 @@ async function toggleTorch() {
             }
         }
     } catch(e) {
-        console.warn("Direct track torch error:", e);
+        console.warn("Direct torch error:", e);
     }
 
     // 2. Библиотечный метод
