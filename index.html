@@ -303,7 +303,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, QR 1:1) ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, КВАДРАТНЫЙ QR) ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -316,23 +316,23 @@ header {
     width: 100%; border-radius: 14px; margin-top: 2px; overflow-x: hidden;
 }
 table {
-    width: 100%; border-collapse: separate; border-spacing: 0 6px; table-layout: auto;
+    width: 100%; border-collapse: separate; border-spacing: 0 6px; table-layout: fixed;
 }
 thead th {
     font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
     color: var(--text-muted); padding: 4px 2px 8px; text-align: center; border: none;
-    white-space: nowrap;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 tr {
     background: var(--input-bg); border-radius: var(--radius-md);
     box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: background-color var(--t-theme), border-color var(--t-theme);
 }
 [data-theme="dark"] tr { background: #13201a; }
-td { padding: 6px 2px; vertical-align: middle; text-align: center; border: none; white-space: nowrap; }
+td { padding: 6px 2px; vertical-align: middle; text-align: center; border: none; white-space: nowrap; overflow: hidden; }
 td:first-child { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); padding-left: 6px; }
 td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); padding-right: 6px; }
 
-/* ИСПРАВЛЕНИЕ: ЖЕСТКИЙ КВАДРАТНЫЙ КОНТЕЙНЕР QR (38x38) */
+/* КВАДРАТНЫЙ АККУРАТНЫЙ QR-КОД 38x38 */
 .qr-cell-box {
     width: 38px !important;
     height: 38px !important;
@@ -504,7 +504,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .toggle.active { background: var(--btn-add); }
 .toggle.active .toggle-thumb { transform: translateX(22px); }
 
-/* ---------- СКАНЕР И ПРИЦЕЛ ---------- */
+/* ---------- СКАНЕР И КНОПКИ КАМЕРЫ / ЗУМА / ФОНАРИКА ---------- */
 #scannerModal { align-items: center; }
 #scannerModal .modal-content {
     height: 100dvh; max-height: 100dvh; width: 100%; max-width: 100%; border-radius: 0;
@@ -566,13 +566,38 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 
+/* КНОПКА ФОНАРИКА (СПРАВА) */
 .btn-icon-torch {
     position: absolute; right: 14px; top: 14px; z-index: 6;
     background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     color: #fff; width: 44px; height: 44px; border-radius: 50%; border: none;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: transform var(--t-fast) var(--ease-spring), background-color var(--t-fast);
 }
 .btn-icon-torch.active { background: #f59e0b; color: #111; box-shadow: 0 0 16px rgba(245, 158, 11, 0.65); }
+
+/* КНОПКА СМЕНЫ КАМЕРЫ (СЛЕВА, СИММЕТРИЧНО ФОНАРИКУ) */
+.btn-icon-camera {
+    position: absolute; left: 14px; top: 14px; z-index: 6;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    color: #fff; width: 44px; height: 44px; border-radius: 50%; border: none;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: transform var(--t-fast) var(--ease-spring), background-color var(--t-fast);
+}
+.btn-icon-camera:active { transform: scale(0.88); background: rgba(255,255,255,0.25); }
+
+/* ПЛАШКА ЗУМА (ПО ЦЕНТРУ) */
+.zoom-pill {
+    position: absolute; left: 50%; top: 14px; transform: translateX(-50%); display: flex; gap: 4px;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-radius: 24px; padding: 4px; z-index: 6; border: 1px solid rgba(255,255,255,0.15);
+}
+.zoom-btn {
+    border: none; background: transparent; color: rgba(255,255,255,0.85); font-weight: 800;
+    font-size: 13.5px; padding: 7px 14px; border-radius: 18px; cursor: pointer;
+    transition: background-color var(--t-fast), color var(--t-fast);
+}
+.zoom-btn.active { background: #fff; color: #111827; }
 
 /* ---------- NUMPAD ---------- */
 .numpad-content { background: var(--numpad-bg); padding-top: 20px; }
@@ -1043,7 +1068,27 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <div class="laser"></div>
                 <div class="scan-hint"><span>QR или штрихкод в рамку</span></div>
             </div>
-            <button class="btn-icon-torch" id="torchBtn" onclick="toggleTorch()">
+            
+            <!-- КНОПКА СМЕНЫ КАМЕРЫ (СЛЕВА) -->
+            <button class="btn-icon-camera" id="cameraBtn" onclick="switchCamera()" title="Сменить камеру">
+                <span class="app-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2v2"/>
+                        <path d="M17 14l3-3 3 3"/>
+                        <path d="M20 11v6"/>
+                    </svg>
+                </span>
+            </button>
+
+            <!-- ПЛАШКА ЗУМА (ПО ЦЕНТРУ) -->
+            <div class="zoom-pill" id="zoomPill">
+                <button class="zoom-btn active" data-zoom="1" onclick="setZoomLevel(1)">1x</button>
+                <button class="zoom-btn" data-zoom="2" onclick="setZoomLevel(2)">2x</button>
+                <button class="zoom-btn" data-zoom="3" onclick="setZoomLevel(3)">3x</button>
+            </div>
+
+            <!-- КНОПКА ФОНАРИКА (СПРАВА) -->
+            <button class="btn-icon-torch" id="torchBtn" onclick="toggleTorch()" title="Включить фонарик">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
             </button>
         </div>
@@ -1105,7 +1150,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- ЗУМ: С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
+<!-- ЗУМ С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
 <div class="modal-overlay" id="zoomModal" style="align-items: center;" onclick="handleZoomClick(event)">
     <div class="modal-content" style="background:var(--bg-card); max-width:460px; padding:26px; border-radius:var(--radius-lg); text-align:center; position: relative;">
         <p style="font-weight:800; font-size:13.5px; color:var(--btn-add); margin-top:-8px; margin-bottom:12px;">Зажмите код пальцем, чтобы скопировать</p>
@@ -1143,8 +1188,9 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
         <div class="instruction-content">
             <ol>
                 <li>Наведите камеру на ценник — код считается автоматически.</li>
-                <li>В столбце <b>QR</b> появится аккуратная точная мини-копия оригинального QR.</li>
-                <li>Нажмите на код в таблице для увеличения. <b>Зажмите увеличенный код пальцем</b>, чтобы скопировать текст в буфер обмена.</li>
+                <li>В столбце <b>QR</b> появится аккуратная мини-копия оригинального QR.</li>
+                <li>Вверху экрана доступны кнопки: <b>Смена камеры</b> (слева), <b>Зум 1x, 2x, 3x</b> (по центру), <b>Фонарик</b> (справа).</li>
+                <li>Нажмите на код в таблице для увеличения. <b>Зажмите увеличенный код пальцем на 0.5 сек</b>, чтобы скопировать.</li>
             </ol>
         </div>
         <button class="btn-modal btn-close" onclick="closeAllModals()">Понятно</button>
@@ -1217,7 +1263,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.3 (Perfect Square QR)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.5 (Samsung Multi-Lens & Torch Fix)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1797,7 +1843,6 @@ function renderCart() {
         
         const qrCanvas = document.getElementById(`qr-c-${item.id}`);
         if (qrCanvas) {
-            // Генерируем QR с правильным размером и подавляем инлайн-стили библиотеки
             QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 96, margin: 0 }, function(err) {
                 if (!err && qrCanvas) {
                     qrCanvas.style.width = "32px";
@@ -1968,10 +2013,37 @@ function confirmPallet() {
     document.getElementById('palletModal').style.display = 'none';
 }
 
-/* ================= СТАРТ КАМЕРЫ ================= */
+/* ================= УПРАВЛЕНИЕ КАМЕРАМИ И АППАРАТНЫМ ФОНАРИКОМ ================= */
 let html5QrCode = null;
 let isScannerPaused = false;
 let torchEnabled = false;
+let availableCameras = [];
+let currentCameraIndex = 0;
+
+async function getBestBackCameraIndex(cameras) {
+    if (!cameras || !cameras.length) return 0;
+    
+    // 1. Ищем камеру 'camera2 0' (основной 64MP сенсор Samsung A52)
+    let idx = cameras.findIndex(c => {
+        const l = c.label.toLowerCase();
+        const isNotAux = !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
+        return isNotAux && (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main'));
+    });
+    if (idx !== -1) return idx;
+
+    // 2. Ищем любую заднюю, не являющуюся ультрашириком или макро
+    idx = cameras.findIndex(c => {
+        const l = c.label.toLowerCase();
+        const isBack = l.includes('back') || l.includes('rear') || l.includes('задн') || l.includes('environment');
+        const isNotAux = !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
+        return isBack && isNotAux;
+    });
+    if (idx !== -1) return idx;
+
+    // 3. Любая задняя
+    idx = cameras.findIndex(c => /back|rear|задн|environment/i.test(c.label));
+    return idx !== -1 ? idx : 0;
+}
 
 async function startScanner() {
     isScannerPaused = false;
@@ -1989,7 +2061,7 @@ async function startScanner() {
         fps: 20,
         qrbox: (w, h) => {
             const min = Math.min(w, h);
-            return { width: Math.floor(min * 0.8), height: Math.floor(min * 0.8) };
+            return { width: Math.floor(min * 0.78), height: Math.floor(min * 0.78) };
         },
         formatsToSupport: [
             Html5QrcodeSupportedFormats.QR_CODE,
@@ -2000,24 +2072,140 @@ async function startScanner() {
     };
 
     try {
-        await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+        availableCameras = await Html5Qrcode.getCameras();
+        if (availableCameras && availableCameras.length) {
+            currentCameraIndex = await getBestBackCameraIndex(availableCameras);
+            await html5QrCode.start(availableCameras[currentCameraIndex].id, config, onCodeDetected);
+        } else {
+            await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+        }
+        updateZoomButtonsUI(1);
     } catch(err) {
         try {
-            const cameras = await Html5Qrcode.getCameras();
-            if (cameras && cameras.length) {
-                const backCamera = cameras.find(c => /back|rear|environment|задн/i.test(c.label)) || cameras[0];
-                await html5QrCode.start(backCamera.id, config, onCodeDetected);
-                return;
+            await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+            updateZoomButtonsUI(1);
+        } catch(err2) {
+            document.getElementById('scannerModal').style.display = 'none';
+            if (html5QrCode) {
+                try { html5QrCode.clear(); } catch(e) {}
+                html5QrCode = null;
             }
-        } catch(e2) {}
-        
-        document.getElementById('scannerModal').style.display = 'none';
-        if (html5QrCode) {
-            try { html5QrCode.clear(); } catch(e) {}
-            html5QrCode = null;
+            alert("Не удалось запустить камеру. Проверьте разрешения в браузере.");
+            updateNavState('onNavHome');
         }
-        alert("Не удалось запустить камеру. Проверьте разрешения в браузере.");
-        updateNavState('onNavHome');
+    }
+}
+
+/* ПЕРЕКЛЮЧЕНИЕ КАМЕР */
+async function switchCamera() {
+    if (!html5QrCode || !availableCameras || availableCameras.length <= 1) {
+        showToast("Другие камеры не найдены");
+        return;
+    }
+
+    triggerVibrate(20);
+    currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
+    const nextCam = availableCameras[currentCameraIndex];
+
+    try {
+        await html5QrCode.stop();
+        
+        // Сброс фонарика и зума
+        torchEnabled = false;
+        document.getElementById('torchBtn').classList.remove('active');
+        updateZoomButtonsUI(1);
+
+        const config = {
+            fps: 20,
+            qrbox: (w, h) => {
+                const min = Math.min(w, h);
+                return { width: Math.floor(min * 0.78), height: Math.floor(min * 0.78) };
+            },
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.QR_CODE,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128
+            ]
+        };
+
+        await html5QrCode.start(nextCam.id, config, onCodeDetected);
+        showToast("Камера: " + (nextCam.label ? nextCam.label.substring(0, 22) : (currentCameraIndex + 1)));
+    } catch(e) {
+        console.error("Switch cam error:", e);
+        showToast("Не удалось переключить камеру");
+    }
+}
+
+/* АППАРАТНЫЙ ФОНАРИК (ФИКС ДЛЯ GALAXY A52) */
+async function toggleTorch() {
+    if (!html5QrCode) return;
+    const nextTorchState = !torchEnabled;
+    let applied = false;
+
+    // Способ 1: Прямое управление WebRTC MediaStreamTrack (100% срабатывание на Samsung)
+    try {
+        const videoEl = document.querySelector("#reader video");
+        if (videoEl && videoEl.srcObject) {
+            const track = videoEl.srcObject.getVideoTracks()[0];
+            if (track) {
+                const caps = track.getCapabilities ? track.getCapabilities() : {};
+                if ('torch' in caps || caps.fillLightMode) {
+                    await track.applyConstraints({ advanced: [{ torch: nextTorchState }] });
+                    applied = true;
+                }
+            }
+        }
+    } catch(e) {
+        console.warn("Direct track torch error:", e);
+    }
+
+    // Способ 2: Fallback через html5QrCode
+    if (!applied) {
+        try {
+            await html5QrCode.applyVideoConstraints({ advanced: [{ torch: nextTorchState }] });
+            applied = true;
+        } catch(e) {
+            console.warn("Library torch fallback error:", e);
+        }
+    }
+
+    if (applied) {
+        torchEnabled = nextTorchState;
+        document.getElementById('torchBtn').classList.toggle('active', torchEnabled);
+        triggerVibrate(15);
+    } else {
+        showToast("Вспышка не поддерживается этим объективом");
+    }
+}
+
+function updateZoomButtonsUI(lvl) {
+    document.querySelectorAll('.zoom-btn').forEach(b => {
+        b.classList.toggle('active', Number(b.dataset.zoom) === lvl);
+    });
+}
+
+function setZoomLevel(lvl) {
+    updateZoomButtonsUI(lvl);
+    triggerVibrate(15);
+    
+    try {
+        const videoEl = document.querySelector("#reader video");
+        if (videoEl && videoEl.srcObject) {
+            const track = videoEl.srcObject.getVideoTracks()[0];
+            if (track) {
+                const caps = track.getCapabilities ? track.getCapabilities() : {};
+                if (caps.zoom) {
+                    const target = Math.min(Math.max(lvl, caps.zoom.min || 1), caps.zoom.max || 10);
+                    track.applyConstraints({ advanced: [{ zoom: target }] }).catch(() => {});
+                    return;
+                }
+            }
+        }
+    } catch(e) {}
+
+    if (html5QrCode) {
+        html5QrCode.applyVideoConstraints({ advanced: [{ zoom: lvl }] }).catch(() => {});
     }
 }
 
@@ -2038,16 +2226,10 @@ function stopScanner(resetNav = true) {
             html5QrCode = null;
         });
     }
+    torchEnabled = false;
+    document.getElementById('torchBtn').classList.remove('active');
     document.getElementById('scannerModal').style.display = 'none';
     if (resetNav) updateNavState('onNavHome');
-}
-
-function toggleTorch() {
-    if (!html5QrCode) return;
-    torchEnabled = !torchEnabled;
-    html5QrCode.applyVideoConstraints({ advanced: [{ torch: torchEnabled }] })
-    .then(() => document.getElementById('torchBtn').classList.toggle('active', torchEnabled))
-    .catch(() => { torchEnabled = false; });
 }
 
 /* ================= ЭКСПОРТ & АРХИВ ================= */
