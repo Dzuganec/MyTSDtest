@@ -2605,7 +2605,7 @@ async function generateExcel(itemsToExport, action, prefix) {
 
         // Если пользователь выбрал "Поделиться"
         if (action === 'share') {
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            if (navigator.share) {
                 try {
                     await navigator.share({
                         files: [file],
@@ -2615,12 +2615,11 @@ async function generateExcel(itemsToExport, action, prefix) {
                     showToast("Отправлено!");
                 } catch (err) {
                     if (err.name !== 'AbortError') {
-                        downloadExcelBlob(blob, fileName);
+                        showToast("Система не дала открыть меню. Сохраните файл кнопкой ниже.");
                     }
                 }
             } else {
-                showToast("Отправка не поддерживается, файл скачан");
-                downloadExcelBlob(blob, fileName);
+                showToast("Ваш браузер не поддерживает это меню. Сохраните файл.");
             }
         } else {
             // Если пользователь выбрал "Сохранить на устройство"
