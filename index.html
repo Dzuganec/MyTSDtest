@@ -476,31 +476,42 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: flex; align-items: center; justify-content: center; color: var(--btn-add);
 }
 
-/* МОДАЛ ВЫБОРА КАМЕРЫ (Z-INDEX ВЫШЕ СКАНЕРА) */
-#cameraSelectModal {
-    z-index: 10025 !important;
+/* ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПОВЕРХ ВИДОИСКАТЕЛЯ */
+.cam-overlay-menu {
+    position: absolute; inset: 0; z-index: 20;
+    background: rgba(8, 20, 15, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-radius: var(--radius-lg); padding: 18px 16px 20px;
+    display: flex; flex-direction: column; text-align: left;
+    animation: slideInUp 0.25s var(--ease-smooth);
 }
-.cam-choice-item {
-    padding: 14px 16px; border-radius: var(--radius-sm); border: 2px solid var(--border-color);
-    background: var(--input-bg); margin-bottom: 10px; cursor: pointer; text-align: left;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    transition: transform var(--t-fast), border-color var(--t-fast), background-color var(--t-fast);
+.cam-overlay-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
-.cam-choice-item:active { transform: scale(0.98); }
-.cam-choice-item.active {
-    border-color: var(--btn-add); background: rgba(5, 150, 105, 0.1);
+.cam-overlay-title {
+    font-size: 16px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px;
 }
-.cam-choice-title {
-    font-weight: 900; font-size: 15.5px; color: var(--text-main);
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+.cam-overlay-close {
+    background: rgba(255, 255, 255, 0.15); border: none; color: #fff;
+    width: 32px; height: 32px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; cursor: pointer;
 }
-.cam-badge-tag {
-    font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
-    background: var(--info-bg); color: var(--info-text);
+.cam-overlay-list {
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px;
 }
-.cam-choice-desc {
-    font-weight: 600; font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.3;
+.cam-choice-card {
+    background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px; padding: 12px 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    transition: transform 0.18s, background-color 0.18s, border-color 0.18s;
 }
+.cam-choice-card:active { transform: scale(0.97); }
+.cam-choice-card.active {
+    background: rgba(16, 185, 129, 0.22); border-color: #10b981;
+}
+.cam-card-info { display: flex; flex-direction: column; gap: 2px; }
+.cam-card-name { font-size: 14.5px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 6px; }
+.cam-card-desc { font-size: 11.5px; font-weight: 600; color: rgba(255, 255, 255, 0.65); line-height: 1.25; }
 
 .instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; }
 .instruction-content ol { margin: 10px 0 0 0; padding-left: 20px; }
@@ -997,22 +1008,19 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ -->
+<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ (РЕЗЕРВНЫЙ ДИАЛОГ) -->
 <div class="modal-overlay" id="cameraSelectModal">
     <div class="modal-content">
         <h3 class="modal-title">
-            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
-            Выберите заднюю камеру
+            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v2"/><circle cx="12" cy="13" r="4"/></svg></span>
+            Выберите камеру
         </h3>
         <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Для ценников лучше использовать Основную (1x)</p>
-        
         <div id="cameraListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
-        
         <button class="btn-modal btn-close" onclick="document.getElementById('cameraSelectModal').style.display='none'">Отмена</button>
     </div>
 </div>
 
-<!-- ГЛАВНОЕ МЕНЮ -->
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1111,8 +1119,8 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <div class="scan-hint"><span>QR или штрихкод в рамку</span></div>
             </div>
             
-            <!-- КНОПКА ВЫБОРА КАМЕРЫ (СЛЕВА, ОТКРЫВАЕТ СПИСОК) -->
-            <button class="btn-icon-camera" id="cameraBtn" onclick="openCameraSelectModal()" title="Выбрать камеру">
+            <!-- КНОПКА ВЫБОРА КАМЕРЫ (СЛЕВА, ОТКРЫВАЕТ СПИСОК ПОВЕРХ КАМЕРЫ) -->
+            <button class="btn-icon-camera" id="cameraBtn" onclick="toggleCameraOverlayMenu()" title="Выбрать камеру">
                 <span class="app-icon">
                     <svg viewBox="0 0 24 24" fill="none">
                         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v2"/>
@@ -1132,6 +1140,20 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
             <button class="btn-icon-torch" id="torchBtn" onclick="toggleTorch()" title="Включить фонарик">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
             </button>
+
+            <!-- ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПРЯМО ПОВЕРХ ВИДОИСКАТЕЛЯ -->
+            <div class="cam-overlay-menu" id="camOverlayMenu" style="display:none;">
+                <div class="cam-overlay-header">
+                    <span class="cam-overlay-title">
+                        <span class="app-icon" style="color:var(--btn-add); width:18px; height:18px;"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v2"/><circle cx="12" cy="13" r="4"/></svg></span>
+                        Камеры устройства
+                    </span>
+                    <button class="cam-overlay-close" onclick="closeCameraMenu(event)">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="cam-overlay-list" id="camOverlayList"></div>
+            </div>
         </div>
         <button class="btn-modal btn-close" onclick="stopScanner()">Завершить</button>
     </div>
@@ -1304,7 +1326,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.6 (Rear Lens Selector & Torch)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.7 (Live Viewfinder Camera Menu)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1446,7 +1468,7 @@ function triggerVibrate(pattern = 12) {
 }
 
 document.addEventListener('pointerdown', (e) => {
-    const interactive = e.target.closest('button, .navitem, .toggle, .pallet-bar, .dropdown-item, .qty-box, .numpad-paste-btn, .num-btn, .qr-cell-box, .zoom-touch-target, .cam-choice-item');
+    const interactive = e.target.closest('button, .navitem, .toggle, .pallet-bar, .dropdown-item, .qty-box, .numpad-paste-btn, .num-btn, .qr-cell-box, .zoom-touch-target, .cam-choice-card, .cam-choice-item');
     if (interactive) {
         SoundFX.tap();
         triggerVibrate(12);
@@ -1930,211 +1952,107 @@ function undoDelete() {
     }
 }
 
-/* ================= NUMPAD МОДАЛ ================= */
-let numpadVal = "1";
-let numpadMode = "";
-let pendingParsedItem = null;
-let editingItemId = null;
-
-function updateNumpadUI() {
-    const display = document.getElementById('numpadDisplay');
-    const group = document.getElementById('numpadInputGroup');
-    const pasteBtn = document.getElementById('numpadPasteBtn');
-
-    if (numpadMode === 'manual') {
-        group.classList.add('manual-mode');
-        pasteBtn.style.display = 'flex';
-        display.innerHTML = numpadVal ? `${numpadVal}<span class="numpad-cursor"></span>` : `<span class="numpad-placeholder">Ввод ШК или QR...</span><span class="numpad-cursor"></span>`;
-    } else {
-        group.classList.remove('manual-mode');
-        pasteBtn.style.display = 'none';
-        display.innerHTML = `${numpadVal || 0}<span class="numpad-cursor"></span>`;
-    }
-    display.scrollLeft = display.scrollWidth;
-}
-
-function showNumpadForManual() {
-    numpadMode = 'manual';
-    numpadVal = "";
-    document.getElementById('numpadTitle').style.display = "none";
-    updateNumpadUI();
-    document.getElementById('numpadModal').style.display = 'flex';
-}
-
-function showNumpadForScan(parsedObj) {
-    numpadMode = 'scan';
-    pendingParsedItem = parsedObj;
-    let defQty = 1;
-    if (MASTER_CODES[parsedObj.barcode] && MASTER_CODES[parsedObj.barcode].qtyInBox) {
-        defQty = MASTER_CODES[parsedObj.barcode].qtyInBox;
-    }
-    numpadVal = String(defQty);
-    const titleEl = document.getElementById('numpadTitle');
-    titleEl.style.display = "block";
-    titleEl.innerText = `ШК: ${parsedObj.barcode}${parsedObj.priceCard ? ' | ' + parsedObj.priceCard + ' ₽' : ''}`;
-    updateNumpadUI();
-    document.getElementById('numpadModal').style.display = 'flex';
-}
-
-function showNumpadForEdit(itemId) {
-    const item = currentCart.find(i => i.id === itemId);
-    if (!item) return;
-    numpadMode = 'edit';
-    editingItemId = itemId;
-    numpadVal = String(item.qty);
-    const titleEl = document.getElementById('numpadTitle');
-    titleEl.style.display = "block";
-    titleEl.innerText = `Изменить кол-во: ${item.code}`;
-    updateNumpadUI();
-    document.getElementById('numpadModal').style.display = 'flex';
-}
-
-function numPress(n) {
-    if (numpadVal === "0" && numpadMode !== 'manual') numpadVal = "";
-    if (numpadVal.length < 28) numpadVal += String(n);
-    updateNumpadUI();
-}
-function numClear() { numpadVal = ""; updateNumpadUI(); }
-function numBackspace() { numpadVal = numpadVal.slice(0, -1); updateNumpadUI(); }
-
-function numCancel() {
-    document.getElementById('numpadModal').style.display = 'none';
-    if (numpadMode === 'scan' && settings.continuous) isScannerPaused = false;
-    else updateNavState('onNavHome');
-}
-
-function numConfirm() {
-    document.getElementById('numpadModal').style.display = 'none';
-    if (numpadMode === 'manual') {
-        const c = numpadVal.trim();
-        if (c) {
-            const parsed = parsePriceTagQR(c);
-            addOrUpdateItem(parsed, 1);
-        }
-        updateNavState('onNavHome');
-    } else if (numpadMode === 'scan') {
-        const q = parseInt(numpadVal) || 1;
-        if (pendingParsedItem) addOrUpdateItem(pendingParsedItem, Math.max(1, q));
-        if (settings.continuous) isScannerPaused = false;
-        else stopScanner(true);
-    } else if (numpadMode === 'edit') {
-        const item = currentCart.find(i => i.id === editingItemId);
-        if (item) {
-            item.qty = Math.max(1, parseInt(numpadVal) || 1);
-            saveState();
-            renderCart();
-        }
-    }
-}
-
-async function pasteToNumpad() {
-    try {
-        const text = await navigator.clipboard.readText();
-        if (text) { numpadVal = text.trim(); updateNumpadUI(); }
-    } catch(e) {}
-}
-
-/* ================= ПАЛЛЕТЫ ================= */
-function openPalletModal() {
-    document.getElementById('palletInput').value = activePallet;
-    const pallets = [...new Set(currentCart.map(i => i.pallet))];
-    const container = document.getElementById('existingPallets');
-    container.innerHTML = pallets.map(p => `
-        <button style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:11px; padding:8px 14px; font-weight:800; font-size:14px; color:var(--text-main); cursor:pointer;" onclick="document.getElementById('palletInput').value='${p}'">${p}</button>
-    `).join('');
-    document.getElementById('palletModal').style.display = 'flex';
-}
-
-function confirmPallet() {
-    activePallet = document.getElementById('palletInput').value.trim() || "Основной";
-    document.getElementById('currentPalletBadge').innerHTML = `
-        <span class="app-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
-        ${activePallet}
-    `;
-    document.getElementById('palletModal').style.display = 'none';
-}
-
-/* ================= УПРАВЛЕНИЕ КАМЕРАМИ И АППАРАТНЫМ ФОНАРИКОМ ================= */
+/* ================= ПОЛНЫЙ СПИСОК ВСЕХ КАМЕР И ПЕРЕКЛЮЧЕНИЕ ================= */
 let html5QrCode = null;
 let isScannerPaused = false;
 let torchEnabled = false;
-let backCamerasList = [];
+let allCamerasList = [];
 let selectedCameraId = null;
+let isSwitchingCamera = false;
 
-// Анализ названий камер для отображения понятных подписей
-function parseFriendlyCameraName(cam, index) {
+// Подробная расшифровка типа камеры на русском языке
+function parseRussianCameraLabel(cam, index) {
     const l = (cam.label || '').toLowerCase();
-    let title = "Камера " + (index + 1);
-    let desc = "Задний сенсор";
+    const isFront = l.includes('front') || l.includes('user') || l.includes('передн') || l.includes('selfie') || l.includes('facing front');
 
-    if (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main') || index === 0) {
-        title = "Основная камера (1x)";
-        desc = "Рекомендуется для сканирования ценников";
-    } else if (l.includes('ultra') || l.includes('wide') || l.includes('0.5') || l.includes('широк')) {
-        title = "Широкоугольная (0.5x)";
-        desc = "Без автофокуса (может мылить)";
-    } else if (l.includes('macro') || l.includes('макро')) {
-        title = "Макро-объектив";
-        desc = "Для мелких деталей в упор";
-    } else if (l.includes('tele') || l.includes('zoom') || l.includes('теле')) {
-        title = "Телеобъектив";
-        desc = "Оптическое приближение";
-    } else if (l.includes('depth') || l.includes('глубин')) {
-        title = "Датчик глубины";
-        desc = "Вспомогательный сенсор";
+    let title = "";
+    let desc = "";
+    let badge = "";
+
+    if (isFront) {
+        title = "Фронтальная камера";
+        desc = "Передняя селфи-камера";
+        badge = "Селфи";
     } else {
-        title = "Задняя камера " + (index + 1);
-        desc = cam.label ? cam.label.substring(0, 32) : "Дополнительный сенсор";
+        // Определение роли задней камеры (Samsung A52 и Android)
+        if (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main') || index === 0) {
+            title = "Основная камера (1x)";
+            desc = "Автофокус и высокая чёткость (рекомендуется для ценников)";
+            badge = "Основная";
+        } else if (l.includes('ultra') || l.includes('0.5') || l.includes('wide') || l.includes('широк')) {
+            title = "Сверхширокоугольная (0.5x)";
+            desc = "Без автофокуса (может мылить мелкие коды)";
+            badge = "Ширик";
+        } else if (l.includes('macro') || l.includes('макро')) {
+            title = "Макро-камера";
+            desc = "Для съёмки объектов в упор (3-5 см)";
+            badge = "Макро";
+        } else if (l.includes('tele') || l.includes('zoom') || l.includes('теле')) {
+            title = "Телеобъектив";
+            desc = "Оптическое увеличение";
+            badge = "Зум";
+        } else if (l.includes('depth') || l.includes('глубин')) {
+            title = "Датчик глубины";
+            desc = "Вспомогательный сенсор резкости";
+            badge = "Сенсор";
+        } else {
+            title = `Задняя камера #${index + 1}`;
+            desc = cam.label || "Тыловой датчик изображения";
+            badge = "Задняя";
+        }
     }
 
-    return { title, desc };
+    return { title, desc, badge, isFront };
 }
 
-// Поиск задних камер
-async function detectBackCameras() {
+// Поиск абсолютно всех камер устройства
+async function detectAllCameras() {
     try {
         const cameras = await Html5Qrcode.getCameras();
-        if (!cameras || !cameras.length) return [];
-        
-        // Отсекаем фронтальные камеры
-        const onlyBack = cameras.filter(c => {
-            const l = c.label.toLowerCase();
-            return !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
-        });
-
-        backCamerasList = onlyBack.length ? onlyBack : cameras;
-        return backCamerasList;
+        allCamerasList = (cameras && cameras.length) ? cameras : [];
+        return allCamerasList;
     } catch(e) {
-        console.warn("Detect cameras error:", e);
+        console.warn("Detect all cameras error:", e);
+        allCamerasList = [];
         return [];
     }
 }
 
-function getBestInitialCameraId() {
-    if (!backCamerasList || !backCamerasList.length) return null;
+// Первоначальный выбор: по умолчанию всегда основная задняя 64MP
+function getBestDefaultCameraId() {
+    if (!allCamerasList || !allCamerasList.length) return null;
 
-    // 1. Ищем camera2 0 (основная 64MP на Samsung A52)
-    let best = backCamerasList.find(c => {
-        const l = c.label.toLowerCase();
+    // 1. Ищем camera2 0 (основная на Samsung)
+    let best = allCamerasList.find(c => {
+        const l = (c.label || '').toLowerCase();
+        const isNotFront = !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
         const isNotAux = !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
-        return isNotAux && (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main'));
+        return isNotFront && isNotAux && (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main'));
     });
     if (best) return best.id;
 
-    // 2. Первая задняя, не являющаяся шириком или макро
-    best = backCamerasList.find(c => {
-        const l = c.label.toLowerCase();
-        return !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
+    // 2. Любая задняя, не являющаяся шириком или макро
+    best = allCamerasList.find(c => {
+        const l = (c.label || '').toLowerCase();
+        const isNotFront = !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
+        return isNotFront && !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
     });
     if (best) return best.id;
 
-    // 3. Первая доступная
-    return backCamerasList[0].id;
+    // 3. Любая задняя камера
+    best = allCamerasList.find(c => {
+        const l = (c.label || '').toLowerCase();
+        return !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
+    });
+    if (best) return best.id;
+
+    return allCamerasList[0].id;
 }
 
 async function startScanner() {
     isScannerPaused = false;
     document.getElementById('scannerModal').style.display = 'flex';
+    closeCameraMenu();
 
     if (html5QrCode) {
         try { await html5QrCode.stop(); } catch(e) {}
@@ -2158,9 +2076,9 @@ async function startScanner() {
         ]
     };
 
-    await detectBackCameras();
+    await detectAllCameras();
     if (!selectedCameraId) {
-        selectedCameraId = getBestInitialCameraId();
+        selectedCameraId = getBestDefaultCameraId();
     }
 
     try {
@@ -2186,52 +2104,77 @@ async function startScanner() {
     }
 }
 
-// Открытие модального окна выбора задних камер
-async function openCameraSelectModal() {
-    await detectBackCameras();
-
-    if (!backCamerasList || !backCamerasList.length) {
-        showToast("Дополнительные камеры не найдены");
+/* ОТКРЫТИЕ И ЗАКРЫТИЕ ВЫПАДАЮЩЕГО МЕНЮ ПОВЕРХ КАМЕРЫ */
+async function toggleCameraOverlayMenu() {
+    const overlay = document.getElementById('camOverlayMenu');
+    if (overlay.style.display === 'flex') {
+        closeCameraMenu();
         return;
     }
 
-    const container = document.getElementById('cameraListContainer');
-    container.innerHTML = backCamerasList.map((cam, idx) => {
-        const info = parseFriendlyCameraName(cam, idx);
+    await detectAllCameras();
+    if (!allCamerasList || !allCamerasList.length) {
+        showToast("Камеры не найдены");
+        return;
+    }
+
+    const listContainer = document.getElementById('camOverlayList');
+    listContainer.innerHTML = allCamerasList.map((cam, idx) => {
+        const info = parseRussianCameraLabel(cam, idx);
         const isActive = (cam.id === selectedCameraId) || (!selectedCameraId && idx === 0);
         return `
-            <div class="cam-choice-item ${isActive ? 'active' : ''}" onclick="selectCameraById('${cam.id}')">
-                <div class="cam-choice-info" style="flex:1;">
-                    <div class="cam-choice-title">
+            <div class="cam-choice-card ${isActive ? 'active' : ''}" onclick="selectCameraById('${cam.id}')">
+                <div class="cam-card-info">
+                    <div class="cam-card-name">
                         <span>${info.title}</span>
+                        <span class="cam-badge-tag">${info.badge}</span>
                     </div>
-                    <div class="cam-choice-desc">${info.desc}</div>
+                    <div class="cam-card-desc">${info.desc}</div>
                 </div>
-                ${isActive ? '<span class="app-icon" style="color:var(--btn-add); width:22px; height:22px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
+                ${isActive ? '<span class="app-icon" style="color:#10b981; width:20px; height:20px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
             </div>
         `;
     }).join('');
 
-    document.getElementById('cameraSelectModal').style.display = 'flex';
+    overlay.style.display = 'flex';
 }
 
-// Применение выбранной камеры из списка
+function closeCameraMenu(e) {
+    if (e) e.stopPropagation();
+    const overlay = document.getElementById('camOverlayMenu');
+    if (overlay) overlay.style.display = 'none';
+}
+
+/* ПЕРЕКЛЮЧЕНИЕ КАМЕРЫ БЕЗ ОШИБОК */
 async function selectCameraById(camId) {
-    document.getElementById('cameraSelectModal').style.display = 'none';
+    closeCameraMenu();
+    if (isSwitchingCamera) return;
     if (selectedCameraId === camId && html5QrCode && html5QrCode.isScanning) return;
 
+    isSwitchingCamera = true;
     selectedCameraId = camId;
     triggerVibrate(20);
 
     try {
+        // Сброс фонарика и зума
+        torchEnabled = false;
+        const torchBtn = document.getElementById('torchBtn');
+        if (torchBtn) torchBtn.classList.remove('active');
+        updateZoomButtonsUI(1);
+
+        // Безопасная остановка текущего потока
         if (html5QrCode) {
-            await html5QrCode.stop();
+            try {
+                if (html5QrCode.isScanning) {
+                    await html5QrCode.stop();
+                }
+            } catch(e) {
+                console.warn("Stop scanner error:", e);
+            }
         }
 
-        // Сброс индикаторов фонарика и зума
-        torchEnabled = false;
-        document.getElementById('torchBtn').classList.remove('active');
-        updateZoomButtonsUI(1);
+        // Пауза 200 мс для корректного освобождения сенсора в Android HAL (критично для Samsung)
+        await new Promise(r => setTimeout(r, 200));
 
         const config = {
             fps: 20,
@@ -2249,19 +2192,25 @@ async function selectCameraById(camId) {
 
         await html5QrCode.start(camId, config, onCodeDetected);
         showToast("Камера переключена");
-    } catch(e) {
-        console.error("Camera switch error:", e);
-        showToast("Ошибка при смене камеры");
+    } catch(err) {
+        console.error("Camera switch error:", err);
+        showToast("Ошибка запуска сенсора");
+        // Пытаемся восстановить сканер
+        try {
+            await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+        } catch(e2) {}
+    } finally {
+        isSwitchingCamera = false;
     }
 }
 
-/* АППАРАТНЫЙ ФОНАРИК (ФИКС ДЛЯ GALAXY A52) */
+/* НАДЕЖНЫЙ ФОНАРИК ДЛЯ GALAXY A52 */
 async function toggleTorch() {
     if (!html5QrCode) return;
     const nextTorchState = !torchEnabled;
     let applied = false;
 
-    // 1. Прямое управление через WebRTC MediaStreamTrack
+    // Способ 1: Прямой доступ к дорожке WebRTC
     try {
         const videoEl = document.querySelector("#reader video");
         if (videoEl && videoEl.srcObject) {
@@ -2275,10 +2224,10 @@ async function toggleTorch() {
             }
         }
     } catch(e) {
-        console.warn("Direct torch error:", e);
+        console.warn("Direct track torch error:", e);
     }
 
-    // 2. Библиотечный fallback
+    // Способ 2: Библиотечный метод
     if (!applied) {
         try {
             await html5QrCode.applyVideoConstraints({ advanced: [{ torch: nextTorchState }] });
@@ -2335,6 +2284,7 @@ function onCodeDetected(decodedText) {
 }
 
 function stopScanner(resetNav = true) {
+    closeCameraMenu();
     if (html5QrCode) {
         html5QrCode.stop().then(() => {
             try { html5QrCode.clear(); } catch(e) {}
@@ -2345,7 +2295,8 @@ function stopScanner(resetNav = true) {
         });
     }
     torchEnabled = false;
-    document.getElementById('torchBtn').classList.remove('active');
+    const torchBtn = document.getElementById('torchBtn');
+    if (torchBtn) torchBtn.classList.remove('active');
     document.getElementById('scannerModal').style.display = 'none';
     if (resetNav) updateNavState('onNavHome');
 }
