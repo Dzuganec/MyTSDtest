@@ -276,7 +276,7 @@ header {
 .pallet-badge {
     background: var(--btn-add); color: white; padding: 5px 14px; border-radius: 12px;
     font-weight: 800; font-size: 13.5px; box-shadow: 0 3px 10px rgba(5,150,105,0.28);
-    display: flex; align-items: gap: 6px;
+    display: flex; align-items: center; gap: 6px;
 }
 
 /* Кнопка Корзины с анимацией */
@@ -369,7 +369,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 
 /* Линейный Штрихкод */
-.inline-barcode-container { padding: 1px; cursor: pointer; transition: opacity var(--t-fast); display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.inline-barcode-container { padding: 1px; cursor: pointer; transition: opacity var(--t-fast); }
 .inline-barcode-container:active { opacity: 0.6; }
 .barcode-wrapper {
     background-color: #ffffff; padding: 3px 6px; border-radius: 9px;
@@ -464,10 +464,9 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     width: 100%; padding: 16px; border: none; border-radius: var(--radius-md);
     font-weight: 800; font-size: 16px; margin-top: 10px; cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    transition: transform var(--t-fast) var(--ease-spring), opacity var(--t-fast);
+    transition: transform var(--t-fast) var(--ease-spring);
 }
 .btn-modal:active { transform: scale(0.96); }
-.btn-modal:disabled { cursor: not-allowed; }
 .btn-close { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); }
 
 .dropdown-item {
@@ -1219,22 +1218,18 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
+<!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
 <div class="modal-overlay" id="exportChoiceModal">
     <div class="modal-content">
         <h3 class="modal-title">Экспорт Excel</h3>
         <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Выберите действие с файлом</p>
-
-        <div id="exportPrepHint" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px; margin-bottom:12px; border-radius:14px; background:var(--info-bg); color:var(--info-text); font-weight:800; font-size:13px; animation: twinkle 1.1s ease-in-out infinite;">
-            Формирование файла...
-        </div>
-
+        
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="btn-modal" id="exportShareBtn" style="background:#2563eb; color:white; margin-top:0;" onclick="executeExport('share')">
+            <button class="btn-modal" style="background:#2563eb; color:white; margin-top:0;" onclick="executeExport('share')">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
                 Поделиться файлом (Telegram, WhatsApp)
             </button>
-            <button class="btn-modal" id="exportSaveBtn" style="background:var(--btn-add); color:white; margin-top:0;" onclick="executeExport('save')">
+            <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:0;" onclick="executeExport('save')">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
                 Сохранить в загрузки
             </button>
@@ -1367,7 +1362,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.2 (API Sync & Share Fix)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.1 (Interactive Share Dialog)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1794,51 +1789,1069 @@ function parsePriceTagQR(rawText) {
     return res;
 }
 
-/* ================= ПОИСК НАЗВАНИЯ ТОВАРА ПО API ================= */
-async function fetchJsonWithTimeout(url, ms = 6000) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), ms);
+function updateCartStats() {
+    const total = currentCart.reduce((acc, i) => acc + i.qty, 0);
+    const stats = document.getElementById('cartStats');
+    if (stats) stats.innerText = `${currentCart.length} строк (${total} шт.)`;
+}
+
+function saveState() {
+    localStorage.setItem('tsd_lite_cart', JSON.stringify(currentCart));
+}
+
+function renderBarcodeSafe(targetId, code, opts = {}) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
     try {
-        const res = await fetch(url, { signal: controller.signal });
-        if (!res.ok) return null;
-        return await res.json();
+        JsBarcode(el, code, Object.assign({ format: "EAN13", lineColor: "#000", background: "transparent" }, opts));
     } catch (e) {
-        return null;
-    } finally {
-        clearTimeout(timer);
+        try {
+            JsBarcode(el, code, Object.assign({ format: "CODE128", lineColor: "#000", background: "transparent" }, opts));
+        } catch (err) {
+            el.outerHTML = `<span style="font-family:monospace;font-weight:900;font-size:13px;">${code}</span>`;
+        }
     }
 }
 
-async function fetchProductName(barcode, itemId) {
-    if (!barcode) return;
-
-    // Семейство открытых бесплатных баз Open*Facts — без ключей, с поддержкой CORS в браузере.
-    // Проверяем по очереди: продукты питания, общие товары (быт. химия, техника и т.д.), косметика, корм для животных.
-    const openFactsSources = [
-        `https://world.openfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,product_name_ru,generic_name`,
-        `https://world.openproductsfacts.org/api/v2/product/${barcode}.json?fields=product_name,product_name_ru,generic_name`,
-        `https://world.openbeautyfacts.org/api/v2/product/${barcode}.json?fields=product_name,product_name_ru,generic_name`,
-        `https://world.openpetfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,product_name_ru,generic_name`
-    ];
-
-    for (const url of openFactsSources) {
-        const data = await fetchJsonWithTimeout(url);
-        if (data && data.status === 1 && data.product) {
-            const name = data.product.product_name_ru || data.product.product_name || data.product.generic_name;
-            if (name) {
-                updateItemName(itemId, name);
-                return;
-            }
-        }
+function addOrUpdateItem(parsedData, qty = 1) {
+    const pallet = activePallet;
+    const barcode = parsedData.barcode || normalizeBarcode(parsedData.raw);
+    
+    const existing = currentCart.find(i => i.code === barcode && i.pallet === pallet);
+    if (existing) {
+        existing.qty += qty;
+        if (parsedData.priceCard) existing.priceCard = parsedData.priceCard;
+        if (parsedData.priceRegular) existing.priceRegular = parsedData.priceRegular;
+        if (parsedData.raw) existing.raw = parsedData.raw;
+    } else {
+        const newItem = {
+            id: 'item_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+            raw: parsedData.raw || barcode,
+            code: barcode,
+            priceCard: parsedData.priceCard || '',
+            priceRegular: parsedData.priceRegular || '',
+            qty: qty,
+            pallet: pallet
+        };
+        currentCart.unshift(newItem);
     }
 
-    // Резервный вариант — бесплатный тестовый эндпоинт UPCItemDB.
-    // Имеет строгий дневной лимит запросов и не для всех штрихкодов отвечает через CORS,
-    // поэтому используется только как последняя попытка и не должен ломать остальной поиск.
-    const upc = await fetchJsonWithTimeout(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
-    if (upc && upc.items && upc.items.length > 0 && upc.items[0].title) {
-        updateItemName(itemId, upc.items[0].title);
+    saveState();
+    renderCart();
+    SoundFX.success();
+    triggerVibrate([20, 35, 20]);
+    flashCartStats();
+}
+
+function renderCart() {
+    const area = document.getElementById('cartContentArea');
+    if (!area) return;
+    
+    if (currentCart.length === 0) {
+        area.innerHTML = `
+            <div class="no-data-card">
+                <span class="app-icon" style="width:44px;height:44px;color:var(--btn-add);"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg></span>
+                <span>Наведите камеру на QR ценника</span>
+            </div>`;
+        updateCartStats();
         return;
     }
 
-    console.warn("Название товара не найдено ни в одной из бесплатных б
+    const pallets = {};
+    currentCart.forEach(item => {
+        if (!pallets[item.pallet]) pallets[item.pallet] = [];
+        pallets[item.pallet].push(item);
+    });
+
+    let html = `<div class="table-responsive"><table>
+        <thead>
+            <tr>
+                <th style="width:52px;">QR</th>
+                <th style="width:130px;">Штрихкод</th>
+                <th>По карте</th>
+                <th style="width:44px;">Кол</th>
+                <th style="width:40px;"></th>
+            </tr>
+        </thead>`;
+
+    for (const [palletName, items] of Object.entries(pallets)) {
+        html += `
+            <tbody>
+                <tr class="pallet-header-row">
+                    <td colspan="5">
+                        <div class="pallet-header-content">
+                            <span class="pallet-name">
+                                <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+                                ${palletName}
+                            </span>
+                            <button class="btn-pallet-qr" onclick="exportPalletToExcel('${palletName}')">
+                                <span class="app-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                                Экспорт
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+
+        items.forEach((item, idx) => {
+            const safeRaw = encodeURIComponent(item.raw || item.code);
+            const cardPriceHtml = item.priceCard 
+                ? `<span class="price-card-badge">${item.priceCard} ₽</span>` 
+                : `<span style="color:var(--text-muted);font-weight:800;font-size:13px;">—</span>`;
+            const oldPriceHtml = item.priceRegular ? `<span class="price-regular-old">${item.priceRegular} ₽</span>` : '';
+            
+            const delay = Math.min(idx * 40, 240);
+            const rowStyle = !isLowFx() ? `style="animation: popIn 0.4s var(--ease-spring) ${delay}ms forwards; opacity: 0;"` : '';
+
+            html += `
+                <tr ${rowStyle}>
+                    <td>
+                        <div class="qr-cell-box" onclick="zoomQr(decodeURIComponent('${safeRaw}'))" title="Нажмите для увеличения">
+                            <canvas id="qr-c-${item.id}"></canvas>
+                        </div>
+                    </td>
+
+                    <td class="inline-barcode-container" onclick="zoomBarcode('${item.code}')">
+                        <div class="barcode-wrapper"><svg id="bc-${item.id}"></svg></div>
+                    </td>
+
+                    <td>
+                        <div class="price-cell">
+                            ${cardPriceHtml}
+                            ${oldPriceHtml}
+                        </div>
+                    </td>
+
+                    <td>
+                        <button class="qty-box" onclick="showNumpadForEdit('${item.id}')">${item.qty}</button>
+                    </td>
+
+                    <td>
+                        <button class="btn-remove" onclick="removeItem('${item.id}')">
+                            <span class="app-icon" style="width:18px;height:18px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+                        </button>
+                    </td>
+                </tr>`;
+        });
+        html += `</tbody>`;
+    }
+    html += `</table></div>`;
+    area.innerHTML = html;
+
+    currentCart.forEach(item => {
+        renderBarcodeSafe(`bc-${item.id}`, item.code, { width: 1.5, height: 36, displayValue: true, fontSize: 11, margin: 1 });
+        
+        const qrCanvas = document.getElementById(`qr-c-${item.id}`);
+        if (qrCanvas) {
+            QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 114, margin: 0 }, function(err) {
+                if (!err && qrCanvas) {
+                    qrCanvas.style.width = "38px";
+                    qrCanvas.style.height = "38px";
+                }
+            });
+        }
+    });
+
+    updateCartStats();
+}
+
+function showToast(msg) {
+    const sb = document.getElementById('snackbar');
+    document.getElementById('snackbarText').innerText = msg;
+    document.getElementById('snackbarUndoBtn').style.display = 'none';
+    sb.classList.add('show');
+    setTimeout(() => sb.classList.remove('show'), 3000);
+}
+
+function removeItem(itemId) {
+    const idx = currentCart.findIndex(i => i.id === itemId);
+    if (idx !== -1) {
+        lastDeletedItem = currentCart.splice(idx, 1)[0];
+        saveState();
+        renderCart();
+        SoundFX.trash();
+        triggerVibrate([20, 30]);
+        const sb = document.getElementById('snackbar');
+        document.getElementById('snackbarText').innerText = 'Товар удалён';
+        document.getElementById('snackbarUndoBtn').style.display = 'block';
+        sb.classList.add('show');
+        setTimeout(() => sb.classList.remove('show'), 3800);
+    }
+}
+
+function undoDelete() {
+    if (lastDeletedItem) {
+        currentCart.unshift(lastDeletedItem);
+        lastDeletedItem = null;
+        saveState();
+        renderCart();
+        document.getElementById('snackbar').classList.remove('show');
+    }
+}
+
+/* ================= NUMPAD МОДАЛ ================= */
+let numpadVal = "1";
+let numpadMode = "";
+let pendingParsedItem = null;
+let editingItemId = null;
+
+function updateNumpadUI() {
+    const display = document.getElementById('numpadDisplay');
+    const group = document.getElementById('numpadInputGroup');
+    const pasteBtn = document.getElementById('numpadPasteBtn');
+
+    if (numpadMode === 'manual') {
+        group.classList.add('manual-mode');
+        pasteBtn.style.display = 'flex';
+        display.innerHTML = numpadVal ? `${numpadVal}<span class="numpad-cursor"></span>` : `<span class="numpad-placeholder">Ввод ШК или QR...</span><span class="numpad-cursor"></span>`;
+    } else {
+        group.classList.remove('manual-mode');
+        pasteBtn.style.display = 'none';
+        display.innerHTML = `${numpadVal || 0}<span class="numpad-cursor"></span>`;
+    }
+    display.scrollLeft = display.scrollWidth;
+}
+
+function showNumpadForManual() {
+    numpadMode = 'manual';
+    numpadVal = "";
+    document.getElementById('numpadTitle').style.display = "none";
+    updateNumpadUI();
+    document.getElementById('numpadModal').style.display = 'flex';
+}
+
+function showNumpadForScan(parsedObj) {
+    numpadMode = 'scan';
+    pendingParsedItem = parsedObj;
+    let defQty = 1;
+    if (MASTER_CODES[parsedObj.barcode] && MASTER_CODES[parsedObj.barcode].qtyInBox) {
+        defQty = MASTER_CODES[parsedObj.barcode].qtyInBox;
+    }
+    numpadVal = String(defQty);
+    const titleEl = document.getElementById('numpadTitle');
+    titleEl.style.display = "block";
+    titleEl.innerText = `ШК: ${parsedObj.barcode}${parsedObj.priceCard ? ' | ' + parsedObj.priceCard + ' ₽' : ''}`;
+    updateNumpadUI();
+    document.getElementById('numpadModal').style.display = 'flex';
+}
+
+function showNumpadForEdit(itemId) {
+    const item = currentCart.find(i => i.id === itemId);
+    if (!item) return;
+    numpadMode = 'edit';
+    editingItemId = itemId;
+    numpadVal = String(item.qty);
+    const titleEl = document.getElementById('numpadTitle');
+    titleEl.style.display = "block";
+    titleEl.innerText = `Изменить кол-во: ${item.code}`;
+    updateNumpadUI();
+    document.getElementById('numpadModal').style.display = 'flex';
+}
+
+function numPress(n) {
+    if (numpadVal === "0" && numpadMode !== 'manual') numpadVal = "";
+    if (numpadVal.length < 28) numpadVal += String(n);
+    updateNumpadUI();
+}
+function numClear() { numpadVal = ""; updateNumpadUI(); }
+function numBackspace() { numpadVal = numpadVal.slice(0, -1); updateNumpadUI(); }
+
+function numCancel() {
+    document.getElementById('numpadModal').style.display = 'none';
+    if (numpadMode === 'scan' && settings.continuous) isScannerPaused = false;
+    else updateNavState('onNavHome');
+}
+
+function numConfirm() {
+    document.getElementById('numpadModal').style.display = 'none';
+    if (numpadMode === 'manual') {
+        const c = numpadVal.trim();
+        if (c) {
+            const parsed = parsePriceTagQR(c);
+            addOrUpdateItem(parsed, 1);
+        }
+        updateNavState('onNavHome');
+    } else if (numpadMode === 'scan') {
+        const q = parseInt(numpadVal) || 1;
+        if (pendingParsedItem) addOrUpdateItem(pendingParsedItem, Math.max(1, q));
+        if (settings.continuous) isScannerPaused = false;
+        else stopScanner(true);
+    } else if (numpadMode === 'edit') {
+        const item = currentCart.find(i => i.id === editingItemId);
+        if (item) {
+            item.qty = Math.max(1, parseInt(numpadVal) || 1);
+            saveState();
+            renderCart();
+        }
+    }
+}
+
+async function pasteToNumpad() {
+    try {
+        const text = await navigator.clipboard.readText();
+        if (text) { numpadVal = text.trim(); updateNumpadUI(); }
+    } catch(e) {}
+}
+
+/* ================= ПАЛЛЕТЫ ================= */
+function openPalletModal() {
+    document.getElementById('palletInput').value = activePallet;
+    const pallets = [...new Set(currentCart.map(i => i.pallet))];
+    const container = document.getElementById('existingPallets');
+    container.innerHTML = pallets.map(p => `
+        <button style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:11px; padding:8px 14px; font-weight:800; font-size:14px; color:var(--text-main); cursor:pointer;" onclick="document.getElementById('palletInput').value='${p}'">${p}</button>
+    `).join('');
+    document.getElementById('palletModal').style.display = 'flex';
+}
+
+function confirmPallet() {
+    activePallet = document.getElementById('palletInput').value.trim() || "Основной";
+    document.getElementById('currentPalletBadge').innerHTML = `
+        <span class="app-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        ${activePallet}
+    `;
+    document.getElementById('palletModal').style.display = 'none';
+}
+
+/* ================= СИСТЕМА УПРАВЛЕНИЯ КАМЕРАМИ ================= */
+let html5QrCode = null;
+let isScannerPaused = false;
+let torchEnabled = false;
+let allCamerasList = [];
+let selectedCameraId = null;
+let isSwitchingCamera = false;
+
+function parseRussianCameraLabel(cam, index) {
+    const l = (cam.label || '').toLowerCase();
+    const isFront = l.includes('front') || l.includes('user') || l.includes('передн') || l.includes('selfie') || l.includes('facing front');
+
+    let title = "";
+    let desc = "";
+    let badge = "";
+
+    if (isFront) {
+        title = l.includes('1') ? "Фронтальная (основная)" : "Фронтальная (широкая)";
+        desc = "Передняя селфи-камера";
+        badge = "Селфи";
+    } else {
+        if (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || (index === 0 && !l.includes('2') && !l.includes('3'))) {
+            title = "Основная камера (1x)";
+            desc = "Автофокус и высокая чёткость (рекомендуется для ценников)";
+            badge = "Основная";
+        } else if (l.includes('camera2 2') || l.includes('ultra') || l.includes('wide') || l.includes('0.5') || l.includes('широк')) {
+            title = "Сверхширокоугольная (0.5x)";
+            desc = "Широкий обзор, фиксированный фокус";
+            badge = "Ширик";
+        } else if (l.includes('camera2 3') || l.includes('macro') || l.includes('макро')) {
+            title = "Макро-объектив";
+            desc = "Для съёмки с очень близкого расстояния";
+            badge = "Макро";
+        } else if (l.includes('tele') || l.includes('zoom') || l.includes('теле')) {
+            title = "Телеобъектив (зум)";
+            desc = "Оптическое увеличение";
+            badge = "Зум";
+        } else if (l.includes('depth') || l.includes('глубин')) {
+            title = "Датчик глубины";
+            desc = "Вспомогательный сенсор резкости";
+            badge = "Сенсор";
+        } else {
+            title = `Задняя камера #${index + 1}`;
+            desc = cam.label || "Тыловой датчик изображения";
+            badge = "Задняя";
+        }
+    }
+
+    return { title, desc, badge };
+}
+
+async function detectAllCameras() {
+    if (allCamerasList && allCamerasList.length > 0) {
+        return allCamerasList;
+    }
+    try {
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+            const devs = await navigator.mediaDevices.enumerateDevices();
+            const vDevs = devs.filter(d => d.kind === 'videoinput');
+            if (vDevs.length > 0 && vDevs.some(d => d.label)) {
+                allCamerasList = vDevs.map((d, i) => ({ id: d.deviceId, label: d.label || `Камера ${i + 1}` }));
+                return allCamerasList;
+            }
+        }
+        const cameras = await Html5Qrcode.getCameras();
+        if (cameras && cameras.length) {
+            allCamerasList = cameras;
+        }
+    } catch(e) {
+        console.warn("Detect cameras error:", e);
+    }
+    return allCamerasList;
+}
+
+function getBestDefaultCameraId() {
+    if (!allCamerasList || !allCamerasList.length) return null;
+
+    let best = allCamerasList.find(c => {
+        const l = (c.label || '').toLowerCase();
+        const isNotFront = !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
+        const isNotAux = !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
+        return isNotFront && isNotAux && (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main'));
+    });
+    if (best) return best.id;
+
+    best = allCamerasList.find(c => {
+        const l = (c.label || '').toLowerCase();
+        const isNotFront = !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
+        return isNotFront && !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
+    });
+    if (best) return best.id;
+
+    best = allCamerasList.find(c => {
+        const l = (c.label || '').toLowerCase();
+        return !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
+    });
+    if (best) return best.id;
+
+    return allCamerasList[0].id;
+}
+
+async function startScanner() {
+    isScannerPaused = false;
+    document.getElementById('scannerModal').style.display = 'flex';
+    closeCameraMenu();
+
+    if (html5QrCode) {
+        try { await html5QrCode.stop(); } catch(e) {}
+        try { html5QrCode.clear(); } catch(e) {}
+        html5QrCode = null;
+    }
+
+    html5QrCode = new Html5Qrcode("reader", {
+        formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.DATA_MATRIX
+        ],
+        experimentalFeatures: {
+            useBarCodeDetectorIfSupported: true
+        },
+        verbose: false
+    });
+
+    const config = { fps: 22 };
+
+    await detectAllCameras();
+    if (!selectedCameraId) {
+        selectedCameraId = getBestDefaultCameraId();
+    }
+
+    try {
+        if (selectedCameraId) {
+            await html5QrCode.start(selectedCameraId, config, onCodeDetected);
+        } else {
+            await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+        }
+        updateZoomButtonsUI(1);
+    } catch(err) {
+        try {
+            await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+            updateZoomButtonsUI(1);
+        } catch(err2) {
+            document.getElementById('scannerModal').style.display = 'none';
+            if (html5QrCode) {
+                try { html5QrCode.clear(); } catch(e) {}
+                html5QrCode = null;
+            }
+            alert("Не удалось запустить камеру. Проверьте разрешения в браузере.");
+            updateNavState('onNavHome');
+        }
+    }
+}
+
+async function toggleCameraOverlayMenu() {
+    const overlay = document.getElementById('camOverlayMenu');
+    if (overlay && overlay.style.display === 'flex') {
+        closeCameraMenu();
+        return;
+    }
+
+    if (!allCamerasList || !allCamerasList.length) {
+        await detectAllCameras();
+    }
+
+    if (!allCamerasList || !allCamerasList.length) {
+        showToast("Камеры не найдены");
+        return;
+    }
+
+    const listContainer = document.getElementById('camOverlayList');
+    listContainer.innerHTML = allCamerasList.map((cam, idx) => {
+        const info = parseRussianCameraLabel(cam, idx);
+        const isActive = (cam.id === selectedCameraId) || (!selectedCameraId && idx === 0);
+        return `
+            <div class="cam-choice-card ${isActive ? 'active' : ''}" onclick="selectCameraById('${cam.id}')">
+                <div class="cam-card-info">
+                    <div class="cam-card-name">
+                        <span>${info.title}</span>
+                        <span class="cam-badge-tag">${info.badge}</span>
+                    </div>
+                    <div class="cam-card-desc">${info.desc}</div>
+                </div>
+                ${isActive ? '<span class="app-icon" style="color:var(--btn-add); width:20px; height:20px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
+            </div>
+        `;
+    }).join('');
+
+    overlay.style.display = 'flex';
+}
+
+function closeCameraMenu(e) {
+    if (e) e.stopPropagation();
+    const overlay = document.getElementById('camOverlayMenu');
+    if (overlay) overlay.style.display = 'none';
+}
+
+async function selectCameraById(camId) {
+    closeCameraMenu();
+    if (isSwitchingCamera) return;
+    if (selectedCameraId === camId && html5QrCode && html5QrCode.isScanning) return;
+
+    isSwitchingCamera = true;
+    selectedCameraId = camId;
+    triggerVibrate(20);
+
+    const config = { fps: 22 };
+
+    try {
+        torchEnabled = false;
+        const torchBtn = document.getElementById('torchBtn');
+        if (torchBtn) torchBtn.classList.remove('active');
+        updateZoomButtonsUI(1);
+
+        if (html5QrCode) {
+            try {
+                if (html5QrCode.isScanning) {
+                    await html5QrCode.stop();
+                }
+            } catch(e) {}
+            try {
+                await html5QrCode.clear();
+            } catch(e) {}
+            html5QrCode = null;
+        }
+
+        await new Promise(r => setTimeout(r, 250));
+
+        html5QrCode = new Html5Qrcode("reader", {
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.QR_CODE,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.DATA_MATRIX
+            ],
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            },
+            verbose: false
+        });
+
+        await html5QrCode.start(camId, config, onCodeDetected);
+        showToast("Камера переключена");
+    } catch(err) {
+        console.error("Camera switch error:", err);
+        showToast("Ошибка запуска сенсора");
+        try {
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader", {
+                    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+                });
+            }
+            await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
+        } catch(e2) {}
+    } finally {
+        isSwitchingCamera = false;
+    }
+}
+
+async function toggleTorch() {
+    if (!html5QrCode) return;
+    const nextTorchState = !torchEnabled;
+    let applied = false;
+
+    try {
+        const videoEl = document.querySelector("#reader video");
+        if (videoEl && videoEl.srcObject) {
+            const track = videoEl.srcObject.getVideoTracks()[0];
+            if (track) {
+                const caps = track.getCapabilities ? track.getCapabilities() : {};
+                if ('torch' in caps || caps.fillLightMode) {
+                    await track.applyConstraints({ advanced: [{ torch: nextTorchState }] });
+                    applied = true;
+                }
+            }
+        }
+    } catch(e) {
+        console.warn("Direct torch error:", e);
+    }
+
+    if (!applied) {
+        try {
+            await html5QrCode.applyVideoConstraints({ advanced: [{ torch: nextTorchState }] });
+            applied = true;
+        } catch(e) {
+            console.warn("Library torch fallback error:", e);
+        }
+    }
+
+    if (applied) {
+        torchEnabled = nextTorchState;
+        document.getElementById('torchBtn').classList.toggle('active', torchEnabled);
+        triggerVibrate(15);
+    } else {
+        showToast("Вспышка недоступна на этой камере");
+    }
+}
+
+function updateZoomButtonsUI(lvl) {
+    document.querySelectorAll('.zoom-btn').forEach(b => {
+        b.classList.toggle('active', Number(b.dataset.zoom) === lvl);
+    });
+}
+
+function setZoomLevel(lvl) {
+    updateZoomButtonsUI(lvl);
+    triggerVibrate(15);
+    
+    try {
+        const videoEl = document.querySelector("#reader video");
+        if (videoEl && videoEl.srcObject) {
+            const track = videoEl.srcObject.getVideoTracks()[0];
+            if (track) {
+                const caps = track.getCapabilities ? track.getCapabilities() : {};
+                if (caps.zoom) {
+                    const target = Math.min(Math.max(lvl, caps.zoom.min || 1), caps.zoom.max || 10);
+                    track.applyConstraints({ advanced: [{ zoom: target }] }).catch(() => {});
+                    return;
+                }
+            }
+        }
+    } catch(e) {}
+
+    if (html5QrCode) {
+        html5QrCode.applyVideoConstraints({ advanced: [{ zoom: lvl }] }).catch(() => {});
+    }
+}
+
+function onCodeDetected(decodedText) {
+    if (isScannerPaused) return;
+    isScannerPaused = true;
+    const parsed = parsePriceTagQR(decodedText);
+    showNumpadForScan(parsed);
+}
+
+function stopScanner(resetNav = true) {
+    closeCameraMenu();
+    if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+            try { html5QrCode.clear(); } catch(e) {}
+            html5QrCode = null;
+        }).catch(() => {
+            try { html5QrCode.clear(); } catch(e) {}
+            html5QrCode = null;
+        });
+    }
+    torchEnabled = false;
+    const torchBtn = document.getElementById('torchBtn');
+    if (torchBtn) torchBtn.classList.remove('active');
+    document.getElementById('scannerModal').style.display = 'none';
+    if (resetNav) updateNavState('onNavHome');
+}
+
+/* ================= EXCELJS ГЕНЕРАЦИЯ, ВЫБОР ДЕЙСТВИЯ И ОТПРАВКА ================= */
+let pendingExportItems = [];
+let pendingExportPrefix = "Inventory";
+
+function exportToExcel() {
+    if (currentCart.length === 0) {
+        alert("Корзина пуста!");
+        updateNavState('onNavHome');
+        return;
+    }
+    pendingExportItems = currentCart;
+    pendingExportPrefix = "Inventory";
+    document.getElementById('exportChoiceModal').style.display = 'flex';
+}
+
+function exportPalletToExcel(palletName) {
+    const items = currentCart.filter(i => i.pallet === palletName);
+    if (!items.length) return;
+    pendingExportItems = items;
+    pendingExportPrefix = `Pallet_${palletName}`;
+    document.getElementById('exportChoiceModal').style.display = 'flex';
+}
+
+async function openArchiveExcel(idx) {
+    const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
+    if (archive[idx] && archive[idx].cartData) {
+        document.getElementById('archiveModal').style.display = 'none';
+        pendingExportItems = archive[idx].cartData;
+        pendingExportPrefix = "Archive";
+        document.getElementById('exportChoiceModal').style.display = 'flex';
+    } else {
+        showToast("Ошибка: формат не поддерживается");
+    }
+}
+
+async function executeExport(action) {
+    document.getElementById('exportChoiceModal').style.display = 'none';
+    await generateExcel(pendingExportItems, action, pendingExportPrefix);
+    
+    // Сохраняем в архив, только если мы выгружаем текущую полную корзину, а не отдельный паллет или старый архив
+    if (pendingExportItems === currentCart && pendingExportPrefix === "Inventory") {
+        const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
+        saveToArchivePayload(currentCart, totalQty);
+    }
+}
+
+async function generateExcel(itemsToExport, action, prefix) {
+    if (!itemsToExport || itemsToExport.length === 0) {
+        showToast("Нет данных для выгрузки");
+        return;
+    }
+
+    try {
+        showToast("Формирование Excel...");
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Инвентаризация');
+
+        // Настраиваем колонки
+        worksheet.columns = [
+            { header: 'Паллет', key: 'pallet', width: 14 },
+            { header: 'QR-код', key: 'qr', width: 15 },
+            { header: 'Штрихкод', key: 'barcode', width: 28 },
+            { header: 'ШК (Поиск)', key: 'code_text', width: 16 },
+            { header: 'По карте (₽)', key: 'price_card', width: 14 },
+            { header: 'Базовая (₽)', key: 'price_reg', width: 14 },
+            { header: 'Кол-во', key: 'qty', width: 10 },
+            { header: 'Данные QR', key: 'raw', width: 35 }
+        ];
+
+        worksheet.getRow(1).font = { bold: true };
+        worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' };
+        worksheet.getRow(1).height = 25;
+
+        for (let i = 0; i < itemsToExport.length; i++) {
+            const item = itemsToExport[i];
+
+            // 1. СНАЧАЛА добавляем строку с данными
+            const newRow = worksheet.addRow({
+                pallet: item.pallet || "Основной",
+                qr: "",
+                barcode: "",
+                code_text: item.code || "", 
+                price_card: item.priceCard ? parseFloat(item.priceCard) : "",
+                price_reg: item.priceRegular ? parseFloat(item.priceRegular) : "",
+                qty: item.qty || 1,
+                raw: item.raw || item.code || ""
+            });
+
+            const rowIndex = newRow.number; // Получаем реальный номер созданной строки
+
+            // 2. ТЕПЕРЬ задаем высоту и выравнивание этой строке
+            newRow.height = 75;
+            newRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+            // === ВСТАВКА ВЫСОКОЧЁТКОГО QR-КОДА ===
+            const qrCanvas = document.createElement('canvas');
+            await QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 300, margin: 2 });
+            const qrId = workbook.addImage({
+                base64: qrCanvas.toDataURL('image/png'),
+                extension: 'png',
+            });
+            worksheet.addImage(qrId, {
+                tl: { col: 1.15, row: rowIndex - 0.9 }, // Привязываем к правильной строке (индекс ExcelJS)
+                ext: { width: 68, height: 68 }
+            });
+
+            // === ВСТАВКА ВЫСОКОЧЁТКОГО ШТРИХКОДА С ПРОПОРЦИЯМИ ===
+            const bcCanvas = document.createElement('canvas');
+            try {
+                JsBarcode(bcCanvas, item.code, { format: "EAN13", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
+            } catch(e) {
+                JsBarcode(bcCanvas, item.code, { format: "CODE128", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
+            }
+            const bcId = workbook.addImage({
+                base64: bcCanvas.toDataURL('image/png'),
+                extension: 'png',
+            });
+            
+            // Защита от искажений штрихкода в экселе
+            const renderHeight = 60;
+            const renderWidth = bcCanvas.width * (renderHeight / bcCanvas.height);
+            
+            worksheet.addImage(bcId, {
+                tl: { col: 2.1, row: rowIndex - 0.85 }, 
+                ext: { width: renderWidth, height: renderHeight }
+            });
+        }
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        const fileName = `TSD_${prefix}_${Date.now()}.xlsx`;
+        const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+        // Если пользователь выбрал "Поделиться"
+        if (action === 'share') {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Выгрузка ТСД',
+                        text: 'Таблица инвентаризации с QR и Штрихкодами'
+                    });
+                    showToast("Отправлено!");
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        downloadExcelBlob(blob, fileName);
+                    }
+                }
+            } else {
+                showToast("Отправка не поддерживается, файл скачан");
+                downloadExcelBlob(blob, fileName);
+            }
+        } else {
+            // Если пользователь выбрал "Сохранить на устройство"
+            downloadExcelBlob(blob, fileName);
+        }
+        
+        updateNavState('onNavHome');
+
+    } catch(e) {
+        console.error(e);
+        showToast("Ошибка формирования Excel");
+        updateNavState('onNavHome');
+    }
+}
+
+function downloadExcelBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Файл сохранен!");
+}
+
+function saveToArchivePayload(cartItems, totalQty) {
+    const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
+    const now = new Date();
+    const payload = cartItems.map(i => `${i.code}-${i.qty}${i.priceCard ? '-'+i.priceCard : ''}`).join(" ");
+    
+    archive.unshift({
+        date: now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        lines: cartItems.length,
+        totalQty: totalQty || cartItems.reduce((a, b) => a + b.qty, 0),
+        payload: payload,
+        cartData: JSON.parse(JSON.stringify(cartItems))
+    });
+    if (archive.length > 15) archive.pop();
+    localStorage.setItem('tsd_archive', JSON.stringify(archive));
+}
+
+function showPalletQR(palletName) {
+    const items = currentCart.filter(i => i.pallet === palletName);
+    if (!items.length) return;
+    const payload = items.map(i => `${i.code}-${i.qty}`).join(" ");
+    document.getElementById('qrModal').style.display = 'flex';
+    const canvas = document.getElementById('finalQrCanvas');
+    canvas.style.display = 'block';
+    window.currentPayload = payload;
+    QRCode.toCanvas(canvas, payload, { width: 320, margin: 2 });
+}
+
+function closeQRModal() {
+    document.getElementById('qrModal').style.display = 'none';
+    updateNavState('onNavHome');
+}
+
+function downloadQR() {
+    const canvas = document.getElementById('finalQrCanvas');
+    const a = document.createElement('a');
+    a.download = `TSD_QR_${Date.now()}.png`;
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+}
+
+function shareToExcel() {
+    if (navigator.clipboard && window.currentPayload) {
+        navigator.clipboard.writeText(window.currentPayload);
+        alert("Данные скопированы в буфер!");
+    }
+}
+
+function renderArchive() {
+    const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
+    const container = document.getElementById('archiveList');
+    if (!archive.length) {
+        container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-weight:700;">Архив пуст</div>';
+    } else {
+        container.innerHTML = archive.map((item, idx) => `
+            <div class="archive-item">
+                <div class="archive-info-row">
+                    <div class="archive-date">${item.date}</div>
+                    <div class="archive-stats">${item.lines} строк | ${item.totalQty} шт.</div>
+                </div>
+                <div class="archive-actions">
+                    <button class="archive-btn-secondary" onclick="restoreArchiveToTable(${idx})">Вернуть в таблицу</button>
+                    <button class="archive-btn" onclick="openArchiveExcel(${idx})">В Excel</button>
+                </div>
+            </div>`).join('');
+    }
+}
+
+function openArchive() {
+    document.getElementById('mainMenuModal').style.display = 'none';
+    renderArchive();
+    document.getElementById('archiveModal').style.display = 'flex';
+}
+
+function restoreArchiveToTable(idx) {
+    const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
+    if (!archive[idx]) return;
+    if (confirm("Заменить текущие строки данными из архива?")) {
+        if (archive[idx].cartData) {
+            currentCart = JSON.parse(JSON.stringify(archive[idx].cartData));
+        }
+        saveState();
+        renderCart();
+        closeAllModals(true);
+    }
+}
+
+function openInstruction() { document.getElementById('mainMenuModal').style.display = 'none'; document.getElementById('instructionModal').style.display = 'flex'; }
+function openAbout() { document.getElementById('mainMenuModal').style.display = 'none'; document.getElementById('aboutModal').style.display = 'flex'; }
+
+/* ================= НАВИГАЦИЯ ================= */
+const navbarEl = document.getElementById('navbar');
+const beadEl = document.getElementById('navBead');
+const glowEl = document.getElementById('navGlow');
+
+function moveBeadTo(targetBtn, animate = true) {
+    if (!targetBtn || !navbarEl || !beadEl || !glowEl) return;
+    const navRect = navbarEl.getBoundingClientRect();
+    const btnRect = targetBtn.getBoundingClientRect();
+    const x = (btnRect.left - navRect.left) + (btnRect.width / 2) - 24;
+    
+    if (!animate || isLowFx()) {
+        beadEl.style.transition = 'none';
+        glowEl.style.transition = 'none';
+    }
+    
+    beadEl.style.transform = `translateX(${x}px)`;
+    glowEl.style.transform = `translateX(${x}px)`;
+    
+    if (!animate || isLowFx()) {
+        void beadEl.offsetWidth;
+        beadEl.style.transition = '';
+        glowEl.style.transition = '';
+    }
+}
+
+function playBeadSquash() {
+    if (isLowFx()) return;
+    const beadInner = document.getElementById('beadInner');
+    if (!beadInner) return;
+    beadInner.classList.remove('squash');
+    void beadInner.offsetWidth;
+    beadInner.classList.add('squash');
+}
+
+function switchNav(btn, executeAction = true) {
+    if (btn.classList.contains('active')) return;
+    document.querySelectorAll('.navitem').forEach(el => el.classList.remove('active'));
+    btn.classList.add('active');
+    moveBeadTo(btn, true);
+    if (!isLowFx()) setTimeout(playBeadSquash, 360);
+    
+    if (executeAction) {
+        const action = btn.dataset.action;
+        if (typeof window[action] === 'function') window[action]();
+    }
+}
+
+function updateNavState(actionName) {
+    const btn = document.querySelector(`[data-action="${actionName}"]`);
+    if (btn) {
+        document.querySelectorAll('.navitem').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        moveBeadTo(btn, true);
+        if (!isLowFx()) setTimeout(playBeadSquash, 360);
+    }
+}
+
+function onNavHome() { closeAllModals(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function onNavManual() { closeAllModals(false); showNumpadForManual(); }
+function onNavScan() { closeAllModals(false); startScanner(); }
+function onNavExcel() { closeAllModals(false); exportToExcel(); }
+function onNavMenu() { closeAllModals(false); document.getElementById('mainMenuModal').style.display = 'flex'; }
+
+function closeAllModals(resetNavToHome = true) {
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+        if (m.id === 'scannerModal' && m.style.display !== 'none') stopScanner(false);
+        else m.style.display = 'none';
+    });
+    if (resetNavToHome) updateNavState('onNavHome');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+            if (this.id === 'numpadModal') numCancel();
+            else closeAllModals();
+        }
+    });
+});
+
+window.onload = function() {
+    initDeleteButton();
+    const saved = localStorage.getItem('tsd_lite_cart');
+    if (saved) {
+        try { currentCart = JSON.parse(saved); } catch(e) {}
+    }
+    renderCart();
+    const home = document.querySelector('[data-action="onNavHome"]');
+    if (home) moveBeadTo(home, false);
+};
+
+window.addEventListener('resize', () => {
+    const active = document.querySelector('.navitem.active');
+    if (active) moveBeadTo(active, false);
+});
+
+(function createStars(){
+  const layer = document.getElementById('starsLayer');
+  if(!layer) return;
+  for (let i = 0; i < 8; i++){
+    const star = document.createElement('span');
+    star.className = 'star';
+    star.style.setProperty('--x', Math.random() * 60 + 6 + '%');
+    star.style.setProperty('--y', Math.random() * 55 + 15 + '%');
+    star.style.setProperty('--d', (Math.random() * 1.6).toFixed(2) + 's');
+    layer.appendChild(star);
+  }
+})();
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+}
+</script>
+</body>
+</html>
