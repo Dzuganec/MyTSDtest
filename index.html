@@ -27,7 +27,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#10b981" id="meta-theme-color">
 
-<!-- ВСТРОЕННАЯ ИКОНКА ПРИЛОЖЕНИЯ (КАК В ШАПКЕ) ДЛЯ APPLE И ANDROID -->
+<!-- ИКОНКА ПРИЛОЖЕНИЯ ДЛЯ ГЛАВНОГО ЭКРАНА -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23059669'/><rect x='22' y='22' width='56' height='56' rx='12' stroke='%23ffffff' stroke-width='6'/><rect x='31' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='40' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/><rect x='51' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='60' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23059669'/><rect x='22' y='22' width='56' height='56' rx='12' stroke='%23ffffff' stroke-width='6'/><rect x='31' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='40' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/><rect x='51' y='33' width='5' height='34' rx='2.5' fill='%23ffffff'/><rect x='60' y='33' width='7' height='34' rx='2.5' fill='%23ffffff'/></svg>">
 
@@ -35,9 +35,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <title>Мой ТСД</title>
+
+<!-- БИБЛИОТЕКИ -->
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
 <style>
 /* ============================================================
@@ -246,7 +249,7 @@ header {
 .daynight-input:checked ~ .daynight-toggle .cloud { background: #c9d3ea; opacity: 0.85; }
 .daynight-input:checked ~ .daynight-toggle .cloud1 { box-shadow: 6px 2px 0 -1px #c9d3ea, 11px 0 0 -2px #c9d3ea; }
 .daynight-input:checked ~ .daynight-toggle .cloud2 { box-shadow: 5px 1px 0 -1px #c9d3ea; }
-.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 1px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
+.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 2px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
 .toggle-thumb {
     position: absolute; top: var(--pad); left: var(--pad); width: var(--thumb); height: var(--thumb);
     border-radius: 50%; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
@@ -305,7 +308,7 @@ header {
 }
 .letter.flying { animation: flyIntoBinActive 0.45s var(--ease-smooth) forwards; animation-delay: var(--delay, 0s); }
 
-/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ (СТРОГО В ОДНУ СТРОКУ, КВАДРАТНЫЙ QR) ---------- */
+/* ---------- СТРУКТУРА КОРЗИНЫ И ТАБЛИЦЫ ---------- */
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
@@ -478,6 +481,64 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: flex; align-items: center; justify-content: center; color: var(--btn-add);
 }
 
+/* ВЫПАДАЮЩЕЕ МЕНЮ КАМЕР ПОВЕРХ ВИДОИСКАТЕЛЯ */
+.cam-overlay-menu {
+    position: absolute; inset: 0; z-index: 50;
+    background: rgba(var(--bg-card-rgb), 0.95);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-radius: var(--radius-lg); padding: 16px 14px 18px;
+    display: flex; flex-direction: column; text-align: left;
+    animation: slideInUp 0.25s var(--ease-smooth);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+}
+.cam-overlay-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);
+}
+.cam-overlay-title {
+    font-size: 16px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 8px;
+}
+.cam-overlay-close {
+    background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main);
+    width: 32px; height: 32px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; cursor: pointer;
+    transition: transform var(--t-fast);
+}
+.cam-overlay-close:active { transform: scale(0.9); }
+.cam-overlay-list {
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px;
+}
+.cam-choice-card {
+    background: var(--input-bg); border: 1.5px solid var(--border-color);
+    border-radius: 14px; padding: 12px 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    transition: transform 0.18s, background-color 0.18s, border-color 0.18s;
+}
+.cam-choice-card:active { transform: scale(0.97); }
+.cam-choice-card.active {
+    background: var(--info-bg); border-color: var(--btn-add);
+}
+.cam-card-info { display: flex; flex-direction: column; gap: 2px; }
+.cam-card-name { font-size: 14.5px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+.cam-badge-tag {
+    font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
+    background: rgba(5, 150, 105, 0.12); color: var(--btn-add); margin-left: 6px;
+    display: inline-block; vertical-align: middle;
+}
+.cam-card-desc { font-size: 11.5px; font-weight: 600; color: var(--text-muted); line-height: 1.25; }
+
+/* Тёмная тема для меню камер */
+[data-theme="dark"] .cam-overlay-menu { background: rgba(10, 24, 18, 0.96); border-color: rgba(255, 255, 255, 0.14); }
+[data-theme="dark"] .cam-overlay-header { border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+[data-theme="dark"] .cam-overlay-title { color: #ffffff; }
+[data-theme="dark"] .cam-overlay-close { background: rgba(255, 255, 255, 0.14); border: none; color: #ffffff; }
+[data-theme="dark"] .cam-choice-card { background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.12); }
+[data-theme="dark"] .cam-choice-card.active { background: rgba(16, 185, 129, 0.22); border-color: #10b981; }
+[data-theme="dark"] .cam-card-name { color: #ffffff; }
+[data-theme="dark"] .cam-badge-tag { background: rgba(16, 185, 129, 0.22); color: #34d399; }
+[data-theme="dark"] .cam-card-desc { color: rgba(255, 255, 255, 0.65); }
+
 .instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; }
 .instruction-content ol { margin: 10px 0 0 0; padding-left: 20px; }
 .instruction-content li { margin-bottom: 12px; line-height: 1.5; color: var(--text-main); }
@@ -569,7 +630,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 
-/* КНОПКА ФОНАРИКА (СПРАВА) */
+/* КНОПКА ФОНАРИКА */
 .btn-icon-torch {
     position: absolute; right: 14px; top: 14px; z-index: 6;
     background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -579,7 +640,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .btn-icon-torch.active { background: #f59e0b; color: #111; box-shadow: 0 0 16px rgba(245, 158, 11, 0.65); }
 
-/* КНОПКА ВЫБОРА КАМЕРЫ (СЛЕВА, СИММЕТРИЧНО) */
+/* КНОПКА ВЫБОРА КАМЕРЫ */
 .btn-icon-camera {
     position: absolute; left: 14px; top: 14px; z-index: 6;
     background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -589,7 +650,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .btn-icon-camera:active { transform: scale(0.88); background: rgba(255,255,255,0.25); }
 
-/* ПЛАШКА ЗУМА (ПО ЦЕНТРУ) */
+/* ПЛАШКА ЗУМА */
 .zoom-pill {
     position: absolute; left: 50%; top: 14px; transform: translateX(-50%); display: flex; gap: 4px;
     background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -814,14 +875,15 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 
 <header>
     <div class="brand-wrapper">
-        <svg class="brand-logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="40" height="40" rx="12" fill="rgba(255, 255, 255, 0.2)"/>
-            <rect x="7" y="7" width="26" height="26" rx="6" stroke="#ffffff" stroke-width="2.5"/>
-            <rect x="12" y="13" width="2" height="14" rx="1" fill="#ffffff"/>
-            <rect x="16" y="13" width="3" height="14" rx="1" fill="#ffffff"/>
-            <rect x="21" y="13" width="2" height="14" rx="1" fill="#ffffff"/>
-            <rect x="25" y="13" width="3" height="14" rx="1" fill="#ffffff"/>
-            <line x1="5" y1="20" x2="35" y2="20" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round" class="logo-laser"/>
+        <!-- СИНХРОНИЗИРОВАНО С НОВОЙ ИКОНКОЙ (РАВНОМЕРНЫЕ РАДИУСЫ И ЛИНИИ) -->
+        <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="28" fill="rgba(255, 255, 255, 0.2)"/>
+            <rect x="22" y="22" width="56" height="56" rx="12" stroke="#ffffff" stroke-width="6"/>
+            <rect x="31" y="33" width="5" height="34" rx="2.5" fill="#ffffff"/>
+            <rect x="40" y="33" width="7" height="34" rx="2.5" fill="#ffffff"/>
+            <rect x="51" y="33" width="5" height="34" rx="2.5" fill="#ffffff"/>
+            <rect x="60" y="33" width="7" height="34" rx="2.5" fill="#ffffff"/>
+            <line x1="10" y1="50" x2="90" y2="50" stroke="#fcd34d" stroke-width="5" stroke-linecap="round" class="logo-laser"/>
         </svg>
         <div class="brand-copy">
             <span class="brand-title">Мой ТСД</span>
@@ -974,7 +1036,19 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА: ГЛАВНОЕ МЕНЮ -->
+<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР ЗАДНЕЙ КАМЕРЫ (РЕЗЕРВНЫЙ ДИАЛОГ) -->
+<div class="modal-overlay" id="cameraSelectModal">
+    <div class="modal-content">
+        <h3 class="modal-title">
+            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v2"/><circle cx="12" cy="13" r="4"/></svg></span>
+            Выберите камеру
+        </h3>
+        <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Для ценников лучше использовать Основную (1x)</p>
+        <div id="cameraListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        <button class="btn-modal btn-close" onclick="document.getElementById('cameraSelectModal').style.display='none'">Отмена</button>
+    </div>
+</div>
+
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -987,7 +1061,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 Архив выгрузок
             </div>
             <div class="dropdown-item" onclick="openSettings()">
-                <div class="menu-icon-box"><span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span></div>
+                <div class="menu-icon-box"><span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span></div>
                 Настройки
             </div>
             <div class="dropdown-item" onclick="openInstruction()">
@@ -1157,17 +1231,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<div class="modal-overlay" id="qrModal" style="align-items: center;">
-    <div class="modal-content" style="background: transparent; box-shadow: none;">
-        <div class="brightness-text">Выкрути яркость на максимум!</div>
-        <canvas id="finalQrCanvas" width="340" height="340" style="display:none; margin: 0 auto; border-radius: 22px; background: #fff; padding: 12px;"></canvas>
-        <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:25px;" onclick="downloadQR()">Сохранить в галерею</button>
-        <button class="btn-modal" style="background:#2563eb; color:white;" onclick="shareToExcel()">Поделиться текстом</button>
-        <button class="btn-modal btn-close" style="background:rgba(255,255,255,0.2); color:white; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);" onclick="closeQRModal()">Закрыть</button>
-    </div>
-</div>
-
-<!-- ЗУМ С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
+<!-- ЗУМ: С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
 <div class="modal-overlay" id="zoomModal" style="align-items: center;" onclick="handleZoomClick(event)">
     <div class="modal-content" style="background:var(--bg-card); max-width:460px; padding:26px; border-radius:var(--radius-lg); text-align:center; position: relative;">
         <p style="font-weight:800; font-size:13.5px; color:var(--btn-add); margin-top:-8px; margin-bottom:12px;">Зажмите код пальцем, чтобы скопировать</p>
@@ -1280,7 +1344,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 13.1 (Fixed Camera Cache & Native Scanner)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 15.0 (Excel Share Engine HD)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1802,10 +1866,6 @@ function renderCart() {
                                 <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
                                 ${palletName}
                             </span>
-                            <button class="btn-pallet-qr" onclick="showPalletQR('${palletName}')">
-                                <span class="app-icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
-                                Экспорт
-                            </button>
                         </div>
                     </td>
                 </tr>`;
@@ -2030,7 +2090,7 @@ function confirmPallet() {
     document.getElementById('palletModal').style.display = 'none';
 }
 
-/* ================= ПОЛНЫЙ СПИСОК ВСЕХ КАМЕР И ПЕРЕКЛЮЧЕНИЕ ================= */
+/* ================= СИСТЕМА УПРАВЛЕНИЯ КАМЕРАМИ ================= */
 let html5QrCode = null;
 let isScannerPaused = false;
 let torchEnabled = false;
@@ -2388,63 +2448,145 @@ function stopScanner(resetNav = true) {
     if (resetNav) updateNavState('onNavHome');
 }
 
-/* ================= ЭКСПОРТ & АРХИВ ================= */
-function showTransferQR() {
-    if (currentCart.length === 0) {
-        alert("Корзина пуста!");
-        updateNavState('onNavHome');
+/* ================= EXCELJS ГЕНЕРАЦИЯ И ОТПРАВКА С ФОТОГРАФИЯМИ ШТРИХКОДОВ ================= */
+
+async function generateExcel(itemsToExport) {
+    if (!itemsToExport || itemsToExport.length === 0) {
+        showToast("Нет данных для выгрузки");
         return;
     }
-    const payload = currentCart.map(i => `${i.code}-${i.qty}${i.priceCard ? '-'+i.priceCard : ''}`).join(" ");
-    const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
-    saveToArchive(payload, totalQty);
-    renderQR(payload);
-}
 
-function showPalletQR(palletName) {
-    const items = currentCart.filter(i => i.pallet === palletName);
-    if (!items.length) return;
-    const payload = items.map(i => `${i.code}-${i.qty}`).join(" ");
-    renderQR(payload);
-}
+    try {
+        showToast("Формирование Excel...");
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Инвентаризация');
 
-function renderQR(payload) {
-    document.getElementById('qrModal').style.display = 'flex';
-    const canvas = document.getElementById('finalQrCanvas');
-    canvas.style.display = 'block';
-    window.currentPayload = payload;
-    QRCode.toCanvas(canvas, payload, { width: 320, margin: 2 });
-}
+        // Настраиваем колонки
+        worksheet.columns = [
+            { header: 'Паллет', key: 'pallet', width: 14 },
+            { header: 'QR-код', key: 'qr', width: 15 },
+            { header: 'Штрихкод', key: 'barcode', width: 28 },
+            { header: 'ШК (Поиск)', key: 'code_text', width: 16 },
+            { header: 'По карте (₽)', key: 'price_card', width: 14 },
+            { header: 'Базовая (₽)', key: 'price_reg', width: 14 },
+            { header: 'Кол-во', key: 'qty', width: 10 },
+            { header: 'Данные QR', key: 'raw', width: 35 }
+        ];
 
-function closeQRModal() {
-    document.getElementById('qrModal').style.display = 'none';
-    updateNavState('onNavHome');
-}
+        worksheet.getRow(1).font = { bold: true };
+        worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' };
+        worksheet.getRow(1).height = 25;
 
-function downloadQR() {
-    const canvas = document.getElementById('finalQrCanvas');
-    const a = document.createElement('a');
-    a.download = `TSD_PRICE_QR_${Date.now()}.png`;
-    a.href = canvas.toDataURL("image/png");
-    a.click();
-}
+        for (let i = 0; i < itemsToExport.length; i++) {
+            const item = itemsToExport[i];
+            const rowIndex = i + 2;
 
-function shareToExcel() {
-    if (navigator.clipboard && window.currentPayload) {
-        navigator.clipboard.writeText(window.currentPayload);
-        alert("Данные для Excel скопированы!");
+            worksheet.getRow(rowIndex).height = 75; 
+
+            worksheet.addRow({
+                pallet: item.pallet || "Основной",
+                qr: "",
+                barcode: "",
+                code_text: item.code || "", 
+                price_card: item.priceCard ? parseFloat(item.priceCard) : "",
+                price_reg: item.priceRegular ? parseFloat(item.priceRegular) : "",
+                qty: item.qty || 1,
+                raw: item.raw || item.code || ""
+            });
+
+            worksheet.getRow(rowIndex).alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+            // === ВСТАВКА ВЫСОКОЧЁТКОГО QR-КОДА ===
+            const qrCanvas = document.createElement('canvas');
+            await QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 300, margin: 2 });
+            const qrId = workbook.addImage({
+                base64: qrCanvas.toDataURL('image/png'),
+                extension: 'png',
+            });
+            worksheet.addImage(qrId, {
+                tl: { col: 1.15, row: rowIndex - 0.9 },
+                ext: { width: 68, height: 68 }
+            });
+
+            // === ВСТАВКА ВЫСОКОЧЁТКОГО ШТРИХКОДА С ПРОПОРЦИЯМИ ===
+            const bcCanvas = document.createElement('canvas');
+            try {
+                JsBarcode(bcCanvas, item.code, { format: "EAN13", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
+            } catch(e) {
+                JsBarcode(bcCanvas, item.code, { format: "CODE128", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
+            }
+            const bcId = workbook.addImage({
+                base64: bcCanvas.toDataURL('image/png'),
+                extension: 'png',
+            });
+            
+            // Защита от искажений штрихкода в экселе
+            const renderHeight = 60;
+            const renderWidth = bcCanvas.width * (renderHeight / bcCanvas.height);
+            
+            worksheet.addImage(bcId, {
+                tl: { col: 2.1, row: rowIndex - 0.85 }, 
+                ext: { width: renderWidth, height: renderHeight }
+            });
+        }
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        const fileName = `TSD_Inventory_${Date.now()}.xlsx`;
+        const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+        // Вызов шторки "Поделиться"
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: 'Выгрузка ТСД',
+                    text: 'Таблица инвентаризации с QR и Штрихкодами'
+                });
+                showToast("Отправлено!");
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    downloadExcelBlob(blob, fileName);
+                }
+            }
+        } else {
+            downloadExcelBlob(blob, fileName);
+        }
+    } catch(e) {
+        console.error(e);
+        showToast("Ошибка формирования Excel");
     }
 }
 
-function saveToArchive(payload, totalQty) {
+function downloadExcelBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Файл сохранен!");
+}
+
+async function exportToExcel() {
+    await generateExcel(currentCart);
+    const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
+    saveToArchivePayload(currentCart, totalQty);
+}
+
+function saveToArchivePayload(cartItems, totalQty) {
     const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
     const now = new Date();
+    const payload = cartItems.map(i => `${i.code}-${i.qty}${i.priceCard ? '-'+i.priceCard : ''}`).join(" ");
+    
     archive.unshift({
         date: now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-        lines: currentCart.length,
-        totalQty: totalQty,
+        lines: cartItems.length,
+        totalQty: totalQty || cartItems.reduce((a, b) => a + b.qty, 0),
         payload: payload,
-        cartData: JSON.parse(JSON.stringify(currentCart))
+        cartData: JSON.parse(JSON.stringify(cartItems))
     });
     if (archive.length > 15) archive.pop();
     localStorage.setItem('tsd_archive', JSON.stringify(archive));
@@ -2464,7 +2606,7 @@ function renderArchive() {
                 </div>
                 <div class="archive-actions">
                     <button class="archive-btn-secondary" onclick="restoreArchiveToTable(${idx})">Вернуть в таблицу</button>
-                    <button class="archive-btn" onclick="openArchiveQR(${idx})">Открыть QR</button>
+                    <button class="archive-btn" onclick="openArchiveExcel(${idx})">В Excel</button>
                 </div>
             </div>`).join('');
     }
@@ -2489,11 +2631,13 @@ function restoreArchiveToTable(idx) {
     }
 }
 
-function openArchiveQR(idx) {
+async function openArchiveExcel(idx) {
     const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
-    if (archive[idx]) {
+    if (archive[idx] && archive[idx].cartData) {
         document.getElementById('archiveModal').style.display = 'none';
-        renderQR(archive[idx].payload);
+        await generateExcel(archive[idx].cartData);
+    } else {
+        showToast("Ошибка: формат не поддерживается");
     }
 }
 
@@ -2561,7 +2705,7 @@ function updateNavState(actionName) {
 function onNavHome() { closeAllModals(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 function onNavManual() { closeAllModals(false); showNumpadForManual(); }
 function onNavScan() { closeAllModals(false); startScanner(); }
-function onNavExcel() { closeAllModals(false); showTransferQR(); }
+function onNavExcel() { closeAllModals(false); exportToExcel(); }
 function onNavMenu() { closeAllModals(false); document.getElementById('mainMenuModal').style.display = 'flex'; }
 
 function closeAllModals(resetNavToHome = true) {
