@@ -276,7 +276,7 @@ header {
 .pallet-badge {
     background: var(--btn-add); color: white; padding: 5px 14px; border-radius: 12px;
     font-weight: 800; font-size: 13.5px; box-shadow: 0 3px 10px rgba(5,150,105,0.28);
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: gap: 6px;
 }
 
 /* Кнопка Корзины с анимацией */
@@ -369,7 +369,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 
 /* Линейный Штрихкод */
-.inline-barcode-container { padding: 1px; cursor: pointer; transition: opacity var(--t-fast); }
+.inline-barcode-container { padding: 1px; cursor: pointer; transition: opacity var(--t-fast); display: flex; flex-direction: column; align-items: center; justify-content: center;}
 .inline-barcode-container:active { opacity: 0.6; }
 .barcode-wrapper {
     background-color: #ffffff; padding: 3px 6px; border-radius: 9px;
@@ -1218,7 +1218,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
 <div class="modal-overlay" id="exportChoiceModal">
     <div class="modal-content">
         <h3 class="modal-title">Экспорт Excel</h3>
@@ -1362,7 +1362,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.1 (Interactive Share Dialog)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.2 (API Sync & Share Fix)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1789,6 +1789,39 @@ function parsePriceTagQR(rawText) {
     return res;
 }
 
+/* ================= ПОИСК НАЗВАНИЯ ТОВАРА ПО API ================= */
+async function fetchProductName(barcode, itemId) {
+    try {
+        // 1. Сначала пробуем бесплатный тестовый API upcitemdb (хорошо ищет технику, общие товары)
+        const res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
+        const data = await res.json();
+        
+        if (data.items && data.items.length > 0) {
+            updateItemName(itemId, data.items[0].title);
+            return;
+        }
+        
+        // 2. Если там пусто, пробуем Open Food Facts (огромная база продуктов питания и быт. химии)
+        const resFood = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+        const dataFood = await resFood.json();
+        
+        if (dataFood.status === 1 && dataFood.product && dataFood.product.product_name) {
+            updateItemName(itemId, dataFood.product.product_name);
+        }
+    } catch (e) {
+        console.warn("Фоновый поиск названия товара не удался (возможно отсутствует интернет или лимит запросов):", e);
+    }
+}
+
+function updateItemName(itemId, nameStr) {
+    const item = currentCart.find(i => i.id === itemId);
+    if (item && nameStr) {
+        item.name = nameStr;
+        saveState();
+        renderCart(); // Перерисовываем таблицу, чтобы появилось название
+    }
+}
+
 function updateCartStats() {
     const total = currentCart.reduce((acc, i) => acc + i.qty, 0);
     const stats = document.getElementById('cartStats');
@@ -1823,17 +1856,24 @@ function addOrUpdateItem(parsedData, qty = 1) {
         if (parsedData.priceCard) existing.priceCard = parsedData.priceCard;
         if (parsedData.priceRegular) existing.priceRegular = parsedData.priceRegular;
         if (parsedData.raw) existing.raw = parsedData.raw;
+        
+        // Если у существующего товара нет имени, попробуем поискать еще раз
+        if (!existing.name) fetchProductName(barcode, existing.id);
     } else {
         const newItem = {
             id: 'item_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
             raw: parsedData.raw || barcode,
             code: barcode,
+            name: '', // Новое поле для имени из базы данных
             priceCard: parsedData.priceCard || '',
             priceRegular: parsedData.priceRegular || '',
             qty: qty,
             pallet: pallet
         };
         currentCart.unshift(newItem);
+        
+        // Сразу запускаем фоновый поиск названия товара по открытым базам
+        fetchProductName(barcode, newItem.id);
     }
 
     saveState();
@@ -1902,6 +1942,11 @@ function renderCart() {
             const delay = Math.min(idx * 40, 240);
             const rowStyle = !isLowFx() ? `style="animation: popIn 0.4s var(--ease-spring) ${delay}ms forwards; opacity: 0;"` : '';
 
+            // Выводим имя товара из БД (если нашлось) под штрихкодом
+            const itemNameHtml = item.name 
+                ? `<div style="font-size: 9.5px; color: var(--text-main); font-weight: 700; text-align: center; margin-top: 4px; white-space: normal; line-height: 1.1; max-width: 118px; word-break: break-word;">${item.name}</div>` 
+                : '';
+
             html += `
                 <tr ${rowStyle}>
                     <td>
@@ -1912,6 +1957,7 @@ function renderCart() {
 
                     <td class="inline-barcode-container" onclick="zoomBarcode('${item.code}')">
                         <div class="barcode-wrapper"><svg id="bc-${item.id}"></svg></div>
+                        ${itemNameHtml}
                     </td>
 
                     <td>
@@ -2527,11 +2573,12 @@ async function generateExcel(itemsToExport, action, prefix) {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Инвентаризация');
 
-        // Настраиваем колонки
+        // Добавлена колонка "Название"
         worksheet.columns = [
             { header: 'Паллет', key: 'pallet', width: 14 },
             { header: 'QR-код', key: 'qr', width: 15 },
             { header: 'Штрихкод', key: 'barcode', width: 28 },
+            { header: 'Название товара', key: 'name', width: 34 },
             { header: 'ШК (Поиск)', key: 'code_text', width: 16 },
             { header: 'По карте (₽)', key: 'price_card', width: 14 },
             { header: 'Базовая (₽)', key: 'price_reg', width: 14 },
@@ -2546,11 +2593,12 @@ async function generateExcel(itemsToExport, action, prefix) {
         for (let i = 0; i < itemsToExport.length; i++) {
             const item = itemsToExport[i];
 
-            // 1. СНАЧАЛА добавляем строку с данными
+            // Вставляем данные + название
             const newRow = worksheet.addRow({
                 pallet: item.pallet || "Основной",
                 qr: "",
                 barcode: "",
+                name: item.name || "", 
                 code_text: item.code || "", 
                 price_card: item.priceCard ? parseFloat(item.priceCard) : "",
                 price_reg: item.priceRegular ? parseFloat(item.priceRegular) : "",
@@ -2558,13 +2606,11 @@ async function generateExcel(itemsToExport, action, prefix) {
                 raw: item.raw || item.code || ""
             });
 
-            const rowIndex = newRow.number; // Получаем реальный номер созданной строки
-
-            // 2. ТЕПЕРЬ задаем высоту и выравнивание этой строке
+            const rowIndex = newRow.number; 
             newRow.height = 75;
             newRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
 
-            // === ВСТАВКА ВЫСОКОЧЁТКОГО QR-КОДА ===
+            // ВСТАВКА QR-КОДА
             const qrCanvas = document.createElement('canvas');
             await QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 300, margin: 2 });
             const qrId = workbook.addImage({
@@ -2572,11 +2618,11 @@ async function generateExcel(itemsToExport, action, prefix) {
                 extension: 'png',
             });
             worksheet.addImage(qrId, {
-                tl: { col: 1.15, row: rowIndex - 0.9 }, // Привязываем к правильной строке (индекс ExcelJS)
+                tl: { col: 1.15, row: rowIndex - 0.9 },
                 ext: { width: 68, height: 68 }
             });
 
-            // === ВСТАВКА ВЫСОКОЧЁТКОГО ШТРИХКОДА С ПРОПОРЦИЯМИ ===
+            // ВСТАВКА ШТРИХКОДА
             const bcCanvas = document.createElement('canvas');
             try {
                 JsBarcode(bcCanvas, item.code, { format: "EAN13", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
@@ -2588,7 +2634,6 @@ async function generateExcel(itemsToExport, action, prefix) {
                 extension: 'png',
             });
             
-            // Защита от искажений штрихкода в экселе
             const renderHeight = 60;
             const renderWidth = bcCanvas.width * (renderHeight / bcCanvas.height);
             
@@ -2603,17 +2648,19 @@ async function generateExcel(itemsToExport, action, prefix) {
         const fileName = `TSD_${prefix}_${Date.now()}.xlsx`;
         const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
 
-        // Если пользователь выбрал "Поделиться"
+        // === ИСПРАВЛЕННАЯ ЛОГИКА ОТПРАВКИ "ПОДЕЛИТЬСЯ" ===
         if (action === 'share') {
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            // Убрали text и title — передаем только сам файл. Это решает проблему 
+            // на Android, заставляя систему открывать нативное меню передачи файла.
+            const shareData = { files: [file] };
+
+            if (navigator.canShare && navigator.canShare(shareData)) {
                 try {
-                    await navigator.share({
-                        files: [file],
-                        title: 'Выгрузка ТСД',
-                        text: 'Таблица инвентаризации с QR и Штрихкодами'
-                    });
-                    showToast("Отправлено!");
+                    await navigator.share(shareData);
+                    showToast("Окно отправки открыто");
                 } catch (err) {
+                    // Если пользователь сам отменил отправку (AbortError) - ничего не делаем.
+                    // При других ошибках сбрасываем файл в загрузки.
                     if (err.name !== 'AbortError') {
                         downloadExcelBlob(blob, fileName);
                     }
@@ -2623,7 +2670,7 @@ async function generateExcel(itemsToExport, action, prefix) {
                 downloadExcelBlob(blob, fileName);
             }
         } else {
-            // Если пользователь выбрал "Сохранить на устройство"
+            // Просто сохраняем (кнопка "Сохранить в загрузки")
             downloadExcelBlob(blob, fileName);
         }
         
