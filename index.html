@@ -234,17 +234,11 @@ header {
 .daynight-input:checked ~ .daynight-toggle .moon { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
 .stars { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s var(--ease-smooth); }
 .daynight-input:checked ~ .daynight-toggle .stars { opacity: 1; }
-.star { position: absolute; top: var(--y); left: var(--x); width: 2px; height: 2px; background: #fff; border-radius: 50%; animation: twinkle 1.8s ease-in-out infinite; animation-delay: var(--d); }
-@keyframes twinkle { 0%, 100% { opacity: 0.25; transform: scale(1); } 50% { opacity: 1; transform: scale(1.4); } }
 .clouds { position: absolute; left: 0; right: 0; bottom: -4px; height: 16px; }
 .cloud { position: absolute; bottom: 0; background: #ffffff; border-radius: 50%; opacity: 0.95; transition: 0.6s var(--ease-smooth); }
 .cloud1 { left: -2px; width: 16px; height: 8px; box-shadow: 6px 2px 0 -1px #fff, 11px 0 0 -2px #fff; }
 .cloud2 { left: 20px; width: 12px; height: 7px; box-shadow: 5px 1px 0 -1px #fff; }
 .cloud3 { left: 38px; width: 14px; height: 8px; box-shadow: 5px 2px 0 -1px #fff, 10px 0 0 -2px #fff; }
-.daynight-input:checked ~ .daynight-toggle .cloud { background: #c9d3ea; opacity: 0.85; }
-.daynight-input:checked ~ .daynight-toggle .cloud1 { box-shadow: 6px 2px 0 -1px #c9d3ea, 11px 0 0 -2px #c9d3ea; }
-.daynight-input:checked ~ .daynight-toggle .cloud2 { box-shadow: 5px 1px 0 -1px #c9d3ea; }
-.daynight-input:checked ~ .daynight-toggle .cloud3 { box-shadow: 5px 2px 0 -1px #c9d3ea, 10px 0 0 -2px #c9d3ea; }
 .toggle-thumb {
     position: absolute; top: var(--pad); left: var(--pad); width: var(--thumb); height: var(--thumb);
     border-radius: 50%; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
@@ -307,7 +301,7 @@ header {
 .cart-card {
     display: flex; flex-direction: column; flex: 1;
     background: rgba(var(--bg-card-rgb), 0.94); border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg); padding: 14px 8px; box-shadow: var(--shadow-soft);
+    border-radius: var(--radius-lg); padding: 14px 10px; box-shadow: var(--shadow-soft);
 }
 .cart-header { padding: 0 4px 12px; display: flex; justify-content: space-between; align-items: center; }
 #cartStats { padding: 6px 11px; border-radius: 10px; background: var(--input-bg); color: var(--text-muted); font-size: 13px; font-weight: 800; }
@@ -316,33 +310,33 @@ header {
     width: 100%; border-radius: 14px; margin-top: 2px; overflow-x: hidden;
 }
 table {
-    width: 100%; border-collapse: separate; border-spacing: 0 6px; table-layout: fixed;
+    width: 100%; border-collapse: separate; border-spacing: 0 8px; table-layout: auto;
 }
 thead th {
-    font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
-    color: var(--text-muted); padding: 4px 2px 8px; text-align: center; border: none;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-muted); padding: 4px 3px 8px; text-align: center; border: none;
+    white-space: nowrap;
 }
 tr {
     background: var(--input-bg); border-radius: var(--radius-md);
     box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: background-color var(--t-theme), border-color var(--t-theme);
 }
 [data-theme="dark"] tr { background: #13201a; }
-td { padding: 6px 2px; vertical-align: middle; text-align: center; border: none; white-space: nowrap; overflow: hidden; }
+td { padding: 7px 3px; vertical-align: middle; text-align: center; border: none; white-space: nowrap; }
 td:first-child { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); padding-left: 6px; }
 td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); padding-right: 6px; }
 
-/* КВАДРАТНЫЙ АККУРАТНЫЙ QR-КОД 38x38 */
+/* КВАДРАТНЫЙ QR-КОД 44x44 */
 .qr-cell-box {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
-    max-width: 38px !important;
-    max-height: 38px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
     background: #ffffff;
-    padding: 2px !important;
-    border-radius: 8px;
+    padding: 3px !important;
+    border-radius: 10px;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
@@ -354,12 +348,12 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .qr-cell-box:active { transform: scale(0.9); }
 .qr-cell-box canvas {
-    width: 32px !important;
-    height: 32px !important;
-    max-width: 32px !important;
-    max-height: 32px !important;
+    width: 38px !important;
+    height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
     display: block !important;
-    border-radius: 3px;
+    border-radius: 4px;
     object-fit: contain !important;
 }
 
@@ -367,32 +361,33 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 .inline-barcode-container { padding: 1px; cursor: pointer; transition: opacity var(--t-fast); }
 .inline-barcode-container:active { opacity: 0.6; }
 .barcode-wrapper {
-    background-color: #ffffff; padding: 2px 4px; border-radius: 8px;
+    background-color: #ffffff; padding: 3px 6px; border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
-    width: 104px; height: 38px; pointer-events: none; margin: 0 auto;
+    width: 118px; height: 44px; pointer-events: none; margin: 0 auto;
     border: 1px solid #e5ebe7; box-sizing: border-box;
 }
 .barcode-wrapper svg { max-width: 100%; max-height: 100%; display: block; }
 
 /* Цена по карте */
-.price-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.price-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
 .price-card-badge {
     background: linear-gradient(135deg, #10b981, #059669); color: #fff;
-    font-size: 13.5px; font-weight: 900; padding: 3px 6px; border-radius: 7px;
-    box-shadow: 0 2px 6px rgba(5,150,105,0.22); white-space: nowrap; line-height: 1.1;
+    font-size: 14.5px; font-weight: 900; padding: 4px 8px; border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(5,150,105,0.25); white-space: nowrap; line-height: 1.1;
 }
-.price-regular-old { font-size: 10px; font-weight: 800; color: var(--text-muted); text-decoration: line-through; white-space: nowrap; line-height: 1; }
+.price-regular-old { font-size: 11px; font-weight: 800; color: var(--text-muted); text-decoration: line-through; white-space: nowrap; line-height: 1; }
 
 .qty-box {
     background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main);
-    font-weight: 900; font-size: 14.5px; border-radius: 9px; padding: 6px 4px;
-    cursor: pointer; display: inline-block; transition: all var(--t-fast) var(--ease-spring); width: 34px; text-align: center;
+    font-weight: 900; font-size: 16px; border-radius: 10px; width: 38px; height: 38px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all var(--t-fast) var(--ease-spring);
 }
 .qty-box:active { background: var(--border-color); transform: scale(0.9); }
 
 .btn-remove {
     background: transparent; color: var(--btn-remove-text); border: 1px solid rgba(220, 38, 38, 0.16);
-    width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
+    width: 34px; height: 34px; border-radius: 10px; cursor: pointer;
     display: flex; align-items: center; justify-content: center; margin: 0 auto;
     transition: transform var(--t-fast) var(--ease-spring);
 }
@@ -474,6 +469,19 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     width: 34px; height: 34px; border-radius: 11px; background: var(--input-bg);
     display: flex; align-items: center; justify-content: center; color: var(--btn-add);
 }
+
+/* Карточки в списке камер */
+.cam-choice-item {
+    padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);
+    background: var(--input-bg); margin-bottom: 10px; cursor: pointer; text-align: left;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    transition: transform var(--t-fast), border-color var(--t-fast);
+}
+.cam-choice-item:active { transform: scale(0.98); }
+.cam-choice-item.active { border-color: var(--btn-add); background: rgba(5, 150, 105, 0.08); }
+.cam-choice-info { display: flex; flex-direction: column; gap: 3px; }
+.cam-choice-name { font-weight: 900; font-size: 15px; color: var(--text-main); }
+.cam-choice-desc { font-weight: 700; font-size: 12px; color: var(--text-muted); }
 
 .instruction-content { padding: 10px 0; font-size: 15px; color: var(--text-muted); font-weight: 600; text-align: left; }
 .instruction-content ol { margin: 10px 0 0 0; padding-left: 20px; }
@@ -576,7 +584,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .btn-icon-torch.active { background: #f59e0b; color: #111; box-shadow: 0 0 16px rgba(245, 158, 11, 0.65); }
 
-/* КНОПКА СМЕНЫ КАМЕРЫ (СЛЕВА, СИММЕТРИЧНО ФОНАРИКУ) */
+/* КНОПКА СМЕНЫ КАМЕРЫ (СЛЕВА, СИММЕТРИЧНО) */
 .btn-icon-camera {
     position: absolute; left: 14px; top: 14px; z-index: 6;
     background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -970,7 +978,22 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     <button class="snackbar-btn" id="snackbarUndoBtn" onclick="undoDelete()">Вернуть</button>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА -->
+<!-- МОДАЛЬНЫЕ ОКНА: ВЫБОР КАМЕРЫ (НОВОЕ ОКНО) -->
+<div class="modal-overlay" id="cameraSelectModal">
+    <div class="modal-content">
+        <h3 class="modal-title">
+            <span class="app-icon" style="color:var(--btn-add)"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+            Выберите заднюю камеру
+        </h3>
+        <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Для ценников лучше использовать Основную (1x)</p>
+        
+        <div id="cameraListContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        
+        <button class="btn-modal btn-close" onclick="document.getElementById('cameraSelectModal').style.display='none'">Отмена</button>
+    </div>
+</div>
+
+<!-- ГЛАВНОЕ МЕНЮ -->
 <div class="modal-overlay" id="mainMenuModal">
     <div class="modal-content">
         <h3 class="modal-title">
@@ -1069,13 +1092,12 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
                 <div class="scan-hint"><span>QR или штрихкод в рамку</span></div>
             </div>
             
-            <!-- КНОПКА СМЕНЫ КАМЕРЫ (СЛЕВА) -->
-            <button class="btn-icon-camera" id="cameraBtn" onclick="switchCamera()" title="Сменить камеру">
+            <!-- КНОПКА ВЫБОРА КАМЕРЫ (СЛЕВА, ОТКРЫВАЕТ СПИСОК) -->
+            <button class="btn-icon-camera" id="cameraBtn" onclick="openCameraSelectModal()" title="Выбрать камеру">
                 <span class="app-icon">
                     <svg viewBox="0 0 24 24">
-                        <path d="M20 16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2v2"/>
-                        <path d="M17 14l3-3 3 3"/>
-                        <path d="M20 11v6"/>
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
                     </svg>
                 </span>
             </button>
@@ -1150,7 +1172,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- ЗУМ С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
+<!-- ЗУМ: С КОПИРОВАНИЕМ ПО УДЕРЖАНИЮ (0.5 сек) -->
 <div class="modal-overlay" id="zoomModal" style="align-items: center;" onclick="handleZoomClick(event)">
     <div class="modal-content" style="background:var(--bg-card); max-width:460px; padding:26px; border-radius:var(--radius-lg); text-align:center; position: relative;">
         <p style="font-weight:800; font-size:13.5px; color:var(--btn-add); margin-top:-8px; margin-bottom:12px;">Зажмите код пальцем, чтобы скопировать</p>
@@ -1189,7 +1211,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
             <ol>
                 <li>Наведите камеру на ценник — код считается автоматически.</li>
                 <li>В столбце <b>QR</b> появится аккуратная мини-копия оригинального QR.</li>
-                <li>Вверху экрана доступны кнопки: <b>Смена камеры</b> (слева), <b>Зум 1x, 2x, 3x</b> (по центру), <b>Фонарик</b> (справа).</li>
+                <li>Вверху экрана доступны кнопки: <b>Выбор камеры</b> (слева), <b>Зум 1x, 2x, 3x</b> (по центру), <b>Фонарик</b> (справа).</li>
                 <li>Нажмите на код в таблице для увеличения. <b>Зажмите увеличенный код пальцем на 0.5 сек</b>, чтобы скопировать.</li>
             </ol>
         </div>
@@ -1263,7 +1285,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.5 (Samsung Multi-Lens & Torch Fix)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 12.6 (Rear Lens Selector & Torch)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -1405,7 +1427,7 @@ function triggerVibrate(pattern = 12) {
 }
 
 document.addEventListener('pointerdown', (e) => {
-    const interactive = e.target.closest('button, .navitem, .toggle, .pallet-bar, .dropdown-item, .qty-box, .numpad-paste-btn, .num-btn, .qr-cell-box, .zoom-touch-target');
+    const interactive = e.target.closest('button, .navitem, .toggle, .pallet-bar, .dropdown-item, .qty-box, .numpad-paste-btn, .num-btn, .qr-cell-box, .zoom-touch-target, .cam-choice-item');
     if (interactive) {
         SoundFX.tap();
         triggerVibrate(12);
@@ -1767,11 +1789,11 @@ function renderCart() {
     let html = `<div class="table-responsive"><table>
         <thead>
             <tr>
-                <th style="width:42px;">QR</th>
-                <th style="width:112px;">Штрихкод</th>
+                <th style="width:52px;">QR</th>
+                <th style="width:130px;">Штрихкод</th>
                 <th>По карте</th>
-                <th style="width:40px;">Кол</th>
-                <th style="width:34px;"></th>
+                <th style="width:44px;">Кол</th>
+                <th style="width:40px;"></th>
             </tr>
         </thead>`;
 
@@ -1828,7 +1850,7 @@ function renderCart() {
 
                     <td>
                         <button class="btn-remove" onclick="removeItem('${item.id}')">
-                            <span class="app-icon" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+                            <span class="app-icon" style="width:18px;height:18px;"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
                         </button>
                     </td>
                 </tr>`;
@@ -1839,14 +1861,14 @@ function renderCart() {
     area.innerHTML = html;
 
     currentCart.forEach(item => {
-        renderBarcodeSafe(`bc-${item.id}`, item.code, { width: 1.35, height: 32, displayValue: true, fontSize: 10, margin: 1 });
+        renderBarcodeSafe(`bc-${item.id}`, item.code, { width: 1.5, height: 36, displayValue: true, fontSize: 11, margin: 1 });
         
         const qrCanvas = document.getElementById(`qr-c-${item.id}`);
         if (qrCanvas) {
-            QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 96, margin: 0 }, function(err) {
+            QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 114, margin: 0 }, function(err) {
                 if (!err && qrCanvas) {
-                    qrCanvas.style.width = "32px";
-                    qrCanvas.style.height = "32px";
+                    qrCanvas.style.width = "38px";
+                    qrCanvas.style.height = "38px";
                 }
             });
         }
@@ -2017,32 +2039,78 @@ function confirmPallet() {
 let html5QrCode = null;
 let isScannerPaused = false;
 let torchEnabled = false;
-let availableCameras = [];
-let currentCameraIndex = 0;
+let backCamerasList = [];
+let selectedCameraId = null;
 
-async function getBestBackCameraIndex(cameras) {
-    if (!cameras || !cameras.length) return 0;
-    
-    // 1. Ищем камеру 'camera2 0' (основной 64MP сенсор Samsung A52)
-    let idx = cameras.findIndex(c => {
+// Анализ названий камер для отображения понятных подписей
+function parseFriendlyCameraName(cam, index) {
+    const l = (cam.label || '').toLowerCase();
+    let title = "Камера " + (index + 1);
+    let desc = "Задний сенсор";
+
+    if (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main') || index === 0) {
+        title = "Основная камера (1x)";
+        desc = "Рекомендуется для сканирования ценников";
+    } else if (l.includes('ultra') || l.includes('wide') || l.includes('0.5') || l.includes('широк')) {
+        title = "Широкоугольная (0.5x)";
+        desc = "Без автофокуса (может мылить)";
+    } else if (l.includes('macro') || l.includes('макро')) {
+        title = "Макро-объектив";
+        desc = "Для мелких деталей в упор";
+    } else if (l.includes('tele') || l.includes('zoom') || l.includes('теле')) {
+        title = "Телеобъектив";
+        desc = "Оптическое приближение";
+    } else if (l.includes('depth') || l.includes('глубин')) {
+        title = "Датчик глубины";
+        desc = "Вспомогательный сенсор";
+    } else {
+        title = "Задняя камера " + (index + 1);
+        desc = cam.label ? cam.label.substring(0, 32) : "Дополнительный сенсор";
+    }
+
+    return { title, desc };
+}
+
+// Поиск задних камер
+async function detectBackCameras() {
+    try {
+        const cameras = await Html5Qrcode.getCameras();
+        if (!cameras || !cameras.length) return [];
+        
+        // Отсекаем фронтальные камеры
+        const onlyBack = cameras.filter(c => {
+            const l = c.label.toLowerCase();
+            return !l.includes('front') && !l.includes('user') && !l.includes('передн') && !l.includes('selfie');
+        });
+
+        backCamerasList = onlyBack.length ? onlyBack : cameras;
+        return backCamerasList;
+    } catch(e) {
+        console.warn("Detect cameras error:", e);
+        return [];
+    }
+}
+
+function getBestInitialCameraId() {
+    if (!backCamerasList || !backCamerasList.length) return null;
+
+    // 1. Ищем camera2 0 (основная 64MP на Samsung A52)
+    let best = backCamerasList.find(c => {
         const l = c.label.toLowerCase();
         const isNotAux = !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
         return isNotAux && (l.includes('camera2 0') || l.includes('camera 0') || l.includes('0, facing back') || l.includes('main'));
     });
-    if (idx !== -1) return idx;
+    if (best) return best.id;
 
-    // 2. Ищем любую заднюю, не являющуюся ультрашириком или макро
-    idx = cameras.findIndex(c => {
+    // 2. Первая задняя, не являющаяся шириком или макро
+    best = backCamerasList.find(c => {
         const l = c.label.toLowerCase();
-        const isBack = l.includes('back') || l.includes('rear') || l.includes('задн') || l.includes('environment');
-        const isNotAux = !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
-        return isBack && isNotAux;
+        return !l.includes('ultra') && !l.includes('0.5') && !l.includes('macro') && !l.includes('depth') && !l.includes('широк');
     });
-    if (idx !== -1) return idx;
+    if (best) return best.id;
 
-    // 3. Любая задняя
-    idx = cameras.findIndex(c => /back|rear|задн|environment/i.test(c.label));
-    return idx !== -1 ? idx : 0;
+    // 3. Первая доступная
+    return backCamerasList[0].id;
 }
 
 async function startScanner() {
@@ -2071,11 +2139,14 @@ async function startScanner() {
         ]
     };
 
+    await detectBackCameras();
+    if (!selectedCameraId) {
+        selectedCameraId = getBestInitialCameraId();
+    }
+
     try {
-        availableCameras = await Html5Qrcode.getCameras();
-        if (availableCameras && availableCameras.length) {
-            currentCameraIndex = await getBestBackCameraIndex(availableCameras);
-            await html5QrCode.start(availableCameras[currentCameraIndex].id, config, onCodeDetected);
+        if (selectedCameraId) {
+            await html5QrCode.start(selectedCameraId, config, onCodeDetected);
         } else {
             await html5QrCode.start({ facingMode: "environment" }, config, onCodeDetected);
         }
@@ -2096,21 +2167,45 @@ async function startScanner() {
     }
 }
 
-/* ПЕРЕКЛЮЧЕНИЕ КАМЕР */
-async function switchCamera() {
-    if (!html5QrCode || !availableCameras || availableCameras.length <= 1) {
-        showToast("Другие камеры не найдены");
+// Открытие модального окна выбора задних камер
+function openCameraSelectModal() {
+    if (!backCamerasList || !backCamerasList.length) {
+        showToast("Дополнительные камеры не найдены");
         return;
     }
 
+    const container = document.getElementById('cameraListContainer');
+    container.innerHTML = backCamerasList.map((cam, idx) => {
+        const info = parseFriendlyCameraName(cam, idx);
+        const isActive = (cam.id === selectedCameraId) || (!selectedCameraId && idx === 0);
+        return `
+            <div class="cam-choice-item ${isActive ? 'active' : ''}" onclick="selectCameraById('${cam.id}')">
+                <div class="cam-choice-info">
+                    <span class="cam-choice-name">${info.title}</span>
+                    <span class="cam-choice-desc">${info.desc}</span>
+                </div>
+                ${isActive ? '<span class="app-icon" style="color:var(--btn-add);"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>' : ''}
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('cameraSelectModal').style.display = 'flex';
+}
+
+// Применение выбранной камеры из списка
+async function selectCameraById(camId) {
+    document.getElementById('cameraSelectModal').style.display = 'none';
+    if (selectedCameraId === camId && html5QrCode && html5QrCode.isScanning) return;
+
+    selectedCameraId = camId;
     triggerVibrate(20);
-    currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
-    const nextCam = availableCameras[currentCameraIndex];
 
     try {
-        await html5QrCode.stop();
-        
-        // Сброс фонарика и зума
+        if (html5QrCode) {
+            await html5QrCode.stop();
+        }
+
+        // Сброс индикаторов фонарика и зума
         torchEnabled = false;
         document.getElementById('torchBtn').classList.remove('active');
         updateZoomButtonsUI(1);
@@ -2129,11 +2224,11 @@ async function switchCamera() {
             ]
         };
 
-        await html5QrCode.start(nextCam.id, config, onCodeDetected);
-        showToast("Камера: " + (nextCam.label ? nextCam.label.substring(0, 22) : (currentCameraIndex + 1)));
+        await html5QrCode.start(camId, config, onCodeDetected);
+        showToast("Камера переключена");
     } catch(e) {
-        console.error("Switch cam error:", e);
-        showToast("Не удалось переключить камеру");
+        console.error("Camera switch error:", e);
+        showToast("Ошибка при смене камеры");
     }
 }
 
@@ -2143,7 +2238,7 @@ async function toggleTorch() {
     const nextTorchState = !torchEnabled;
     let applied = false;
 
-    // Способ 1: Прямое управление WebRTC MediaStreamTrack (100% срабатывание на Samsung)
+    // 1. Прямое управление через WebRTC MediaStreamTrack
     try {
         const videoEl = document.querySelector("#reader video");
         if (videoEl && videoEl.srcObject) {
@@ -2157,10 +2252,10 @@ async function toggleTorch() {
             }
         }
     } catch(e) {
-        console.warn("Direct track torch error:", e);
+        console.warn("Direct torch error:", e);
     }
 
-    // Способ 2: Fallback через html5QrCode
+    // 2. Библиотечный fallback
     if (!applied) {
         try {
             await html5QrCode.applyVideoConstraints({ advanced: [{ torch: nextTorchState }] });
@@ -2175,7 +2270,7 @@ async function toggleTorch() {
         document.getElementById('torchBtn').classList.toggle('active', torchEnabled);
         triggerVibrate(15);
     } else {
-        showToast("Вспышка не поддерживается этим объективом");
+        showToast("Вспышка недоступна на этой камере");
     }
 }
 
