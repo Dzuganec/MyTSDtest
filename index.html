@@ -468,6 +468,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
 }
 .btn-modal:active { transform: scale(0.96); }
 .btn-close { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); }
+.btn-modal:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 .dropdown-item {
     padding: 15px 18px; font-weight: 800; font-size: 15px; color: var(--text-main);
@@ -1218,18 +1219,18 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
     </div>
 </div>
 
-<!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ДЕЙСТВИЯ (ПОДЕЛИТЬСЯ ИЛИ СОХРАНИТЬ) -->
 <div class="modal-overlay" id="exportChoiceModal">
     <div class="modal-content">
         <h3 class="modal-title">Экспорт Excel</h3>
         <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top:-6px; margin-bottom: 14px;">Выберите действие с файлом</p>
         
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="btn-modal" style="background:#2563eb; color:white; margin-top:0;" onclick="executeExport('share')">
+            <button class="btn-modal" id="btnShareExport" style="background:#2563eb; color:white; margin-top:0;" onclick="executeReadyShare()">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
                 Поделиться файлом
             </button>
-            <button class="btn-modal" style="background:var(--btn-add); color:white; margin-top:0;" onclick="executeExport('save')">
+            <button class="btn-modal" id="btnSaveExport" style="background:var(--btn-add); color:white; margin-top:0;" onclick="executeReadySave()">
                 <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
                 Сохранить в загрузки
             </button>
@@ -1362,7 +1363,7 @@ td:last-child { border-top-right-radius: var(--radius-md); border-bottom-right-r
               <line x1="0" y1="125" x2="160" y2="125" stroke="var(--border-color)" stroke-width="4" stroke-linecap="round" />
             </svg>
             <p style="font-size: 19px; font-weight: 900; color: var(--text-main);">Сергей Джугань</p>
-            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.1 (Interactive Share Dialog)</p>
+            <p style="font-size: 13.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Версия: 16.2 (Instant Share Fix)</p>
             <a href="https://t.me/segarey" target="_blank" class="tg-dev-btn">
                 <svg class="tg-icon-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -2471,8 +2472,8 @@ function stopScanner(resetNav = true) {
 }
 
 /* ================= EXCELJS ГЕНЕРАЦИЯ, ВЫБОР ДЕЙСТВИЯ И ОТПРАВКА ================= */
-let pendingExportItems = [];
-let pendingExportPrefix = "Inventory";
+let pendingFileToExport = null;
+let pendingFileName = "";
 
 function exportToExcel() {
     if (currentCart.length === 0) {
@@ -2480,171 +2481,175 @@ function exportToExcel() {
         updateNavState('onNavHome');
         return;
     }
-    pendingExportItems = currentCart;
-    pendingExportPrefix = "Inventory";
-    document.getElementById('exportChoiceModal').style.display = 'flex';
+    prepareAndShowExportModal(currentCart, "Inventory");
 }
 
 function exportPalletToExcel(palletName) {
     const items = currentCart.filter(i => i.pallet === palletName);
     if (!items.length) return;
-    pendingExportItems = items;
-    pendingExportPrefix = `Pallet_${palletName}`;
-    document.getElementById('exportChoiceModal').style.display = 'flex';
+    prepareAndShowExportModal(items, `Pallet_${palletName}`);
 }
 
-async function openArchiveExcel(idx) {
+function openArchiveExcel(idx) {
     const archive = JSON.parse(localStorage.getItem('tsd_archive')) || [];
     if (archive[idx] && archive[idx].cartData) {
         document.getElementById('archiveModal').style.display = 'none';
-        pendingExportItems = archive[idx].cartData;
-        pendingExportPrefix = "Archive";
-        document.getElementById('exportChoiceModal').style.display = 'flex';
+        prepareAndShowExportModal(archive[idx].cartData, "Archive");
     } else {
         showToast("Ошибка: формат не поддерживается");
     }
 }
 
-async function executeExport(action) {
-    document.getElementById('exportChoiceModal').style.display = 'none';
-    await generateExcel(pendingExportItems, action, pendingExportPrefix);
-    
-    // Сохраняем в архив, только если мы выгружаем текущую полную корзину, а не отдельный паллет или старый архив
-    if (pendingExportItems === currentCart && pendingExportPrefix === "Inventory") {
-        const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
-        saveToArchivePayload(currentCart, totalQty);
-    }
-}
+async function prepareAndShowExportModal(itemsToExport, prefix) {
+    const modal = document.getElementById('exportChoiceModal');
+    const btnShare = document.getElementById('btnShareExport');
+    const btnSave = document.getElementById('btnSaveExport');
 
-async function generateExcel(itemsToExport, action, prefix) {
-    if (!itemsToExport || itemsToExport.length === 0) {
-        showToast("Нет данных для выгрузки");
-        return;
-    }
+    // Показываем окно сразу, но блокируем кнопки
+    modal.style.display = 'flex';
+    btnShare.disabled = true; btnSave.disabled = true;
+    btnShare.style.opacity = '0.5'; btnSave.style.opacity = '0.5';
+    
+    const originalShareHtml = btnShare.innerHTML;
+    btnShare.innerHTML = '<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span> Формируем Excel...';
 
     try {
-        showToast("Формирование Excel...");
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Инвентаризация');
+        // Создаём файл в фоне ДО того как пользователь нажмет кнопку "Поделиться"
+        const { file, fileName } = await buildExcelFileObject(itemsToExport, prefix);
+        pendingFileToExport = file;
+        pendingFileName = fileName;
 
-        // Настраиваем колонки
-        worksheet.columns = [
-            { header: 'Паллет', key: 'pallet', width: 14 },
-            { header: 'QR-код', key: 'qr', width: 15 },
-            { header: 'Штрихкод', key: 'barcode', width: 28 },
-            { header: 'ШК (Поиск)', key: 'code_text', width: 16 },
-            { header: 'По карте (₽)', key: 'price_card', width: 14 },
-            { header: 'Базовая (₽)', key: 'price_reg', width: 14 },
-            { header: 'Кол-во', key: 'qty', width: 10 },
-            { header: 'Данные QR', key: 'raw', width: 35 }
-        ];
-
-        worksheet.getRow(1).font = { bold: true };
-        worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' };
-        worksheet.getRow(1).height = 25;
-
-        for (let i = 0; i < itemsToExport.length; i++) {
-            const item = itemsToExport[i];
-
-            // 1. СНАЧАЛА добавляем строку с данными
-            const newRow = worksheet.addRow({
-                pallet: item.pallet || "Основной",
-                qr: "",
-                barcode: "",
-                code_text: item.code || "", 
-                price_card: item.priceCard ? parseFloat(item.priceCard) : "",
-                price_reg: item.priceRegular ? parseFloat(item.priceRegular) : "",
-                qty: item.qty || 1,
-                raw: item.raw || item.code || ""
-            });
-
-            const rowIndex = newRow.number; // Получаем реальный номер созданной строки
-
-            // 2. ТЕПЕРЬ задаем высоту и выравнивание этой строке
-            newRow.height = 75;
-            newRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-
-            // === ВСТАВКА ВЫСОКОЧЁТКОГО QR-КОДА ===
-            const qrCanvas = document.createElement('canvas');
-            await QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 300, margin: 2 });
-            const qrId = workbook.addImage({
-                base64: qrCanvas.toDataURL('image/png'),
-                extension: 'png',
-            });
-            worksheet.addImage(qrId, {
-                tl: { col: 1.15, row: rowIndex - 0.9 }, // Привязываем к правильной строке (индекс ExcelJS)
-                ext: { width: 68, height: 68 }
-            });
-
-            // === ВСТАВКА ВЫСОКОЧЁТКОГО ШТРИХКОДА С ПРОПОРЦИЯМИ ===
-            const bcCanvas = document.createElement('canvas');
-            try {
-                JsBarcode(bcCanvas, item.code, { format: "EAN13", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
-            } catch(e) {
-                JsBarcode(bcCanvas, item.code, { format: "CODE128", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
-            }
-            const bcId = workbook.addImage({
-                base64: bcCanvas.toDataURL('image/png'),
-                extension: 'png',
-            });
-            
-            // Защита от искажений штрихкода в экселе
-            const renderHeight = 60;
-            const renderWidth = bcCanvas.width * (renderHeight / bcCanvas.height);
-            
-            worksheet.addImage(bcId, {
-                tl: { col: 2.1, row: rowIndex - 0.85 }, 
-                ext: { width: renderWidth, height: renderHeight }
-            });
+        // Сохраняем в архив (если это основная выгрузка)
+        if (itemsToExport === currentCart && prefix === "Inventory") {
+            const totalQty = currentCart.reduce((a, b) => a + b.qty, 0);
+            saveToArchivePayload(currentCart, totalQty);
         }
 
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-        const fileName = `TSD_${prefix}_${Date.now()}.xlsx`;
-        const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-
-        // Если пользователь выбрал "Поделиться"
-        if (action === 'share') {
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        files: [file],
-                        title: 'Выгрузка ТСД',
-                        text: 'Таблица инвентаризации с QR и Штрихкодами'
-                    });
-                    showToast("Отправлено!");
-                } catch (err) {
-                    if (err.name !== 'AbortError') {
-                        showToast("Система не дала открыть меню. Сохраните файл кнопкой ниже.");
-                    }
-                }
-            } else {
-                showToast("Ваш браузер не поддерживает это меню. Сохраните файл.");
-            }
-        } else {
-            // Если пользователь выбрал "Сохранить на устройство"
-            downloadExcelBlob(blob, fileName);
-        }
-        
-        updateNavState('onNavHome');
-
-    } catch(e) {
+        // Возвращаем кнопкам нормальный вид
+        btnShare.innerHTML = originalShareHtml;
+        btnShare.disabled = false; btnSave.disabled = false;
+        btnShare.style.opacity = '1'; btnSave.style.opacity = '1';
+    } catch (e) {
         console.error(e);
-        showToast("Ошибка формирования Excel");
-        updateNavState('onNavHome');
+        showToast("Ошибка при создании файла");
+        modal.style.display = 'none';
     }
 }
 
-function downloadExcelBlob(blob, fileName) {
-    const url = URL.createObjectURL(blob);
+async function buildExcelFileObject(itemsToExport, prefix) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Инвентаризация');
+
+    worksheet.columns = [
+        { header: 'Паллет', key: 'pallet', width: 14 },
+        { header: 'QR-код', key: 'qr', width: 15 },
+        { header: 'Штрихкод', key: 'barcode', width: 28 },
+        { header: 'ШК (Поиск)', key: 'code_text', width: 16 },
+        { header: 'По карте (₽)', key: 'price_card', width: 14 },
+        { header: 'Базовая (₽)', key: 'price_reg', width: 14 },
+        { header: 'Кол-во', key: 'qty', width: 10 },
+        { header: 'Данные QR', key: 'raw', width: 35 }
+    ];
+
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' };
+    worksheet.getRow(1).height = 25;
+
+    for (let i = 0; i < itemsToExport.length; i++) {
+        const item = itemsToExport[i];
+
+        const newRow = worksheet.addRow({
+            pallet: item.pallet || "Основной",
+            qr: "",
+            barcode: "",
+            code_text: item.code || "", 
+            price_card: item.priceCard ? parseFloat(item.priceCard) : "",
+            price_reg: item.priceRegular ? parseFloat(item.priceRegular) : "",
+            qty: item.qty || 1,
+            raw: item.raw || item.code || ""
+        });
+
+        const rowIndex = newRow.number;
+        newRow.height = 75;
+        newRow.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+
+        const qrCanvas = document.createElement('canvas');
+        await QRCode.toCanvas(qrCanvas, item.raw || item.code, { width: 300, margin: 2 });
+        const qrId = workbook.addImage({
+            base64: qrCanvas.toDataURL('image/png'),
+            extension: 'png',
+        });
+        worksheet.addImage(qrId, {
+            tl: { col: 1.15, row: rowIndex - 0.9 },
+            ext: { width: 68, height: 68 }
+        });
+
+        const bcCanvas = document.createElement('canvas');
+        try {
+            JsBarcode(bcCanvas, item.code, { format: "EAN13", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
+        } catch(e) {
+            JsBarcode(bcCanvas, item.code, { format: "CODE128", width: 3, height: 80, displayValue: true, fontSize: 20, margin: 10, background: "#ffffff" });
+        }
+        const bcId = workbook.addImage({
+            base64: bcCanvas.toDataURL('image/png'),
+            extension: 'png',
+        });
+        
+        const renderHeight = 60;
+        const renderWidth = bcCanvas.width * (renderHeight / bcCanvas.height);
+        
+        worksheet.addImage(bcId, {
+            tl: { col: 2.1, row: rowIndex - 0.85 }, 
+            ext: { width: renderWidth, height: renderHeight }
+        });
+    }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const fileName = `TSD_${prefix}_${Date.now()}.xlsx`;
+    const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+    return { file, fileName };
+}
+
+// ЭТА ФУНКЦИЯ ТЕПЕРЬ СРАБАТЫВАЕТ МГНОВЕННО И ОТКРОЕТ ОКНО
+async function executeReadyShare() {
+    if (!pendingFileToExport) return;
+    
+    if (navigator.canShare && navigator.canShare({ files: [pendingFileToExport] })) {
+        try {
+            await navigator.share({
+                files: [pendingFileToExport],
+                title: 'Выгрузка ТСД',
+                text: 'Таблица инвентаризации с QR и Штрихкодами'
+            });
+            document.getElementById('exportChoiceModal').style.display = 'none';
+            updateNavState('onNavHome');
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                showToast("Система закрыла меню. Сохраните файл кнопкой ниже.");
+            }
+        }
+    } else {
+        showToast("Отправка файлов не поддерживается вашим браузером");
+    }
+}
+
+// ЭТА ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ В ПАПКУ
+function executeReadySave() {
+    if (!pendingFileToExport) return;
+    const url = URL.createObjectURL(pendingFileToExport);
     const a = document.createElement('a');
     a.href = url;
-    a.download = fileName;
+    a.download = pendingFileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast("Файл сохранен!");
+    
+    document.getElementById('exportChoiceModal').style.display = 'none';
+    updateNavState('onNavHome');
 }
 
 function saveToArchivePayload(cartItems, totalQty) {
